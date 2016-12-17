@@ -1,0 +1,192 @@
+
+drop database if exists cannongamedb;
+create database cannongamedb;
+use cannongamedb;
+
+
+drop table if exists Players;
+drop table if exists Games;
+drop table if exists GamesEvents;
+
+
+create table Players (
+  playerId integer not null, 
+  playerFullName varchar(20) not null, 
+  constraint pkPlayers primary key (playerId));
+
+create table Games (
+  playerId integer not null,
+  gameId integer not null,
+  startedTime timestamp not null, 
+  gameScore double not null, 
+  difficulty varchar(20) not null,
+  constraint pkGames primary key (playerId, gameId),
+  constraint fkGames foreign key (playerId)
+  references Players(playerId)
+  on delete cascade);
+
+create table GamesEvents(
+  playerId integer not null,
+  gameId integer not null,
+  eventType varchar(20) not null,
+  eventTime timestamp not null,
+  foreign key (playerId, gameId) 
+  references Games(playerId, gameId)
+  on delete cascade);
+
+insert into Players values (
+  11111, 'Moran');
+insert into Players values (
+  22222, 'Ben');
+insert into Players values (
+  33333, 'Lior');
+
+insert into Games values (
+  11111, 1, '2016-10-10 10:00:00', 25, 'Beginner');
+
+insert into GamesEvents values ( 
+  11111, 1, 'Hit', '2016-10-10 10:00:11');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:00:42');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:01:27');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:01:56');
+insert into GamesEvents values ( 
+  11111, 1, 'Hit', '2016-10-10 10:02:10');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:02:15');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:02:27');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:02:30');
+insert into GamesEvents values ( 
+  11111, 1, 'Hit', '2016-10-10 10:02:35');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:02:40');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:02:45');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:02:57');  
+insert into GamesEvents values ( 
+  11111, 1, 'Hit', '2016-10-10 10:03:11');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:03:16');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:03:28');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:03:31');
+insert into GamesEvents values ( 
+  11111, 1, 'Hit', '2016-10-10 10:03:36');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:03:41');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:03:46');
+insert into GamesEvents values ( 
+  11111, 1, 'Miss', '2016-10-10 10:03:58');  
+  
+insert into Games values (
+11111, 2, '2017-10-10 10:00:00', 50, 'Expert');
+
+insert into GamesEvents values ( 
+  11111, 2, 'Hit', '2017-10-10 10:00:11');
+insert into GamesEvents values ( 
+  11111, 2, 'Hit', '2017-10-10 10:00:42');
+insert into GamesEvents values ( 
+  11111, 2, 'Miss', '2017-10-10 10:01:27');
+insert into GamesEvents values ( 
+  11111, 2, 'Miss', '2017-10-10 10:01:56');
+  
+insert into Games values (
+11111, 3, '2017-11-10 10:00:00', 80, 'Beginner');
+
+insert into GamesEvents values ( 
+  11111, 3, 'Hit', '2017-11-10 10:00:11');
+insert into GamesEvents values ( 
+  11111, 3, 'Hit', '2017-11-10 10:00:42');
+insert into GamesEvents values ( 
+  11111, 3, 'Hit', '2017-11-10 10:01:27');
+insert into GamesEvents values ( 
+  11111, 3, 'Hit', '2017-11-10 10:01:56');
+insert into GamesEvents values ( 
+  11111, 3, 'Miss', '2017-11-10 10:01:58');
+  
+  insert into Games values (
+11111, 4, '2017-11-10 10:00:00', 100, 'Advanced');
+
+insert into GamesEvents values ( 
+  11111, 4, 'Hit', '2017-11-20 10:00:11');
+insert into GamesEvents values ( 
+  11111, 4, 'Hit', '2017-11-20 10:00:42');
+insert into GamesEvents values ( 
+  11111, 4, 'Hit', '2017-11-20 10:01:27');
+insert into GamesEvents values ( 
+  11111, 4, 'Hit', '2017-11-20 10:01:56');
+
+insert into Games values (
+  22222, 1, '2016-10-10 10:00:00', 25, 'Beginner');
+
+insert into GamesEvents values ( 
+  22222, 1, 'Hit', '2016-10-10 10:00:11');
+insert into GamesEvents values ( 
+  22222, 1, 'Miss', '2016-10-10 10:00:42');
+insert into GamesEvents values ( 
+  22222, 1, 'Miss', '2016-10-10 10:01:27');
+insert into GamesEvents values ( 
+  22222, 1, 'Miss', '2016-10-10 10:01:56');
+  
+  
+insert into Games values (
+  33333, 1, '2016-10-10 10:00:00', 25, 'Beginner');
+
+insert into GamesEvents values ( 
+  33333, 1, 'Hit', '2016-10-10 10:00:11');
+insert into GamesEvents values ( 
+  33333, 1, 'Miss', '2016-10-10 10:00:42');
+insert into GamesEvents values ( 
+  33333, 1, 'Miss', '2016-10-10 10:01:27');
+insert into GamesEvents values ( 
+  33333, 1, 'Miss', '2016-10-10 10:01:56');
+  
+insert into Games values (
+33333, 2, '2017-10-10 10:00:00', 50, 'Beginner');
+
+insert into GamesEvents values ( 
+  33333, 2, 'Hit', '2017-10-10 10:00:11');
+insert into GamesEvents values ( 
+  33333, 2, 'Hit', '2017-10-10 10:00:42');
+insert into GamesEvents values ( 
+  33333, 2, 'Miss', '2017-10-10 10:01:27');
+insert into GamesEvents values ( 
+  33333, 2, 'Miss', '2017-10-10 10:01:56');
+  
+insert into Games values (
+33333, 3, '2017-11-10 10:00:00', 80, 'Beginner');
+
+insert into GamesEvents values ( 
+  33333, 3, 'Hit', '2017-11-10 10:00:11');
+insert into GamesEvents values ( 
+  33333, 3, 'Hit', '2017-11-10 10:00:42');
+insert into GamesEvents values ( 
+  33333, 3, 'Hit', '2017-11-10 10:01:27');
+insert into GamesEvents values ( 
+  33333, 3, 'Hit', '2017-11-10 10:01:56');
+insert into GamesEvents values ( 
+  33333, 3, 'Miss', '2017-11-10 10:01:58');
+  
+  insert into Games values (
+33333, 4, '2017-11-10 10:00:00', 100, 'Beginner');
+
+insert into GamesEvents values ( 
+  33333, 4, 'Hit', '2017-11-20 10:00:11');
+insert into GamesEvents values ( 
+  33333, 4, 'Hit', '2017-11-20 10:00:42');
+insert into GamesEvents values ( 
+  33333, 4, 'Hit', '2017-11-20 10:01:27');
+insert into GamesEvents values ( 
+  33333, 4, 'Hit', '2017-11-20 10:01:56');  
+  
+  
+  
+commit;
+
