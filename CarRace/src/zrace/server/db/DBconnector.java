@@ -1,4 +1,4 @@
-package zrace.server;
+package zrace.server.db;
 
 public class DBconnector {
 

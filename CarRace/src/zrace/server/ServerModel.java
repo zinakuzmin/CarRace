@@ -1,5 +1,5 @@
 package zrace.server;
 
-public class ZRaceServer {
+public class ServerModel {
 
 }
