@@ -58,7 +58,7 @@ public class Runner extends Application {
 		
 		pane.setCenter(btnHBox);
 		
-		BackgroundImage myBI= new BackgroundImage(new Image(RunParameters.IMG_RUNNER_BACKGROUD),
+		BackgroundImage myBI= new BackgroundImage(new Image(RunParameters.IMG_RUNNER_BACKGROUND),
 				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
 				new BackgroundSize(500, 150, false, false, false, false));
 		pane.setBackground(new Background(myBI));
