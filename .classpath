@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="CarRace/src"/>
-	<classpathentry kind="src" path="ItzikExample/src"/>
-	<classpathentry kind="src" path="Moran&amp;Ben_FinalProject_update/src"/>
-	<classpathentry kind="lib" path="Moran&amp;Ben_FinalProject_update/mybatis-3.2.3.jar"/>
-	<classpathentry kind="lib" path="Moran&amp;Ben_FinalProject_update/mysql-connector-java-5.1.39-bin.jar"/>
-	<classpathentry kind="lib" path="C:/afeka/JavaNet/CarRace/jars/mysql-connector-java-5.0.8-bin.jar"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="Moran&amp;Ben_FinalProject_update/bin"/>
+	<classpathentry kind="lib" path="lib/JFX3DModelImporters_EA_2014-02-09/jim3dsModelImporterJFX.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/myJava/ZinasProject/GIT_repo/CarRace/CarRace/lib/JFX3DModelImporters_EA_2014-02-09/apidoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JFX3DModelImporters_EA_2014-02-09/jimColModelImporterJFX.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/myJava/ZinasProject/GIT_repo/CarRace/CarRace/lib/JFX3DModelImporters_EA_2014-02-09/apidoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JFX3DModelImporters_EA_2014-02-09/jimFxmlModelImporterJFX.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/myJava/ZinasProject/GIT_repo/CarRace/CarRace/lib/JFX3DModelImporters_EA_2014-02-09/apidoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JFX3DModelImporters_EA_2014-02-09/jimObjModelImporterJFX.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/myJava/ZinasProject/GIT_repo/CarRace/CarRace/lib/JFX3DModelImporters_EA_2014-02-09/apidoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JFX3DModelImporters_EA_2014-02-09/jimStlMeshImporterJFX.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/myJava/ZinasProject/GIT_repo/CarRace/CarRace/lib/JFX3DModelImporters_EA_2014-02-09/apidoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/JFX3DModelImporters_EA_2014-02-09/jimX3dModelImporterJFX.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/myJava/ZinasProject/GIT_repo/CarRace/CarRace/lib/JFX3DModelImporters_EA_2014-02-09/apidoc/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/mybatis-3.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.8-bin.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
