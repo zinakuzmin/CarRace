@@ -24,7 +24,7 @@ public class Runner extends Application {
 	/**
 	 * Create the client and open the client view
 	 */
-	private Button clientBtn = new Button("Start Cilent");
+	private Button clientBtn = new Button("Start Client");
 
 	/**
 	 * Create the server socket and open the Server view
@@ -40,7 +40,9 @@ public class Runner extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		ZRaceGameDBScript.runScript();
+		
+		if (RunParameters.shouldInitDB)
+			ZRaceGameDBScript.runScript();
 		
 		serverBtn.setOnAction(e -> {
 			new ZRaceMVCServer().start(new Stage());

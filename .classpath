@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="CarRace/src"/>
+	<classpathentry kind="src" path="ItzikExample/src"/>
+	<classpathentry kind="src" path="Moran&amp;Ben_FinalProject_update/src"/>
+	<classpathentry kind="lib" path="Moran&amp;Ben_FinalProject_update/mybatis-3.2.3.jar"/>
+	<classpathentry kind="lib" path="Moran&amp;Ben_FinalProject_update/mysql-connector-java-5.1.39-bin.jar"/>
+	<classpathentry kind="lib" path="C:/afeka/JavaNet/CarRace/jars/mysql-connector-java-5.0.8-bin.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="Moran&amp;Ben_FinalProject_update/bin"/>
+</classpath>
