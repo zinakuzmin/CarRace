@@ -313,8 +313,6 @@ public class DataBaseViewer extends Stage{
 	/**
 	 * This Class Manages each tableview cell in the DataBaseView tableView that can be edited.
 	 * 
-	 * 
-	 * @author Moran Tenzer & Ben Nave
 	 *
 	 */
 	class EditCell extends TableCell<String[], String> {

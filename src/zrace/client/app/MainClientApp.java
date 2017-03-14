@@ -3,8 +3,6 @@ package zrace.client.app;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -12,25 +10,32 @@ import com.interactivemesh.jfx.importer.ModelImporter;
 import com.interactivemesh.jfx.importer.col.ColModelImporter;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import main.runner.RunParameters;
 import zrace.client.app.world.Crowd;
 import zrace.client.app.world.Road;
 import zrace.client.app.world.Tribune;
 import zrace.client.app.world.ZCamera;
 import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.abstracts.Car;
+import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 
 public class MainClientApp extends Application {
 
     private ArrayList<Car> cars = new ArrayList<>();
+	private Pane pane;
     
-    private void buildAllCars(Xform world) throws InstantiationException, IllegalAccessException {
+    public MainClientApp(Pane racePane) {
+		this.pane = racePane;
+	}
+
+	private void buildAllCars(Xform world) throws InstantiationException, IllegalAccessException {
 //    	cars.add(new AlfaRomeo());
 //    	cars.add(new AudiTT());
 //    	cars.add(new AstonMartinV12());
@@ -40,7 +45,7 @@ public class MainClientApp extends Application {
 //    	cars.add(new Nissan350Zcoupe());
 //    	cars.add(new McLaren());
 
-    	boolean shoudBePixelCar = true;
+    	boolean shoudBePixelCar = RunParameters.BUILD_PIXEL_CARS;
     	List<CarResources> carResources = shoudBePixelCar ? CarResources.getPixelCarResources() : CarResources.getModelCarResources();
     	
     	for( int i=0 ; i < 5 ; i++) {
@@ -94,32 +99,33 @@ public class MainClientApp extends Application {
 		world.getChildren().add(tribunes.getTribunes());
 		world.getChildren().add(Crowd.generateCrowd(tribunes).getCrowdGroup());
 		
-        Scene scene = new Scene(root, 1024, 768, true);
-        scene.setFill(Color.FORESTGREEN);
-        cam.handleKeyboard(scene, world, cars);
-        cam.handleMouse(scene, world);
+		SubScene subScene = new SubScene(root, 800, 600, true, SceneAntialiasing.BALANCED);
+		
+        subScene.setFill(Color.FORESTGREEN);
+        cam.handleKeyboard(subScene, world, cars);
+        cam.handleMouse(subScene, world);
+//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+//
+//			@Override
+//			public void handle(WindowEvent arg0) {
+//		        System.out.println("Cars driving mileage:");
+//		        for (Car car : cars) {
+//		        	System.out.println(car.getCarName() + ":" + car.getTotalDrivingMileage());
+//		        }
+//
+//		        System.out.println("=============================");
+//		        Car max = Collections.max(cars, Comparator.comparing(Car::getTotalDrivingMileage));
+//		        System.out.println("Car won the race:" + max.getCarName());
+//		        System.out.println("=============================");
+//			}
+//		});
 
-        primaryStage.setTitle("CarZ");
-        primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-			@Override
-			public void handle(WindowEvent arg0) {
-		        System.out.println("Cars driving mileage:");
-		        for (Car car : cars) {
-		        	System.out.println(car.getCarName() + ":" + car.getTotalDrivingMileage());
-		        }
-
-		        System.out.println("=============================");
-		        Car max = Collections.max(cars, Comparator.comparing(Car::getTotalDrivingMileage));
-		        System.out.println("Car won the race:" + max.getCarName());
-		        System.out.println("=============================");
-			}
-		});
-
-        primaryStage.show();
-
-        scene.setCamera(cam.getCamera());
+        subScene.setCamera(cam.getCamera());
+        pane.getChildren().add(subScene);
+        
+        for (Car car : cars) {
+    		car.moveCar(new CarRadialMove());
+		}
     }
 
 	@SuppressWarnings("unused")
