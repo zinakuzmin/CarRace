@@ -67,7 +67,11 @@ create table Bets (
   userRevenue double not null,
   systemRevenue double not null,
   constraint pkRaceResults primary key (raceId, betId));
-
+  
+  
+ alter table RaceResults 
+  add constraint fk_raceID foreign key (raceId) references Races(raceId),
+  add constraint fk_betID foreign key (betId) references Bets(betId);
  
 
 insert into ZRaceSystem values (
@@ -102,8 +106,6 @@ insert into Bets values (
 
 insert into RaceResults values (
   1001, 3002, 1, 200.0, 0);
-insert into RaceResults values (
-  1002, 3001, 0, 2.0, 0);
 
   
 commit;

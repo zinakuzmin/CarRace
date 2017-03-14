@@ -7,5 +7,10 @@ public class RunParameters {
 	
 	//3D Models
 	public static String MODEL_PLANE = "resources/models/seymourplane-150-im.dae";
-	public static boolean shouldInitDB = true;
+	
+	//Server params
+	public static boolean SHOULD_INIT_DB = false;
+	public static int NUMBER_OF_CARS_IN_RACE = 3;
+	public static double SYSTEM_COMISSION = 0.05;
+	public static int NUMBER_OF_CARS_IN_RACE_THAT_HAVE_BET = 3;
 }
