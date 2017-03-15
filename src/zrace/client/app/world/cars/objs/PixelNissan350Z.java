@@ -18,7 +18,7 @@ public class PixelNissan350Z extends Car{
 	public static int uid = 2009;
     
 	public PixelNissan350Z() {
-		super(CarResources.PixelFamilyCar);
+		super(CarResources.PixelNissan350Z);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class PixelAlfaRomeo extends Car{
 	public static int uid = 2001;
     
 	public PixelAlfaRomeo() {
-		super(CarResources.PixelSportCar);
+		super(CarResources.PixelAlfaRomeo);
 	}
 
 	@Override

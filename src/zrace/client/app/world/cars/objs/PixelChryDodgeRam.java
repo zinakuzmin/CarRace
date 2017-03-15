@@ -19,7 +19,7 @@ public class PixelChryDodgeRam extends Car{
 	public static int uid = 2006;
     
 	public PixelChryDodgeRam() {
-		super(CarResources.PixelSportCar);
+		super(CarResources.PixelChryDodgeRam);
 	}
 
 	@Override

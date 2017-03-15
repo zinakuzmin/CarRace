@@ -18,7 +18,7 @@ public class PixelBugatty extends Car{
 	public static int uid = 2005;
     
 	public PixelBugatty() {
-		super(CarResources.PixelFamilyCar);
+		super(CarResources.PixelChryDodgeRam);
 	}
 
 	@Override

@@ -49,8 +49,7 @@ public class MainClientApp extends Application {
     	List<CarResources> carResources = shoudBePixelCar ? CarResources.getPixelCarResources() : CarResources.getModelCarResources();
     	
     	for( int i=0 ; i < 5 ; i++) {
-    		int carI = new Random().nextInt(carResources.size());
-    		cars.add(carResources.get(carI).getKlass().newInstance());
+    		cars.add(carResources.get(i).getKlass().newInstance());
     	}
 
     	for (int i = 0; i < cars.size(); i++) {

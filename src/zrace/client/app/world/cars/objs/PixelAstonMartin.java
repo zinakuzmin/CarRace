@@ -18,7 +18,7 @@ public class PixelAstonMartin extends Car{
 	public static int uid = 2002;
     
 	public PixelAstonMartin() {
-		super(CarResources.PixelFamilyCar);
+		super(CarResources.PixelAstonMartin);
 	}
 
 	@Override

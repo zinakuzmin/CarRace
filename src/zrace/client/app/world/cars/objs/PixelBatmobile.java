@@ -19,7 +19,7 @@ public class PixelBatmobile extends Car{
 	public static int uid = 2004;
     
 	public PixelBatmobile() {
-		super(CarResources.PixelSportCar);
+		super(CarResources.PixelBatmobile);
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class PixelMrcedesCLKGTR extends Car{
 	public static int uid = 2008;
     
 	public PixelMrcedesCLKGTR() {
-		super(CarResources.PixelSportCar);
+		super(CarResources.PixelMrcedesCLKGTR);
 	}
 
 	@Override

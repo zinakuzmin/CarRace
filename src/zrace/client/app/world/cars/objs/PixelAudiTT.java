@@ -19,7 +19,7 @@ public class PixelAudiTT extends Car{
 	public static int uid = 2003;
     
 	public PixelAudiTT() {
-		super(CarResources.PixelSportCar);
+		super(CarResources.PixelAudiTT);
 	}
 
 	@Override

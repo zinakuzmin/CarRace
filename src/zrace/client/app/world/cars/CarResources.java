@@ -1,6 +1,8 @@
 package zrace.client.app.world.cars;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import zrace.client.app.world.cars.objs.AlfaRomeo;
@@ -19,9 +21,20 @@ public enum CarResources {
 	Nissan350Zcoupe(Nissan350Zcoupe.class, false), 
 	ButgattyVeyronSS(zrace.client.app.world.cars.objs.ButgattyVeyronSS.class, false), 
 	McLaren(McLaren.class, false), 
-	PixelFamilyCar(zrace.client.app.world.cars.objs.PixelFamilyCar.class, true), 
-	PixelSportCar(zrace.client.app.world.cars.objs.PixelSportCar.class, true),
-	PixelConvertibleCar(zrace.client.app.world.cars.objs.PixelConvertibleCar.class, true),
+	
+	PixelAlfaRomeo(zrace.client.app.world.cars.objs.PixelAlfaRomeo.class, true),
+	PixelAudiTT(zrace.client.app.world.cars.objs.PixelAudiTT.class, true),
+	PixelBatmobile(zrace.client.app.world.cars.objs.PixelBatmobile.class, true),
+	PixelAstonMartin(zrace.client.app.world.cars.objs.PixelAstonMartin.class, true),
+	PixelChryDodgeRam(zrace.client.app.world.cars.objs.PixelChryDodgeRam.class, true),
+	PixelMrcedesCLKGTR(zrace.client.app.world.cars.objs.PixelMrcedesCLKGTR.class, true),
+	PixelNissan350Z(zrace.client.app.world.cars.objs.PixelNissan350Z.class, true),
+	PixelBugatty(zrace.client.app.world.cars.objs.PixelBugatty.class, true),
+	PixelMcLaren(zrace.client.app.world.cars.objs.PixelMcLaren.class, true),
+	
+//	PixelFamilyCar(zrace.client.app.world.cars.objs.PixelFamilyCar.class, true), 
+//	PixelSportCar(zrace.client.app.world.cars.objs.PixelSportCar.class, true),
+//	PixelConvertibleCar(zrace.client.app.world.cars.objs.PixelConvertibleCar.class, true),
 	;
 
 	private Class<? extends Car> klass;
@@ -44,8 +57,10 @@ public enum CarResources {
 	public static List<CarResources> getPixelCarResources(){
 		ArrayList<CarResources> cars = new ArrayList<>();
 		
-		CarResources[] values = CarResources.values();
-		for (CarResources carResources : values) {
+		List<CarResources> asList = Arrays.asList(CarResources.values());
+		Collections.shuffle(asList);
+		
+		for (CarResources carResources : asList) {
 			if (carResources.isPixelCar)
 				cars.add(carResources);
 		}
@@ -55,9 +70,11 @@ public enum CarResources {
 
 	public static List<CarResources> getModelCarResources(){
 		ArrayList<CarResources> cars = new ArrayList<>();
+
+		List<CarResources> asList = Arrays.asList(CarResources.values());
+		Collections.shuffle(asList);
 		
-		CarResources[] values = CarResources.values();
-		for (CarResources carResources : values) {
+		for (CarResources carResources : asList) {
 			if (!carResources.isPixelCar)
 				cars.add(carResources);
 		}

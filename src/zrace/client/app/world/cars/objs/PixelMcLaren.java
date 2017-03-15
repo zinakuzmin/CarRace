@@ -19,7 +19,7 @@ public class PixelMcLaren extends Car{
 	public static int uid = 2007;
     
 	public PixelMcLaren() {
-		super(CarResources.PixelSportCar);
+		super(CarResources.PixelMcLaren);
 	}
 
 	@Override
