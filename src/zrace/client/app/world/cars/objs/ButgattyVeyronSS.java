@@ -20,8 +20,7 @@ public class ButgattyVeyronSS extends Car {
 
 	@Override
 	public Rotate getRotateOnLoad() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Rotate(0, 180, 0, 0);
 	}
 
 	@Override

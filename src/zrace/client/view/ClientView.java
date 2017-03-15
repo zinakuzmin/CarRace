@@ -2,32 +2,26 @@ package zrace.client.view;
 
 import java.io.FileNotFoundException;
 
-import com.mysql.jdbc.StringUtils;
-
-import zrace.client.ZRaceGameController;
-import zrace.client.app.MainClientApp;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import zrace.client.ZRaceGameController;
+import zrace.client.app.MainClientApp;
 
 public class ClientView extends Application {
 	private ZRaceGameController gameController;
@@ -116,12 +110,9 @@ public class ClientView extends Application {
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		pane.setTop(userNameLabel);
 
-		VBox vbox = new VBox(4);
-		Label raceViewLbl = new Label("Race Viewer");
-		Group group = new Group();
-		RadioButton radio1 = new RadioButton("Race1");
-		RadioButton radio2 = new RadioButton("Race2");
-		RadioButton radio3 = new RadioButton("Race3");
+		Label raceStatus1 = new Label("RAC1fromserver");
+		Label raceStatus2 = new Label("RAC2fromserver");
+		Label raceStatus3 = new Label("RAC3fromserver");
 
 		Button viewRace1 = new Button("View Race1 " + gameController.getActiveRaces().get(0).getRaceFullName());
 		Button viewRace2 = new Button("View Race2 " + gameController.getActiveRaces().get(0).getRaceFullName());
@@ -131,45 +122,39 @@ public class ClientView extends Application {
 		Button betBtn3 = new Button("Make a bet for race3");
 
 		GridPane grid = new GridPane();
-		// grid.add(viewRace1, 0, 0, 2, 1);
 		grid.add(viewRace1, 0, 1);
 		grid.add(viewRace2, 0, 2);
 		grid.add(viewRace3, 0, 3);
 		grid.add(betBtn1, 1, 1);
 		grid.add(betBtn2, 1, 2);
 		grid.add(betBtn3, 1, 3);
+		grid.add(raceStatus1, 2, 1);
+		grid.add(raceStatus2, 2, 2);
+		grid.add(raceStatus3, 2, 3);
 
-		group.getChildren().addAll(radio1, radio2, radio3);
-		vbox.getChildren().addAll(radio1, radio2, radio3);
 
 		pane.setRight(grid);
 
 		Pane racePane = new Pane();
 		pane.setCenter(racePane);
 
-		racePane.getChildren().add(new Label("place race here"));
-
-		pane.getChildren().add(raceViewLbl);
-		// pane.getChildren().add(group);
-
-		Scene scene = new Scene(pane, 300, 275);
+		Scene scene = new Scene(pane, 1160, 600);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		viewRace1.setOnAction(e -> showRace(viewRace1.getText(), racePane));
-		viewRace2.setOnAction(e -> showRace(viewRace2.getText(), racePane));
-		viewRace3.setOnAction(e -> showRace(viewRace3.getText(), racePane));
+		viewRace1.setOnAction(e -> showRace(viewRace1.getText(), racePane, primaryStage));
+		viewRace2.setOnAction(e -> showRace(viewRace2.getText(), racePane, primaryStage));
+		viewRace3.setOnAction(e -> showRace(viewRace3.getText(), racePane, primaryStage));
 
 		betBtn1.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(0).getRaceId()));
 		betBtn2.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(1).getRaceId()));
 		betBtn3.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(2).getRaceId()));
 	}
 
-	private static void showRace(String raceID, Pane racePane) {
+	private static void showRace(String raceID, Pane racePane, Stage primaryStage) {
 		racePane.getChildren().clear();
-		racePane.getChildren().add(new Label("Show race " + raceID));
 		try {
-			new MainClientApp().start(new Stage());
+			new MainClientApp(racePane).start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException e) {
 			// TODO Auto-generated catch block

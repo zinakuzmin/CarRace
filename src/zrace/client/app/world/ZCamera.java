@@ -7,7 +7,7 @@ import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
+import javafx.scene.SubScene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -42,8 +42,8 @@ public class ZCamera {
 	        cameraXform.rx.setAngle(35);
 	    }
 	    
-	    public void handleMouse(Scene scene, final Node root) {
-	    	scene.setOnScroll(new EventHandler<ScrollEvent>() {
+	    public void handleMouse(SubScene subScene, final Node root) {
+	    	subScene.setOnScroll(new EventHandler<ScrollEvent>() {
 	  			@Override
 	  			public void handle(ScrollEvent event) {
 	  				if (event.getDeltaY() != 0) {
@@ -54,7 +54,7 @@ public class ZCamera {
 	  			}
 	          });
 	    	
-	        scene.setOnMousePressed(new EventHandler<MouseEvent>() {
+	        subScene.setOnMousePressed(new EventHandler<MouseEvent>() {
 	            @Override public void handle(MouseEvent me) {
 	                mousePosX = me.getSceneX();
 	                mousePosY = me.getSceneY();
@@ -62,7 +62,7 @@ public class ZCamera {
 	                mouseOldY = me.getSceneY();
 	            }
 	        });
-	        scene.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	        subScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
 	            @Override
 	            public void handle(MouseEvent me) {
 	                mouseOldX = mousePosX;
@@ -96,12 +96,12 @@ public class ZCamera {
 	        });
 	    }
 
-	    public void handleKeyboard(Scene scene, final Node root, ArrayList<Car> cars) {
-	        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	    public void handleKeyboard(SubScene subScene, final Node root, ArrayList<Car> cars) {
+	        subScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 	            @Override
 	            public void handle(KeyEvent event) {
 	                switch (event.getCode()) {
-	                    case SPACE:
+	                    case Z:
 	                    	for (Car car : cars) {
 	                    		car.moveCar(new CarRadialMove());
 							}
