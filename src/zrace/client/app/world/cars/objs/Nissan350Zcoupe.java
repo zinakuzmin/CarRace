@@ -8,6 +8,7 @@ import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.abstracts.Car;
 
 public class Nissan350Zcoupe extends Car {
+	public static int uid = 2009;
 
 	public Nissan350Zcoupe() {
 		super(CarResources.Nissan350Zcoupe);
