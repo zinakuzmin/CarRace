@@ -169,7 +169,7 @@ public class Runner extends Application {
 		System.out.println("inserted raceresult " + db.insertRaceResult(rr));
 		
 		System.out.println("---get user bets----");
-		System.out.println(db.getUserBets(10003));
+		System.out.println(db.getUserBetsAsArray(10003));
 		
 		System.out.println("---get race bets----");
 		System.out.println(db.getRaceBets(1003));

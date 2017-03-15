@@ -64,6 +64,7 @@ public class ServerController {
 		
 		db = new DBHandler();
 		activeRaces = new ArrayList<Race>();
+		setActiveRaces();
 		initServer();
 	}
 	
@@ -110,6 +111,11 @@ public class ServerController {
 				}
 			}
 		}
+		else {
+			for (int i = 0; i < RunParameters.NUMBER_OF_CARS_IN_RACE; i++){
+				activeRaces.add(notCompletedRaces.get(i));
+			}
+		}
 		
 	}
 	
@@ -150,21 +156,26 @@ public class ServerController {
 	}
 	
 	
-	public synchronized void userLoginOrRegister(int userId, String userFullName){
+	public synchronized User userLoginOrRegister(int userId, String userFullName){
 		User user = db.getUserById(userId);
 		if (user != null){
-			if (user.getUserFullName().equals(userFullName))
+			if (user.getUserFullName().equals(userFullName)){
 				System.out.println("login of existing user submitted");
+				return user;
+			}
+			
 			else{
 				System.out.println("login failed - existing userID with different name");
 				new Exception("login failed - existing userID with different name");
+				return null;
 			}
 		}
 		
 		else {
-			User newUser = new User(userFullName, userId, 0);
+			User newUser = new User(userFullName, userId, RunParameters.USER_INITIAL_AMOUNT_OF_MONEY);
 			db.insertUser(newUser);
 			System.out.println("Created a new user " + newUser);
+			return newUser;
 		}
 	}
 	
@@ -258,6 +269,10 @@ public class ServerController {
 
 	public void setLogger(ServerLogger logger) {
 		this.logger = logger;
+	}
+	
+	public synchronized ArrayList<Race> getActiveRaces(){
+		return activeRaces;
 	}
 	
 

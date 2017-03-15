@@ -80,13 +80,24 @@ insert into Users values (
   10002, 'Dima', 200.0);
 
 insert into Cars values (
-  2001, 'Marcedes');
+  2001, 'Alfa Romeo');
 insert into Cars values (
-  2002, 'Ford');
+  2002, 'Aston Martin');
 insert into Cars values (
-  2003, 'Alfa Romeo');
+  2003, 'Audi TT');
 insert into Cars values (
-  2004, 'Aston Martin');
+  2004, 'Batmobile');
+insert into Cars values (
+  2005, 'Bugatty');
+insert into Cars values (
+  2006, 'Dodge Ram');
+insert into Cars values (
+  2007, 'MCLaren');
+insert into Cars values (
+  2008, 'Mercedes CLKGTR');
+insert into Cars values (
+  2009, 'Nissan 350Z');
+
 
 insert into Races values (
   1001, 'Race1', 2001, 2002, 2003, 0, null, null, null);

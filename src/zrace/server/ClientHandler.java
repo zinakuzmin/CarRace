@@ -37,7 +37,7 @@ public class ClientHandler implements Runnable{
 			do{
 				System.out.println("Waiting for client message");
 				messageFromClient = (Message) new ObjectInputStream(
-						connectToClient.getInputStream()).readObject();
+						getConnectToClient().getInputStream()).readObject();
 				System.out.println("Server: read message " + messageFromClient);
 				Platform.runLater(new HandleMessage(messageFromClient, this));
 //				new Thread(new HandleMessage(messageFromClient, logger)).start();
@@ -84,7 +84,14 @@ public class ClientHandler implements Runnable{
 	public void setController(ServerController controller) {
 		this.controller = controller;
 	}
-	
+
+
+
+	public Socket getConnectToClient() {
+		return connectToClient;
+	}
+
+
 	
 	
 

@@ -1,7 +1,5 @@
 package zrace.server.view;
 
-
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -32,7 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class ServerMainView extends Application {
-//	private TableView<?> tableView = new TableView<Object>();
+	// private TableView<?> tableView = new TableView<Object>();
 	private TextArea textArea;
 
 	public ServerMainView(TextArea logActivity) {
@@ -71,8 +69,7 @@ public class ServerMainView extends Application {
 		root.getChildren().add(borderPane);
 		stage.setScene(scene);
 		stage.show();
-		
-		
+
 		for (int i = 0; i < 20; i++)
 			addActivityLog("log " + i + "\n");
 
@@ -86,7 +83,6 @@ public class ServerMainView extends Application {
 
 		Label activityLabel = new Label("View activity log");
 		pane.getChildren().add(activityLabel);
-
 
 		// Scene scene = new Scene(pane, 500, 500);
 		pane.prefWidthProperty().bind(scene.widthProperty());
@@ -108,7 +104,7 @@ public class ServerMainView extends Application {
 		// scroll.setPrefSize(200, 200);
 
 		// ListView<String> list = new ListView<>();
-//		textArea = new TextArea();
+		// textArea = new TextArea();
 
 		textArea.prefWidthProperty().bind(scroll.widthProperty());
 		textArea.prefHeightProperty().bind(scroll.heightProperty());
@@ -130,7 +126,6 @@ public class ServerMainView extends Application {
 		textArea.appendText("second line\n");
 		scroll.setContent(textArea);
 
-
 		pane.getChildren().addAll(scroll);
 
 		activityTab.setContent(pane);
@@ -140,23 +135,14 @@ public class ServerMainView extends Application {
 
 	}
 
-	private Tab createDBViewerTab(){
-		
-		 TableView<?> tableView = new TableView<Object>();
-		 Button btShowContents = new Button("Show Contents");
-		 Label lblStatus = new Label();
-		
-//		ObservableList<String> options = 
-//			    FXCollections.observableArrayList(
-//			        "1",
-//			        "2",
-//			        "3",
-//			        "4",
-//			        "5"
-//			    );
+	private Tab createDBViewerTab() {
 
-			ComboBox<String> comboBox = new ComboBox<>(setComboboxOptions());
-			comboBox.setVisibleRowCount(5);
+		TableView<?> tableView = new TableView<Object>();
+		Button btShowContents = new Button("Show Contents");
+		Label lblStatus = new Label();
+
+		ComboBox<String> comboBox = new ComboBox<>(setComboboxOptions());
+		comboBox.setVisibleRowCount(5);
 
 		HBox hBox = new HBox(5);
 		hBox.getChildren().add(new Label("DB selector"));
@@ -167,54 +153,49 @@ public class ServerMainView extends Application {
 		pane.setCenter(tableView);
 		pane.setTop(hBox);
 		pane.setBottom(lblStatus);
-	
+
 		Tab dbViewerTab = new Tab();
 		dbViewerTab.setClosable(false);
-        dbViewerTab.setContent(pane);
-        dbViewerTab.setText("View DB statistics");
-        btShowContents.setOnAction(e -> showContents("String", tableView));
+		dbViewerTab.setContent(pane);
+		dbViewerTab.setText("View DB statistics");
+		btShowContents.setOnAction(e -> showContents("String", tableView));
 		return dbViewerTab;
-		
-		
+
 	}
-	
-	
-	private ObservableList<String> setComboboxOptions(){
-		ObservableList<String> options = 
-			    FXCollections.observableArrayList(
-			        "View race statictics",
-			        "View system revenue",
-			        "3",
-			        "4",
-			        "5"
-			    );
-		
-		
+
+	private ObservableList<String> setComboboxOptions() {
+		ObservableList<String> options = FXCollections.observableArrayList(
+				"View races status", "View system revenue", "3", "4", "5");
+
 		return options;
 	}
-	
-	private void addActivityLog(String log){
+
+	private void addActivityLog(String log) {
 		textArea.appendText(log);
-		
+
 	}
-	
+
 	private void showContents(String comboboxChoise, TableView tableView) {
-//	private void showContents() {	
+		// private void showContents() {
 		DBHandler db = new DBHandler();
 		ResultSet res = db.getAllUsers();
-		populateTableView(res, tableView);
-//		String tableName = comboboxChoise;
-//		try {
-//			String queryString = "select * from " + tableName;
-//			ResultSet resultSet = stmt.executeQuery(queryString);
-//			resultSet = stmt.executeQuery(queryString);
-//			populateTableView(resultSet, tableView);
-//		} catch (SQLException ex) {
-//			ex.printStackTrace();
-//		}
+		ResultSet res1 = db.getAllActiveRaces(false);
+		ResultSet res2 = db.getAllSystemRevenue();
+		ResultSet res3 = db.getAllUsersRevenue();
+		ResultSet res4 = db.getRaceBets(1001);
+		ResultSet res5 = db.getRacesStatus();
+		populateTableView(res5, tableView);
+		// String tableName = comboboxChoise;
+		// try {
+		// String queryString = "select * from " + tableName;
+		// ResultSet resultSet = stmt.executeQuery(queryString);
+		// resultSet = stmt.executeQuery(queryString);
+		// populateTableView(resultSet, tableView);
+		// } catch (SQLException ex) {
+		// ex.printStackTrace();
+		// }
 	}
-	
-	
+
 	private void populateTableView(ResultSet rs, TableView tableView) {
 		tableView.getColumns().clear();
 		ObservableList<ObservableList> data = FXCollections
@@ -231,9 +212,11 @@ public class ServerMainView extends Application {
 						.getColumnName(i + 1));
 
 				col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-					public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
+					public ObservableValue<String> call(
+							CellDataFeatures<ObservableList, String> param) {
 						if (param.getValue().get(j) != null)
-							return new SimpleStringProperty(param.getValue().get(j).toString());
+							return new SimpleStringProperty(param.getValue()
+									.get(j).toString());
 						else
 							return null;
 					}

@@ -1,9 +1,14 @@
 package dbModels;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Bet {
+public class Bet implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int betId;
 	private int raceId;
 	private int carId;

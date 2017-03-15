@@ -206,7 +206,7 @@ public class DBHandler {
 	 *         null.
 	 */
 
-	public synchronized ArrayList<Bet> getUserBets(int userId) {
+	public synchronized ArrayList<Bet> getUserBetsAsArray(int userId) {
 		String theQuery;
 		theQuery = "select * from Bets where userId = " + userId;
 		ResultSet result = executeQuery(theQuery);
@@ -245,7 +245,7 @@ public class DBHandler {
 	 *         null.
 	 */
 
-	public synchronized ArrayList<Bet> getRaceBets(int raceId) {
+	public synchronized ArrayList<Bet> getRaceBetsAsArray(int raceId) {
 		String theQuery;
 		theQuery = "select * from Bets where raceId = " + raceId;
 		ResultSet result = executeQuery(theQuery);
@@ -1039,5 +1039,38 @@ public class DBHandler {
 		return null;
 
 	}
+
+	/** DB viewer **/
+	public synchronized ResultSet getAllSystemRevenue() {
+		// Return race results
+		String theQuery = "select raceId, systemRevenue from RaceResults group by raceId order by systemRevenue desc";
+		return executeQuery(theQuery);
+	}
+
+	public synchronized ResultSet getAllUsersRevenue() {
+		// Return race results
+		String theQuery = "select raceId, userRevenue from RaceResults group by raceId order by userRevenue desc";
+		return executeQuery(theQuery);
+	}
+
+	public synchronized ResultSet getRacesStatus() {
+		String theQuery = "select * from Races";
+		return executeQuery(theQuery);
+	}
+
+	public synchronized ResultSet getRaceBets(int raceId) {
+		String theQuery = "select * from Bets where raceId = " + raceId;
+		return executeQuery(theQuery);
+	}
+
+	public synchronized ResultSet getUserBets(int userId) {
+		String theQuery = "select * from Bets where userId = " + userId;
+		return executeQuery(theQuery);
+	}
+
+//	public synchronized ResultSet getCarsStatistics() {
+//		String theQuery = "select carId, carFullName from Cars where userId = " + userId;
+//		return executeQuery(theQuery);
+//	}
 
 }

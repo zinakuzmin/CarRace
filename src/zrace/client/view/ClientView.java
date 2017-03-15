@@ -98,7 +98,7 @@ public class ClientView extends Application {
 				else {
 					
 					actiontarget.setFill(Color.FIREBRICK);
-					actiontarget.setText("Sign in button pressed");
+					actiontarget.setText("Invalid user ID");
 					
 				}
 			}
@@ -111,6 +111,10 @@ public class ClientView extends Application {
 
 	public void createClientView(Stage primaryStage) {
 		BorderPane pane = new BorderPane();
+		Label userNameLabel = new Label();
+		userNameLabel.setText("Welcome " + gameController.getUser().getUserFullName());
+		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		pane.setTop(userNameLabel);
 
 		VBox vbox = new VBox(4);
 		Label raceViewLbl = new Label("Race Viewer");
@@ -119,9 +123,9 @@ public class ClientView extends Application {
 		RadioButton radio2 = new RadioButton("Race2");
 		RadioButton radio3 = new RadioButton("Race3");
 
-		Button viewRace1 = new Button("View Race1");
-		Button viewRace2 = new Button("View Race2");
-		Button viewRace3 = new Button("View Race3");
+		Button viewRace1 = new Button("View Race1 " + gameController.getActiveRaces().get(0).getRaceFullName());
+		Button viewRace2 = new Button("View Race2 " + gameController.getActiveRaces().get(0).getRaceFullName());
+		Button viewRace3 = new Button("View Race3 " + gameController.getActiveRaces().get(0).getRaceFullName());
 		Button betBtn1 = new Button("Make a bet for race1");
 		Button betBtn2 = new Button("Make a bet for race3");
 		Button betBtn3 = new Button("Make a bet for race3");
@@ -156,9 +160,9 @@ public class ClientView extends Application {
 		viewRace2.setOnAction(e -> showRace(viewRace2.getText(), racePane));
 		viewRace3.setOnAction(e -> showRace(viewRace3.getText(), racePane));
 
-		betBtn1.setOnAction(e -> showBettingPage(viewRace1.getText()));
-		betBtn2.setOnAction(e -> showBettingPage(viewRace2.getText()));
-		betBtn3.setOnAction(e -> showBettingPage(viewRace3.getText()));
+		betBtn1.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(0).getRaceId()));
+		betBtn2.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(1).getRaceId()));
+		betBtn3.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(2).getRaceId()));
 	}
 
 	private static void showRace(String raceID, Pane racePane) {
@@ -174,9 +178,10 @@ public class ClientView extends Application {
 
 	}
 
-	private static void showBettingPage(String raceID) {
+	private synchronized void showBettingPage(int raceID) {
 		try {
-			new BetView().start(new Stage());
+			BetView betView = new BetView(gameController, gameController.findRaceByID(raceID) , gameController.getUser().getUserID());
+			betView.start(new Stage());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
