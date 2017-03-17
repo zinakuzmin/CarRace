@@ -14,6 +14,7 @@ import java.util.Random;
 import com.sun.swing.internal.plaf.synth.resources.synth;
 
 import main.runner.RunParameters;
+import zrace.client.app.world.cars.objs.Songs;
 import zrace.server.db.DBHandler;
 import zrace.server.view.ServerMainView;
 import dbModels.Bet;
@@ -40,7 +41,7 @@ public class ServerController {
 	private TextArea logActivity;
 	private ServerLogger logger;
 	private ArrayList<RaceRun> raceRuns;
-	private ArrayList<String> listOfSongs;
+	
 	
 	
 	
@@ -309,7 +310,7 @@ public class ServerController {
 		cars.add(new CarInRace(race.getCar3Id()));
 		cars.add(new CarInRace(race.getCar4Id()));
 		cars.add(new CarInRace(race.getCar5Id()));
-		RaceRun raceRun = new RaceRun(RaceStatus.before_start, songId, cars);
+		RaceRun raceRun = new RaceRun(RaceStatus.before_start, Songs.getSongByUid(songId), cars);
 		return raceRun;
 	}
 	
@@ -325,18 +326,12 @@ public class ServerController {
 		this.raceRuns = raceRuns;
 	}
 	
-	
-	public void setSongArray(){
-		listOfSongs = new ArrayList<>();
-        listOfSongs.add("Guns N Roses - Sweet.mp3");
-        listOfSongs.add("I Like To Move It.mp3");
-        listOfSongs.add("Michael Jackson - Smooth Criminal.mp3");
-	}
+
 	
 	//Return song duration in seconds 
 	public synchronized int getSongDuration(int songId){
         if (songId >= 0 && songId < 3){
-        	String bip = listOfSongs.get(songId);
+        	String bip = Songs.getSongByUid(songId).getSongName();
         	Media hit = new Media(new File(bip).toURI().toString());
         	return (int) hit.getDuration().toSeconds();
         }
