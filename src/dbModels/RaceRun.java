@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import zrace.client.app.world.cars.objs.Songs;
+
 public class RaceRun implements Serializable{
 	/**
 	 * 
@@ -12,12 +14,12 @@ public class RaceRun implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private int raceId;
 	private RaceStatus raceStatus;
-	private int songUid;
+	private Songs song;
 	private ArrayList<CarInRace> carsInRace;
 
-	public RaceRun(RaceStatus raceStatus, int songUid, ArrayList<CarInRace> carsInRace) {
+	public RaceRun(RaceStatus raceStatus, Songs song, ArrayList<CarInRace> carsInRace) {
 		this.raceStatus = raceStatus;
-		this.songUid = songUid;
+		this.song = song;
 		this.carsInRace = carsInRace;
 	}
 	
@@ -25,8 +27,8 @@ public class RaceRun implements Serializable{
 		return raceStatus;
 	}
 
-	public int getSongUid() {
-		return songUid;
+	public Songs getSongUid() {
+		return song;
 	}
 
 	public ArrayList<CarInRace> getCarsInRace() {
@@ -36,7 +38,7 @@ public class RaceRun implements Serializable{
 
 	@Override
 	public String toString() {
-		return "RaceRun [raceStatus=" + raceStatus + ", songUid=" + songUid
+		return "RaceRun [raceStatus=" + raceStatus + ", songUid=" + song.getId()
 				+ ", carsInRace=" + carsInRace + "]";
 	}
 
