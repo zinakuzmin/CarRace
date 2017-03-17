@@ -3,8 +3,8 @@ package zrace.client.app;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import com.interactivemesh.jfx.importer.ModelImporter;
 import com.interactivemesh.jfx.importer.col.ColModelImporter;
@@ -15,6 +15,8 @@ import javafx.scene.Node;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import main.runner.RunParameters;
@@ -49,8 +51,7 @@ public class MainClientApp extends Application {
     	List<CarResources> carResources = shoudBePixelCar ? CarResources.getPixelCarResources() : CarResources.getModelCarResources();
     	
     	for( int i=0 ; i < 5 ; i++) {
-    		int carI = new Random().nextInt(carResources.size());
-    		cars.add(carResources.get(carI).getKlass().newInstance());
+    		cars.add(carResources.get(i).getKlass().newInstance());
     	}
 
     	for (int i = 0; i < cars.size(); i++) {
@@ -126,7 +127,26 @@ public class MainClientApp extends Application {
         for (Car car : cars) {
     		car.moveCar(new CarRadialMove());
 		}
+        
+        ArrayList<String> listOfSongs = new ArrayList<>();
+        listOfSongs.add("Guns N Roses - Sweet.mp3");
+        listOfSongs.add("I Like To Move It.mp3");
+        listOfSongs.add("Michael Jackson - Smooth Criminal.mp3");
+        Collections.shuffle(listOfSongs);
+        
+        String bip = listOfSongs.get(0);
+		Media hit = new Media(new File(bip).toURI().toString());
+		mediaPlayer = new MediaPlayer(hit);
+		mediaPlayer.play();
+		mediaPlayer.setOnEndOfMedia(new Runnable() {
+			
+			@Override
+			public void run() {
+				System.out.println("Song ended");
+			}
+		});
     }
+    MediaPlayer mediaPlayer ;
 
 	@SuppressWarnings("unused")
 	private void buildCar(Xform world) {
@@ -151,4 +171,10 @@ public class MainClientApp extends Application {
     	
     	world.getChildren().addAll(carForm);
     }
+
+	public void closeApp() {
+		mediaPlayer.stop();
+		pane.getChildren().clear();
+		System.gc();
+	}
 }

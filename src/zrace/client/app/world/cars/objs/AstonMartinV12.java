@@ -8,6 +8,7 @@ import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.abstracts.Car;
 
 public class AstonMartinV12 extends Car{
+	public static int uid = 2002;
 
 	public AstonMartinV12() {
 		super(CarResources.AstonMartinV12);

@@ -20,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
 
@@ -27,7 +28,8 @@ public class ClientView extends Application {
 	private ZRaceGameController gameController;
 	private TextField userTextField;
 	private TextField userIDtextField;
-
+	private static MainClientApp mainClientApp;
+	
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
 	}
@@ -76,6 +78,7 @@ public class ClientView extends Application {
 
 			@Override
 			public void handle(ActionEvent e) {
+
 //				if (isLoginInputValid(userIDtextField, userTextField)){
 				if (isLoginInputValid(userTextField)){
 					gameController.sendLoginOrRegisterMessage(userTextField.getText());
@@ -154,12 +157,25 @@ public class ClientView extends Application {
 		betBtn1.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(0).getRaceId()));
 		betBtn2.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(1).getRaceId()));
 		betBtn3.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(2).getRaceId()));
+		
+		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			
+			@Override
+			public void handle(WindowEvent event) {
+				if (mainClientApp != null)
+					mainClientApp.closeApp();
+			}
+		});
 	}
 
 	private static void showRace(String raceID, Pane racePane, Stage primaryStage) {
+		if (mainClientApp != null) {
+			mainClientApp.closeApp();
+		}
 		racePane.getChildren().clear();
 		try {
-			new MainClientApp(racePane).start(primaryStage);
+			mainClientApp = new MainClientApp(racePane);
+			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -177,6 +193,7 @@ public class ClientView extends Application {
 			e.printStackTrace();
 		}
 	}
+
 
 //	public boolean isLoginInputValid(TextField userIdTF, TextField userNameTF) {
 //		if (userIdTF.getText().isEmpty() || userNameTF.getText().isEmpty()) {
@@ -197,7 +214,9 @@ public class ClientView extends Application {
 	public boolean isLoginInputValid(TextField userNameTF) {
 		if (userNameTF.getText().isEmpty()) 
 			return false;
+
 		return true;
+
 
 	}
 }

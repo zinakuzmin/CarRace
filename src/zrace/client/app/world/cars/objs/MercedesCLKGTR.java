@@ -8,6 +8,7 @@ import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.abstracts.Car;
 
 public class MercedesCLKGTR extends Car {
+	public static int uid = 2008;
 
 	public MercedesCLKGTR() {
 		super(CarResources.MercedesCLKGTR);
