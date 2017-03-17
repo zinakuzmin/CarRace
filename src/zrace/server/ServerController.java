@@ -72,6 +72,8 @@ public class ServerController {
 		setActiveRaces();
 		System.out.println("Active races " + activeRaces);
 		
+		
+		raceRuns = new ArrayList<RaceRun>();
 		for (int i = 0; i < activeRaces.size(); i++){
 			raceRuns.add(generateRaceRun(activeRaces.get(0)));
 		}

@@ -1,10 +1,15 @@
 package dbModels;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class RaceRun {
+public class RaceRun implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int raceId;
 	private RaceStatus raceStatus;
 	private int songUid;
@@ -51,7 +56,11 @@ public class RaceRun {
 		before_start, in_progress, completed;
 	}
 	
-	public static class CarInRace{
+	public static class CarInRace implements Serializable{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		private int carId;
 		private ArrayList<Integer> speedList;
 		private static final int speed_end = 180;
