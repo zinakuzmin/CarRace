@@ -12,6 +12,7 @@ import zrace.client.view.ClientView;
 import zrace.client.view.listeners.ServerListener;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
+import zrace.protocol.ClientDisconnectMsg;
 import zrace.protocol.ClientGetRaces;
 import zrace.server.ClientHandler;
 import javafx.application.Platform;
@@ -23,6 +24,9 @@ public class ZRaceGameController {
 	private ObjectOutputStream out;
 	private ArrayList<Race> activeRaces;
 	private User user;
+	private boolean gotUserFromServer = false;
+	private boolean gotRacesFromServer = false;
+	private boolean serverListenerActivated = false;
 
 	public ZRaceGameController(Stage primaryStage) {
 		activeRaces = new ArrayList<Race>();
@@ -30,15 +34,16 @@ public class ZRaceGameController {
 		new Thread(() -> {
 			try {
 				
-				System.out.println("start game");
+				System.out.println("client start game");
 				socket = new Socket("localhost", 8000);
-				System.out.println("Socket inited");
+				System.out.println("Client Socket inited");
 				out = new ObjectOutputStream(socket.getOutputStream());
-				System.out.println("init out");
-//				out.writeObject(new ClientConnectMsg(123245, "blabla"));
+				out.flush();
+				System.out.println("client init out");
 				in = new ObjectInputStream(socket.getInputStream());
-				System.out.println("init in");
+				System.out.println("client init in");
 				//Start listen to server
+				System.out.println("client - start serverListener");
 				new Thread(new ServerListener(in, this)).start();
 			
 				
@@ -51,6 +56,10 @@ public class ZRaceGameController {
 		
 		
 		try {
+			while (!serverListenerActivated){
+				Thread.sleep(200);
+				
+			}
 			System.out.println("start GUI");
 			ClientView clientView = new ClientView(this);
 			clientView.start(new Stage());
@@ -65,13 +74,14 @@ public class ZRaceGameController {
 	}
 	
 	
-	public synchronized void sendLoginOrRegisterMessage(int userId, String userFullName){
-		ClientConnectMsg msg = new ClientConnectMsg(userId, userFullName);
+	public synchronized void sendLoginOrRegisterMessage(String userFullName){
+		ClientConnectMsg msg = new ClientConnectMsg(0, userFullName);
 		
 		System.out.println("client: send login msg");
-		System.out.println("output stream is " + out);
 		try {
 			out.writeObject(msg);
+			out.reset();
+		    out.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -126,6 +136,51 @@ public class ZRaceGameController {
 			}
 			
 		}).start();
+	}
+
+
+	public boolean isGotUserFromServer() {
+		return gotUserFromServer;
+	}
+
+
+	public void setGotUserFromServer(boolean gotUserFromServer) {
+		this.gotUserFromServer = gotUserFromServer;
+	}
+
+
+	public boolean isGotRacesFromServer() {
+		return gotRacesFromServer;
+	}
+
+
+	public void setGotRacesFromServer(boolean gotRacesFromServer) {
+		this.gotRacesFromServer = gotRacesFromServer;
+	}
+
+
+	public boolean isServerListenerActivated() {
+		return serverListenerActivated;
+	}
+
+
+	public void setServerListenerActivated(boolean serverListenerActivated) {
+		this.serverListenerActivated = serverListenerActivated;
+	}
+	
+	
+	
+	
+	public void disconnectClient(){
+		try {
+			out.writeObject(new ClientDisconnectMsg());
+			in.close();
+			out.close();
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

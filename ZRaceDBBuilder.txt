@@ -12,12 +12,12 @@ drop table if exists RaceResults;
 drop table if exists System;
 
 create table ZRaceSystem (
-  systemId integer not null, 
+  systemId integer not null AUTO_INCREMENT, 
   totalRevenue double not null, 
   constraint pkSystem primary key (systemId));
 
 create table Users (
-  userId integer not null, 
+  userId integer not null AUTO_INCREMENT, 
   userFullName varchar(20) not null,
   userRevenue double not null, 
   constraint pkUsers primary key (userId));
@@ -30,7 +30,7 @@ create table Cars (
   
  
 create table Races (
-  raceId integer not null, 
+  raceId integer not null AUTO_INCREMENT, 
   raceFullName varchar(20) not null, 
   car1Id integer not null,
   car2Id integer not null,
@@ -47,7 +47,7 @@ create table Races (
   
   
 create table Bets (
-  betId integer not null, 
+  betId integer not null AUTO_INCREMENT, 
   raceId integer not null, 
   carId integer not null, 
   userId integer not null, 
@@ -71,51 +71,39 @@ create table Bets (
  
 
 insert into ZRaceSystem values (
-  1, 1000.0);
+  NULL, 1000.0);
   
 
 insert into Users values (
-  10001, 'Zina', 100.0);
+  NULL, 'Zina', 100.0);
 insert into Users values (
-  10002, 'Dima', 200.0);
+  NULL, 'Dima', 200.0);
 
 insert into Cars values (
-  2001, 'Alfa Romeo');
+  20001, 'Alfa Romeo');
 insert into Cars values (
-  2002, 'Aston Martin');
+  20002, 'Aston Martin');
 insert into Cars values (
-  2003, 'Audi TT');
+  20003, 'Audi TT');
 insert into Cars values (
-  2004, 'Batmobile');
+  20004, 'Batmobile');
 insert into Cars values (
-  2005, 'Bugatty');
+  20005, 'Bugatty');
 insert into Cars values (
-  2006, 'Dodge Ram');
+  20006, 'Dodge Ram');
 insert into Cars values (
-  2007, 'MCLaren');
+  20007, 'MCLaren');
 insert into Cars values (
-  2008, 'Mercedes CLKGTR');
+  20008, 'Mercedes CLKGTR');
 insert into Cars values (
-  2009, 'Nissan 350Z');
+  20009, 'Nissan 350Z');
 
 
 insert into Races values (
-  1001, 'Race1', 2001, 2002, 2003, 0, null, null, null);
+  NULL, 'Race1', 20001, 20002, 20003, 0, null, null, null);
 insert into Races values (
-  1002, 'Race2', 2001, 2002, 2003, 1, '2016-10-10 10:00:00',  '2016-10-10 10:02:00', 110);
+  NULL, 'Race2', 20001, 20007, 20009, 1, '2016-10-10 10:00:00',  '2016-10-10 10:02:00', 110);
 
 
-insert into Bets values (
-  3001, 1001, 2001, 10001, 100, '2016-10-10 10:00:00');
-insert into Bets values (
-  3002, 1002, 2001, 10002, 200, '2016-10-10 10:00:00');
-
-
-insert into RaceResults values (
-  1001, 3002, 1, 200.0, 0);
-insert into RaceResults values (
-  1002, 3001, 0, 2.0, 0);
-
-  
 commit;
 

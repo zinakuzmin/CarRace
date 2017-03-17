@@ -2,13 +2,14 @@ package zrace.client.view.listeners;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
 import java.util.ArrayList;
 
 import com.mysql.jdbc.UpdatableResultSet;
 
 
+
 import zrace.client.ZRaceGameController;
+import zrace.protocol.Message;
 import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.UserDetailsMsg;
 import dbModels.Race;
@@ -30,22 +31,29 @@ public class ServerListener extends Thread{
 
 		@Override
 		public void run() {
+			System.out.println("Client start to listen");
+			gameController.setServerListenerActivated(true);
 			while (true) {
+				System.out.println("clients waiting for message from server");
 				try {
-					Object message = in.readObject();
-
+					Message message = (Message) in.readObject();
+					System.out.println("message " + message);
 					if (message instanceof UpdateRacesMsg) {
-						Platform.runLater(() -> {
+						new Thread(() -> {
+//						Platform.runLater(() -> {
 							ArrayList<Race> activaRaces = (((UpdateRacesMsg) message).getRaces());
 							gameController.setActiveRaces(activaRaces);
 							System.out.println("client got races from server " + activaRaces);
-						});
+							gameController.setGotRacesFromServer(true);
+						}).start();;
 					} else if (message instanceof UserDetailsMsg) {
-						Platform.runLater(() -> {
+						new Thread(() -> {
+//						Platform.runLater(() -> {
 							User user = ((UserDetailsMsg)message).getUser();
 							gameController.setUserDetails(user);
 							System.out.println("client got user details " + user);
-						});
+							gameController.setGotUserFromServer(true);
+						}).start();;
 						
 
 					}

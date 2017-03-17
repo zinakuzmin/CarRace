@@ -29,6 +29,16 @@ public class Bet implements Serializable{
 		this.amount = amount;
 		this.betTime = betTime;
 	}
+	
+	public Bet(int raceId, int carId, int userId, double amount,
+			Timestamp betTime) {
+		this.raceId = raceId;
+		this.carId = carId;
+		this.userId = userId;
+		this.amount = amount;
+		this.betTime = betTime;
+	}
+	
 	public int getBetId() {
 		return betId;
 	}

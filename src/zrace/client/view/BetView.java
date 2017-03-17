@@ -23,6 +23,8 @@ public class BetView extends Application{
 	private TextField car1BetAmount;
 	private TextField car2BetAmount;
 	private TextField car3BetAmount;
+	private Button betBtn;
+	
 	
 	
 	public BetView(ZRaceGameController gameController,Race race,int userID ) {
@@ -56,14 +58,14 @@ public class BetView extends Application{
 		grid.setPadding(new Insets(25, 25, 25, 25));
 		
 		
-		Label raceNamelbl = new Label(race.getRaceFullName());
-		Label car1Namelbl = new Label("Car1");
-		Label car2Namelbl = new Label("Car2");
-		Label car3Namelbl = new Label("Car3");
+		Label raceNamelbl = new Label(race.getRaceFullName() + race.getRaceId());
+		Label car1Namelbl = new Label("Car1: " + race.getCar1Id());
+		Label car2Namelbl = new Label("Car2: " + race.getCar2Id());
+		Label car3Namelbl = new Label("Car3: " + race.getCar3Id());
 //		TextField car1BetAmount = new TextField();
 //		TextField car2BetAmount = new TextField();
 //		TextField car3BetAmount = new TextField();
-		Button betBtn = new Button("Make a bet!");
+		betBtn = new Button("Make a bet!");
 		betBtn.setDisable(true);
 		
 		grid.add(raceNamelbl, 0, 0, 2, 1);
@@ -82,7 +84,7 @@ public class BetView extends Application{
 		
 		
 		car1BetAmount.textProperty().addListener((observable, oldValue, newValue) -> {
-		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
+//		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
 		    if (!newValue.isEmpty()){
 		    	try {
 		    		Integer.parseInt(newValue);
@@ -95,7 +97,7 @@ public class BetView extends Application{
 		});
 		
 		car2BetAmount.textProperty().addListener((observable, oldValue, newValue) -> {
-		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
+//		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
 		    if (!newValue.isEmpty()){
 		    	try {
 		    		Integer.parseInt(newValue);
@@ -108,7 +110,7 @@ public class BetView extends Application{
 		});
 		
 		car3BetAmount.textProperty().addListener((observable, oldValue, newValue) -> {
-		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
+//		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
 		    if (!newValue.isEmpty()){
 		    	try {
 		    		Integer.parseInt(newValue);
@@ -134,7 +136,7 @@ public class BetView extends Application{
 		if (!car1BetAmount.getText().isEmpty()){
 			try{
 				double amount = Integer.parseInt(car1BetAmount.getText());
-				Bet bet = new Bet(3005, race.getRaceId(), race.getCar1Id(), userID, amount, null);
+				Bet bet = new Bet(0, race.getRaceId(), race.getCar1Id(), userID, amount, null);
 				bets.add(bet);
 				stage.close();
 			}
@@ -146,7 +148,7 @@ public class BetView extends Application{
 		if (!car2BetAmount.getText().isEmpty()){
 			try{
 				double amount = Integer.parseInt(car2BetAmount.getText());
-				Bet bet = new Bet(3006, race.getRaceId(), race.getCar2Id(), userID, amount, null);
+				Bet bet = new Bet(0, race.getRaceId(), race.getCar2Id(), userID, amount, null);
 				bets.add(bet);
 			}
 			catch (Exception e){
@@ -157,7 +159,7 @@ public class BetView extends Application{
 		if (!car3BetAmount.getText().isEmpty()){
 			try{
 				double amount = Integer.parseInt(car3BetAmount.getText());
-				Bet bet = new Bet(3007, race.getRaceId(), race.getCar2Id(), userID, amount, null);
+				Bet bet = new Bet(0, race.getRaceId(), race.getCar2Id(), userID, amount, null);
 				bets.add(bet);
 			}
 			catch (Exception e){
@@ -167,6 +169,8 @@ public class BetView extends Application{
 		
 		
 		gameController.sendBetsToServer(bets);
+		betBtn.setDisable(true);
+		stage.close();
 		
 	}
 

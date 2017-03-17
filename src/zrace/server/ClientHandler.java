@@ -12,38 +12,43 @@ public class ClientHandler implements Runnable{
 	private Socket connectToClient;
 	private int userId;
 	private ServerController controller;
+	private ObjectInputStream streamFromClient;
+	private ObjectOutputStream streamToClient;
 
 	public ClientHandler(Socket socket, ServerController controller) {
 		this.connectToClient = socket;
 		this.controller = controller;
+		try {
+			setStreamToClient(new ObjectOutputStream(connectToClient.getOutputStream()));
+			getStreamToClient().flush();
+			System.out.println("server out stream configured");
+			setStreamFromClient(new ObjectInputStream(connectToClient.getInputStream()));
+			System.out.println("server in stream configured");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
+
 	
 
 	@Override
 	public void run() {
 
-		try {
-			System.out.println("server: configure in out stream");
-//			ObjectInputStream streamFromClient = new ObjectInputStream(
-//					connectToClient.getInputStream());
-//			System.out.println("in stream configured");
-//			ObjectOutputStream streamToClient = new ObjectOutputStream(
-//					connectToClient.getOutputStream());
-//			System.out.println("out stream configured");
+		try {		
 			
 			Message messageFromClient;
 			do{
 				System.out.println("Waiting for client message");
-				messageFromClient = (Message) new ObjectInputStream(
-						getConnectToClient().getInputStream()).readObject();
+				messageFromClient = (Message) getStreamFromClient().readObject();
 				System.out.println("Server: read message " + messageFromClient);
-				Platform.runLater(new HandleMessage(messageFromClient, this));
-//				new Thread(new HandleMessage(messageFromClient, logger)).start();
+//				Platform.runLater(new HandleMessage(messageFromClient, this));
+				new Thread(new HandleMessage(messageFromClient, this)).start();
 				
 			}
 			while (!(messageFromClient instanceof ClientDisconnectMsg));
+			
 
 
 		} catch (IOException e) {
@@ -89,6 +94,34 @@ public class ClientHandler implements Runnable{
 
 	public Socket getConnectToClient() {
 		return connectToClient;
+	}
+
+
+
+
+	public ObjectInputStream getStreamFromClient() {
+		return streamFromClient;
+	}
+
+
+
+
+	public void setStreamFromClient(ObjectInputStream streamFromClient) {
+		this.streamFromClient = streamFromClient;
+	}
+
+
+
+
+	public ObjectOutputStream getStreamToClient() {
+		return streamToClient;
+	}
+
+
+
+
+	public void setStreamToClient(ObjectOutputStream streamToClient) {
+		this.streamToClient = streamToClient;
 	}
 
 

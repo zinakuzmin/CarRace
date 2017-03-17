@@ -135,17 +135,17 @@ public class ServerController {
 					selectedCars.add(cars.get(randomNum));
 				}
 			}
-			System.out.println(selectedCars);
+			System.out.println("cars selected for race " + selectedCars);
 			
 			Race race = new Race();
 			race.setCar1Id(selectedCars.get(0).getCarId());
 			race.setCar2Id(selectedCars.get(1).getCarId());
 			race.setCar3Id(selectedCars.get(2).getCarId());
 			race.setCompleted(false);
-			race.setRaceId(1004);
+			race.setRaceId(0);
 			race.setRaceFullName("race-" + race.getRaceId());
 			
-			db.insertRace(race);
+			race = db.insertRace(race);
 			return race;
 		}
 		
@@ -173,7 +173,7 @@ public class ServerController {
 		
 		else {
 			User newUser = new User(userFullName, userId, RunParameters.USER_INITIAL_AMOUNT_OF_MONEY);
-			db.insertUser(newUser);
+			newUser = db.insertUser(newUser);
 			System.out.println("Created a new user " + newUser);
 			return newUser;
 		}

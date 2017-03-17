@@ -10,11 +10,6 @@ import java.util.ArrayList;
 
 import com.sun.swing.internal.plaf.synth.resources.synth;
 
-import dbModels.Bet;
-import dbModels.Car;
-import dbModels.Race;
-import dbModels.RaceResult;
-import dbModels.User;
 import dbModels.*;
 
 /**
@@ -54,15 +49,139 @@ public class DBHandler {
 	 *            - User Class Object.
 	 * @return return Boolean if the user added to the database.
 	 */
-	public synchronized boolean insertUser(User theUser) {
+	public synchronized User insertUser(User theUser) {
 		String theQuery = " insert into Users (userId, userFullName, userRevenue)"
 				+ " values (?, ?, ?)";
 		try {
+			PreparedStatement preparedStmt = theConnection.prepareStatement(
+					theQuery, Statement.RETURN_GENERATED_KEYS);
+			preparedStmt.setInt(1, 0);
+			preparedStmt.setString(2, theUser.getUserFullName().toLowerCase());
+			preparedStmt.setDouble(3, theUser.getUserRevenue());
+
+			preparedStmt.execute();
+			ResultSet rs = preparedStmt.getGeneratedKeys();
+			rs.next();
+			int auto_id = rs.getInt(1);
+			theUser.setUserID(auto_id);
+
+			preparedStmt.close();
+			return theUser;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return theUser;
+
+	}
+
+	/**
+	 * Add Race Object to the DB.
+	 * 
+	 * @param theRace
+	 *            - Race Class Object.
+	 * @return return Boolean if the race added to the database.
+	 */
+	public synchronized Race insertRace(Race theRace) {
+		String theQuery = " insert into Races (raceId, raceFullName, car1Id, car2Id, car3Id, isCompleted, startTime, endTime, duration)"
+				+ " values (?, ?, ?, ?, ?, ?, ? ,? ,?)";
+		try {
+			PreparedStatement preparedStmt = theConnection
+					.prepareStatement(theQuery, Statement.RETURN_GENERATED_KEYS);
+			preparedStmt.setInt(1, 0);
+			preparedStmt.setString(2, theRace.getRaceFullName());
+			preparedStmt.setInt(3, theRace.getCar1Id());
+			preparedStmt.setInt(4, theRace.getCar2Id());
+			preparedStmt.setInt(5, theRace.getCar3Id());
+			preparedStmt.setBoolean(6, theRace.isCompleted());
+			preparedStmt.setTimestamp(7, theRace.getStartTime());
+			preparedStmt.setTimestamp(8, theRace.getEndTime());
+			preparedStmt.setInt(9, theRace.getDuration());
+
+			preparedStmt.execute();
+			ResultSet rs = preparedStmt.getGeneratedKeys();
+			rs.next();
+			int auto_id = rs.getInt(1);
+			theRace.setRaceId(auto_id);
+			preparedStmt.close();
+			return theRace;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return theRace;
+	}
+
+	/**
+	 * Add Car Object to the DB.
+	 * 
+	 * @param theCar
+	 *            - Car Class Object.
+	 * @return return Boolean if the car added to the database.
+	 */
+	public synchronized boolean insertCar(Car theCar) {
+		String theQuery = " insert into Cars (carId, carFullName)"
+				+ " values (?, ?)";
+		try {
 			PreparedStatement preparedStmt = theConnection
 					.prepareStatement(theQuery);
-			preparedStmt.setInt(1, theUser.getUserID());
-			preparedStmt.setString(2, theUser.getUserFullName());
-			preparedStmt.setDouble(3, theUser.getUserRevenue());
+			preparedStmt.setInt(1, theCar.getCarId());
+			preparedStmt.setString(2, theCar.getCarFullName());
+
+			preparedStmt.execute();
+			preparedStmt.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * Add Bet Object to the DB.
+	 * 
+	 * @param theBet
+	 *            - Bet Class Object.
+	 * @return return Boolean if the bet added to the database.
+	 */
+	public synchronized boolean insertBet(Bet theBet) {
+		String theQuery = " insert into Bets (betId, raceId, carId, userId, amount, betTime)"
+				+ " values (?, ?, ?, ?, ?, ?)";
+		try {
+			PreparedStatement preparedStmt = theConnection
+					.prepareStatement(theQuery);
+			preparedStmt.setInt(1, 0);
+			preparedStmt.setInt(2, theBet.getRaceId());
+			preparedStmt.setInt(3, theBet.getCarId());
+			preparedStmt.setInt(4, theBet.getUserId());
+			preparedStmt.setDouble(5, theBet.getAmount());
+			preparedStmt.setTimestamp(6, theBet.getBetTime());
+
+			preparedStmt.execute();
+			preparedStmt.close();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	/**
+	 * Add RaceResult Object to the DB.
+	 * 
+	 * @param theRaceResult
+	 *            - RaceResult Class Object.
+	 * @return Boolean if the raceResult added to the database.
+	 */
+	public synchronized boolean insertRaceResult(RaceResult theRaceResult) {
+		String theQuery = " insert into RaceResults (raceId, betId, isWinner, userRevenue, systemRevenue)"
+				+ " values (?, ?, ?, ?, ?)";
+		try {
+			PreparedStatement preparedStmt = theConnection
+					.prepareStatement(theQuery);
+			preparedStmt.setInt(1, theRaceResult.getRaceId());
+			preparedStmt.setInt(2, theRaceResult.getBetId());
+			preparedStmt.setBoolean(3, theRaceResult.getIsWinner());
+			preparedStmt.setDouble(4, theRaceResult.getUserRevenue());
+			preparedStmt.setDouble(5, theRaceResult.getSystemRevenue());
 
 			preparedStmt.execute();
 			preparedStmt.close();
@@ -100,7 +219,7 @@ public class DBHandler {
 	public synchronized boolean isUserExist(User theUser) {
 		String theQuery = " select  * from Users where userId = '"
 				+ theUser.getUserID() + "' and userFullName = '"
-				+ theUser.getUserFullName() + "'";
+				+ theUser.getUserFullName().toLowerCase() + "'";
 		ResultSet res = executeQuery(theQuery);
 		try {
 			if (res.first())
@@ -199,82 +318,26 @@ public class DBHandler {
 
 	}
 
-	/**
-	 * @param userId
-	 *            - unique id of user.
-	 * @return return Bets of specified user if exist in DB otherwise return
-	 *         null.
-	 */
-
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getUserBetsAsArray(int userId) {
-		String theQuery;
-		theQuery = "select * from Bets where userId = " + userId;
-		ResultSet result = executeQuery(theQuery);
-
-		ArrayList<Bet> bets = new ArrayList<>();
-		if (result != null) {
-			try {
-				while (result.next()) {
-					Bet bet;
-
-					bet = new Bet(result.getInt("betId"),
-							result.getInt("raceId"), result.getInt("carId"),
-							result.getInt("userId"),
-							result.getDouble("amount"),
-							result.getTimestamp("betTime"));
-					bets.add(bet);
-				}
-				return bets;
-			}
-
-			catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else
-			System.out.println("Result is null");
-
+		try {
+			return (ArrayList<Bet>) convertResultSetToArraylist(
+					getUserBets(userId), "Bet");
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+		}
 		return null;
-
 	}
 
-	/**
-	 * @param raceId
-	 *            - unique id of race.
-	 * @return return Bets of specified race if exist in DB otherwise return
-	 *         null.
-	 */
-
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getRaceBetsAsArray(int raceId) {
-		String theQuery;
-		theQuery = "select * from Bets where raceId = " + raceId;
-		ResultSet result = executeQuery(theQuery);
-
-		ArrayList<Bet> bets = new ArrayList<>();
-		if (result != null) {
-			try {
-				while (result.next()) {
-					Bet bet;
-
-					bet = new Bet(result.getInt("betId"),
-							result.getInt("raceId"), result.getInt("carId"),
-							result.getInt("userId"),
-							result.getDouble("amount"),
-							result.getTimestamp("betTime"));
-					bets.add(bet);
-				}
-				return bets;
-			}
-
-			catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		} else
-			System.out.println("Result is null");
-
+		try {
+			return (ArrayList<Bet>) convertResultSetToArraylist(
+					getRaceBets(raceId), "Bet");
+		} catch (Exception e) {
+			System.out.println(e.getStackTrace());
+		}
 		return null;
-
 	}
 
 	public synchronized ArrayList<Bet> getRaceBetsByUserID(int raceId,
@@ -415,123 +478,6 @@ public class DBHandler {
 			System.out.println("Result is null");
 
 		return null;
-	}
-
-	/**
-	 * Add Race Object to the DB.
-	 * 
-	 * @param theRace
-	 *            - Race Class Object.
-	 * @return return Boolean if the race added to the database.
-	 */
-	public synchronized boolean insertRace(Race theRace) {
-		String theQuery = " insert into Races (raceId, raceFullName, car1Id, car2Id, car3Id, isCompleted, startTime, endTime, duration)"
-				+ " values (?, ?, ?, ?, ?, ?, ? ,? ,?)";
-		try {
-			PreparedStatement preparedStmt = theConnection
-					.prepareStatement(theQuery);
-			preparedStmt.setInt(1, theRace.getRaceId());
-			preparedStmt.setString(2, theRace.getRaceFullName());
-			preparedStmt.setInt(3, theRace.getCar1Id());
-			preparedStmt.setInt(4, theRace.getCar2Id());
-			preparedStmt.setInt(5, theRace.getCar3Id());
-			preparedStmt.setBoolean(6, theRace.isCompleted());
-			preparedStmt.setTimestamp(7, theRace.getStartTime());
-			preparedStmt.setTimestamp(8, theRace.getEndTime());
-			preparedStmt.setInt(9, theRace.getDuration());
-
-			boolean insertResult = preparedStmt.execute();
-			// boolean id =
-			// preparedStmt.execute(theQuery,Statement.RETURN_GENERATED_KEYS);
-
-			preparedStmt.close();
-			return insertResult;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * Add Car Object to the DB.
-	 * 
-	 * @param theCar
-	 *            - Car Class Object.
-	 * @return return Boolean if the car added to the database.
-	 */
-	public synchronized boolean insertCar(Car theCar) {
-		String theQuery = " insert into Cars (carId, carFullName)"
-				+ " values (?, ?)";
-		try {
-			PreparedStatement preparedStmt = theConnection
-					.prepareStatement(theQuery);
-			preparedStmt.setInt(1, theCar.getCarId());
-			preparedStmt.setString(2, theCar.getCarFullName());
-
-			preparedStmt.execute();
-			preparedStmt.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * Add Bet Object to the DB.
-	 * 
-	 * @param theBet
-	 *            - Bet Class Object.
-	 * @return return Boolean if the bet added to the database.
-	 */
-	public synchronized boolean insertBet(Bet theBet) {
-		String theQuery = " insert into Bets (betId, raceId, carId, userId, amount, betTime)"
-				+ " values (?, ?, ?, ?, ?, ?)";
-		try {
-			PreparedStatement preparedStmt = theConnection
-					.prepareStatement(theQuery);
-			preparedStmt.setInt(1, theBet.getBetId());
-			preparedStmt.setInt(2, theBet.getRaceId());
-			preparedStmt.setInt(3, theBet.getCarId());
-			preparedStmt.setInt(4, theBet.getUserId());
-			preparedStmt.setDouble(5, theBet.getAmount());
-			preparedStmt.setTimestamp(6, theBet.getBetTime());
-
-			preparedStmt.execute();
-			preparedStmt.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-
-	/**
-	 * Add RaceResult Object to the DB.
-	 * 
-	 * @param theRaceResult
-	 *            - RaceResult Class Object.
-	 * @return Boolean if the raceResult added to the database.
-	 */
-	public synchronized boolean insertRaceResult(RaceResult theRaceResult) {
-		String theQuery = " insert into RaceResults (raceId, betId, isWinner, userRevenue, systemRevenue)"
-				+ " values (?, ?, ?, ?, ?)";
-		try {
-			PreparedStatement preparedStmt = theConnection
-					.prepareStatement(theQuery);
-			preparedStmt.setInt(1, theRaceResult.getRaceId());
-			preparedStmt.setInt(2, theRaceResult.getBetId());
-			preparedStmt.setBoolean(3, theRaceResult.getIsWinner());
-			preparedStmt.setDouble(4, theRaceResult.getUserRevenue());
-			preparedStmt.setDouble(5, theRaceResult.getSystemRevenue());
-
-			preparedStmt.execute();
-			preparedStmt.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 	public synchronized int updateUserRevenue(User user) {
@@ -789,6 +735,7 @@ public class DBHandler {
 		return getRaceById(-1);
 	}
 
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Race> getAllRacesAsArray(String raceID) {
 		return (ArrayList<Race>) convertResultSetToArraylist(getAllRaces(),
 				"Race");
@@ -887,38 +834,6 @@ public class DBHandler {
 				+ userID + "'";
 		executeSqlQuery(delQueryFromUsers);
 
-	}
-
-	/**
-	 * this method delete a game that match the gameID and it's user id match
-	 * userID.
-	 * 
-	 * @param userID
-	 *            - a user id.
-	 * @param gameID
-	 *            - a game id.
-	 */
-	public synchronized void delGame(int userID, int gameID) {
-
-		String delQueryFromGames = "delete from Games where userId = '"
-				+ userID + "' and gameId = '" + gameID + "'";
-		executeSqlQuery(delQueryFromGames);
-	}
-
-	/**
-	 * @param userID
-	 *            - a user id.
-	 * @param gameID
-	 *            - a game id.
-	 * @return return a ResultSet that contains all gameEvents and it's user id
-	 *         match userID and game id match gameID.
-	 */
-	public synchronized ResultSet getUserGameEvents(int userID, int gameID) {
-		String theQuery;
-		theQuery = "select * from GamesEvents where userId = '" + userID
-				+ "' and gameId = '" + gameID + "' order by eventTime";
-
-		return executeQuery(theQuery);
 	}
 
 	/**
@@ -1040,6 +955,17 @@ public class DBHandler {
 
 	}
 
+	public synchronized Object convertResultSetToObject(ResultSet result,
+			String objectType) {
+		Object object = null;
+
+		if (result != null) {
+			object = convertResultSetToArraylist(result, objectType).get(0);
+		}
+
+		return object;
+	}
+
 	/** DB viewer **/
 	public synchronized ResultSet getAllSystemRevenue() {
 		// Return race results
@@ -1068,9 +994,15 @@ public class DBHandler {
 		return executeQuery(theQuery);
 	}
 
-//	public synchronized ResultSet getCarsStatistics() {
-//		String theQuery = "select carId, carFullName from Cars where userId = " + userId;
-//		return executeQuery(theQuery);
-//	}
+	public synchronized ResultSet getAllBets() {
+		String theQuery = "select * from Bets";
+		return executeQuery(theQuery);
+	}
+
+	// public synchronized ResultSet getCarsStatistics() {
+	// String theQuery = "select carId, carFullName from Cars where userId = " +
+	// userId;
+	// return executeQuery(theQuery);
+	// }
 
 }

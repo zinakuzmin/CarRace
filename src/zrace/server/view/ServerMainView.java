@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import zrace.server.db.DBHandler;
+import zrace.server.db.DataBaseViewer;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -158,14 +159,19 @@ public class ServerMainView extends Application {
 		dbViewerTab.setClosable(false);
 		dbViewerTab.setContent(pane);
 		dbViewerTab.setText("View DB statistics");
-		btShowContents.setOnAction(e -> showContents("String", tableView));
+		btShowContents.setOnAction(e -> showContents(comboBox.getValue(),
+				tableView));
 		return dbViewerTab;
 
 	}
 
 	private ObservableList<String> setComboboxOptions() {
 		ObservableList<String> options = FXCollections.observableArrayList(
-				"View races status", "View system revenue", "3", "4", "5");
+				DataBaseViewer.GET_CARS_QUERY,
+				DataBaseViewer.GET_RACE_BETS_QUERY,
+				DataBaseViewer.GET_RACES_STATS_QUERY,
+				DataBaseViewer.GET_SYSTEM_REVENUE_QUERY,
+				DataBaseViewer.GET_USER_REVENUE_QUERY);
 
 		return options;
 	}
@@ -177,23 +183,44 @@ public class ServerMainView extends Application {
 
 	private void showContents(String comboboxChoise, TableView tableView) {
 		// private void showContents() {
+
 		DBHandler db = new DBHandler();
-		ResultSet res = db.getAllUsers();
-		ResultSet res1 = db.getAllActiveRaces(false);
-		ResultSet res2 = db.getAllSystemRevenue();
-		ResultSet res3 = db.getAllUsersRevenue();
-		ResultSet res4 = db.getRaceBets(1001);
-		ResultSet res5 = db.getRacesStatus();
-		populateTableView(res5, tableView);
-		// String tableName = comboboxChoise;
-		// try {
-		// String queryString = "select * from " + tableName;
-		// ResultSet resultSet = stmt.executeQuery(queryString);
-		// resultSet = stmt.executeQuery(queryString);
-		// populateTableView(resultSet, tableView);
-		// } catch (SQLException ex) {
-		// ex.printStackTrace();
-		// }
+		ResultSet result = null;
+		if (comboboxChoise.equals(DataBaseViewer.GET_CARS_QUERY)) {
+			result = db.getAllCars();
+		} else if (comboboxChoise
+				.equals(DataBaseViewer.GET_SYSTEM_REVENUE_QUERY)) {
+			result = db.getAllSystemRevenue();
+		} else if (comboboxChoise
+				.equals(DataBaseViewer.GET_USER_REVENUE_QUERY)) {
+			result = db.getAllUsersRevenue();
+		} else if (comboboxChoise
+				.equals(DataBaseViewer.GET_RACES_STATS_QUERY)) {
+			result = db.getRacesStatus();
+		} else if (comboboxChoise
+				.equals(DataBaseViewer.GET_RACE_BETS_QUERY)) {
+			result = db.getAllBets();
+			
+		}
+		else{
+			try {
+				throw new Exception("Invalid string set as quesy request");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+//		ResultSet res = db.getAllUsers();
+//		ResultSet res1 = db.getAllActiveRaces(false);
+//		ResultSet res2 = db.getAllSystemRevenue();
+//		ResultSet res3 = db.getAllUsersRevenue();
+//		ResultSet res5 = db.getRacesStatus();
+		
+		if (result != null){
+			populateTableView(result, tableView);
+			
+		}
+
 	}
 
 	private void populateTableView(ResultSet rs, TableView tableView) {
@@ -223,7 +250,7 @@ public class ServerMainView extends Application {
 				});
 
 				tableView.getColumns().addAll(col);
-				System.out.println("Column [" + i + "] ");
+//				System.out.println("Column [" + i + "] ");
 			}
 
 			/********************************
@@ -237,7 +264,7 @@ public class ServerMainView extends Application {
 					// Iterate Column
 					row.add(rs.getString(i));
 				}
-				System.out.println("Row [1] added " + row);
+//				System.out.println("Row [1] added " + row);
 				data.add(row);
 
 			}

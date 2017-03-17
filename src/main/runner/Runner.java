@@ -62,7 +62,7 @@ public class Runner extends Application {
 		if (RunParameters.SHOULD_INIT_DB)
 			ZRaceGameDBScript.runScript();
 		
-		dbTests();
+//		dbTests();
 		
 		serverBtn.setOnAction(e -> {
 //			new ZRaceMVCServer().start(new Stage());

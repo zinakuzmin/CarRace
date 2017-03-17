@@ -28,10 +28,6 @@ public class ClientView extends Application {
 	private TextField userTextField;
 	private TextField userIDtextField;
 
-	// public static void main(String[] args) {
-	// launch(args);
-	// }
-
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
 	}
@@ -57,18 +53,14 @@ public class ClientView extends Application {
 		Label userName = new Label("User Name:");
 		grid.add(userName, 0, 1);
 
-//		TextField userTextField = new TextField();
 		userTextField = new TextField();
 		grid.add(userTextField, 1, 1);
 
-		Label userID = new Label("User ID:");
-		grid.add(userID, 0, 2);
-
-//		PasswordField pwBox = new PasswordField();
-//		grid.add(pwBox, 1, 2);
-//		TextField userIDtextField = new TextField();
-		userIDtextField = new TextField();
-		grid.add(userIDtextField, 1, 2);
+//		Label userID = new Label("User ID:");
+//		grid.add(userID, 0, 2);
+//
+//		userIDtextField = new TextField();
+//		grid.add(userIDtextField, 1, 2);
 		
 
 		Button signInButton = new Button("Sign in");
@@ -84,8 +76,9 @@ public class ClientView extends Application {
 
 			@Override
 			public void handle(ActionEvent e) {
-				if (isLoginInputValid(userIDtextField, userTextField)){
-					gameController.sendLoginOrRegisterMessage(Integer.parseInt(userIDtextField.getText()), userTextField.getText());
+//				if (isLoginInputValid(userIDtextField, userTextField)){
+				if (isLoginInputValid(userTextField)){
+					gameController.sendLoginOrRegisterMessage(userTextField.getText());
 					createClientView(primaryStage);
 					
 				}
@@ -106,6 +99,18 @@ public class ClientView extends Application {
 	public void createClientView(Stage primaryStage) {
 		BorderPane pane = new BorderPane();
 		Label userNameLabel = new Label();
+		
+		while (!(gameController.isGotUserFromServer() && gameController.isGotRacesFromServer())){
+			try {
+//				System.out.println("client get user " + gameController.isGotUserFromServer());
+//				System.out.println("client get races " + gameController.isGotRacesFromServer());
+
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		userNameLabel.setText("Welcome " + gameController.getUser().getUserFullName());
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		pane.setTop(userNameLabel);
@@ -173,19 +178,26 @@ public class ClientView extends Application {
 		}
 	}
 
-	public boolean isLoginInputValid(TextField userIdTF, TextField userNameTF) {
-		if (userIdTF.getText().isEmpty() || userNameTF.getText().isEmpty()) {
+//	public boolean isLoginInputValid(TextField userIdTF, TextField userNameTF) {
+//		if (userIdTF.getText().isEmpty() || userNameTF.getText().isEmpty()) {
+//			return false;
+//		} else {
+//
+//			try {
+//				Integer.parseInt(userIdTF.getText());
+//				return true;
+//			} catch (Exception e) {
+//				return false;
+//			}
+//
+//		}
+//
+//	}
+	
+	public boolean isLoginInputValid(TextField userNameTF) {
+		if (userNameTF.getText().isEmpty()) 
 			return false;
-		} else {
-
-			try {
-				Integer.parseInt(userIdTF.getText());
-				return true;
-			} catch (Exception e) {
-				return false;
-			}
-
-		}
+		return true;
 
 	}
 }

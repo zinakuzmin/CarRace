@@ -1,5 +1,7 @@
 package main.runner;
 
+import java.util.Observable;
+
 public class RunParameters {
 	
 	public static String IMG_RUNNER_BACKGROUND = "resources/images/runnerbck.jpg";
@@ -13,5 +15,12 @@ public class RunParameters {
 	public static int NUMBER_OF_CARS_IN_RACE = 3;
 	public static double SYSTEM_COMISSION = 0.05;
 	public static int NUMBER_OF_CARS_IN_RACE_THAT_HAVE_BET = 3;
-	public static double USER_INITIAL_AMOUNT_OF_MONEY = 100.0;	//Client params
-	public static boolean BUILD_PIXEL_CARS = true;}
+	public static double USER_INITIAL_AMOUNT_OF_MONEY = 100.0;	
+	
+	
+	
+	
+	
+	//Client params
+	public static boolean BUILD_PIXEL_CARS = true;
+	}

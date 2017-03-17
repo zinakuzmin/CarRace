@@ -36,13 +36,15 @@ public class HandleMessage implements Runnable{
 			
 			new Thread(() -> {
 				try {
-					ObjectOutputStream out = new ObjectOutputStream(client.getConnectToClient().getOutputStream());
-					out.writeObject(new UserDetailsMsg(user));
+//					ObjectOutputStream out = new ObjectOutputStream(client.getConnectToClient().getOutputStream());
+//					out.flush();
+					client.getStreamToClient().writeObject(new UserDetailsMsg(user));
 					System.out.println("server sent user details " + user);
 					ArrayList<Race> activeRaces = client.getController().getActiveRaces();
-					out.flush();
-					out.writeObject(new UpdateRacesMsg(activeRaces));
+					client.getStreamToClient().flush();
+					client.getStreamToClient().writeObject(new UpdateRacesMsg(activeRaces));
 					System.out.println("server sent to client races " + activeRaces);
+					client.getStreamToClient().flush();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
