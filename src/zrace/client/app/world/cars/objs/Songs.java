@@ -22,8 +22,13 @@ public enum Songs {
 	}
 
 	public static Songs getSongByUid(int songUid) {
-		// TODO Auto-generated method stub
-		return null;
+		for (Songs song : Songs.values()) {
+			if (song.getId()==songUid) {
+				return song;
+			}
+		}
+		
+		throw new RuntimeException("Song ID not found in Songs enum:" + songUid);
 	}
 	
 	
