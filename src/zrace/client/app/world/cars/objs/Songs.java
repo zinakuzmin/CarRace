@@ -20,6 +20,11 @@ public enum Songs {
 	public int getId() {
 		return id;
 	}
+
+	public static Songs getSongByUid(int songUid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }
