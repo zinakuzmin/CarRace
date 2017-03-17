@@ -1,6 +1,6 @@
 package zrace.server;
 
-public class RaceRun implements Runnable{
+public class RaceRunner implements Runnable{
 	
 	
 	public void run() {

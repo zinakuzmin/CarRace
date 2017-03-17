@@ -8,12 +8,16 @@ import com.mysql.jdbc.UpdatableResultSet;
 
 
 
+
+
 import zrace.client.ZRaceGameController;
 import zrace.protocol.Message;
+import zrace.protocol.UpdateRaceRunsMsg;
 import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.UserDetailsMsg;
 import dbModels.Race;
 import dbModels.User;
+import dbModels.RaceRun;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 
@@ -53,10 +57,20 @@ public class ServerListener extends Thread{
 							gameController.setUserDetails(user);
 							System.out.println("client got user details " + user);
 							gameController.setGotUserFromServer(true);
-						}).start();;
+						}).start();
+						
 						
 
-					}
+					
+					
+				} else if (message instanceof UpdateRaceRunsMsg) {
+					new Thread(() -> {
+						ArrayList<RaceRun> raceRuns = (((UpdateRaceRunsMsg) message).getRaceRuns());
+						gameController.setRaceRuns(raceRuns);
+						System.out.println("client got races runs from server " + raceRuns);
+						gameController.setGotRacesRunsFromServer(true);
+					}).start();
+				}
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

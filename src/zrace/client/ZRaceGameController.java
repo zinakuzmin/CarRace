@@ -23,9 +23,11 @@ public class ZRaceGameController {
 	private ObjectInputStream in;
 	private ObjectOutputStream out;
 	private ArrayList<Race> activeRaces;
+	private ArrayList<RaceRun> raceRuns;
 	private User user;
 	private boolean gotUserFromServer = false;
 	private boolean gotRacesFromServer = false;
+	private boolean gotRacesRunsFromServer = false;
 	private boolean serverListenerActivated = false;
 
 	public ZRaceGameController(Stage primaryStage) {
@@ -181,6 +183,26 @@ public class ZRaceGameController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+
+	public ArrayList<RaceRun> getRaceRuns() {
+		return raceRuns;
+	}
+
+
+	public void setRaceRuns(ArrayList<RaceRun> raceRuns) {
+		this.raceRuns = raceRuns;
+	}
+
+
+	public boolean isGotRacesRunsFromServer() {
+		return gotRacesRunsFromServer;
+	}
+
+
+	public void setGotRacesRunsFromServer(boolean gotRacesRunsFromServer) {
+		this.gotRacesRunsFromServer = gotRacesRunsFromServer;
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 
 import main.runner.RunParameters;
 import zrace.server.db.DBHandler;
@@ -15,6 +16,9 @@ import dbModels.Bet;
 import dbModels.Car;
 import dbModels.Race;
 import dbModels.RaceResult;
+import dbModels.RaceRun;
+import dbModels.RaceRun.CarInRace;
+import dbModels.RaceRun.RaceStatus;
 import dbModels.User;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -30,6 +34,7 @@ public class ServerController {
 	private Socket socket;
 	private TextArea logActivity;
 	private ServerLogger logger;
+	private ArrayList<RaceRun> raceRuns;
 	
 	
 	
@@ -66,6 +71,10 @@ public class ServerController {
 		activeRaces = new ArrayList<Race>();
 		setActiveRaces();
 		System.out.println("Active races " + activeRaces);
+		
+		for (int i = 0; i < activeRaces.size(); i++){
+			raceRuns.add(generateRaceRun(activeRaces.get(0)));
+		}
 		initServer();
 	}
 	
@@ -281,6 +290,31 @@ public class ServerController {
 	
 	public synchronized ArrayList<Race> getActiveRaces(){
 		return activeRaces;
+	}
+	
+	
+	public synchronized RaceRun generateRaceRun(Race race){
+		int songId = 0 + (int)(Math.random() * (RunParameters.NUMBER_OF_SONGS));
+		ArrayList<CarInRace> cars = new ArrayList<RaceRun.CarInRace>();
+		cars.add(new CarInRace(race.getCar1Id()));
+		cars.add(new CarInRace(race.getCar2Id()));
+		cars.add(new CarInRace(race.getCar3Id()));
+		cars.add(new CarInRace(race.getCar4Id()));
+		cars.add(new CarInRace(race.getCar5Id()));
+		RaceRun raceRun = new RaceRun(RaceStatus.before_start, songId, cars);
+		return raceRun;
+	}
+	
+	
+
+
+	public ArrayList<RaceRun> getRaceRuns() {
+		return raceRuns;
+	}
+
+
+	public void setRaceRuns(ArrayList<RaceRun> raceRuns) {
+		this.raceRuns = raceRuns;
 	}
 	
 

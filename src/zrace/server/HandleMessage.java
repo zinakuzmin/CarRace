@@ -7,11 +7,13 @@ import java.io.ObjectOutputStream;
 
 import java.util.ArrayList;
 
+
 import dbModels.*;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
 import zrace.protocol.ClientDisconnectMsg;
-import zrace.protocol.Message;import zrace.protocol.UpdateRacesMsg;
+import zrace.protocol.Message;import zrace.protocol.UpdateRaceRunsMsg;
+import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.UserDetailsMsg;
 
 
@@ -44,6 +46,7 @@ public class HandleMessage implements Runnable{
 					client.getStreamToClient().flush();
 					client.getStreamToClient().writeObject(new UpdateRacesMsg(activeRaces));
 					System.out.println("server sent to client races " + activeRaces);
+					client.getStreamToClient().writeObject(new UpdateRaceRunsMsg(client.getController().getRaceRuns()));
 					client.getStreamToClient().flush();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
