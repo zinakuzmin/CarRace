@@ -13,6 +13,8 @@ public class Race implements Serializable{
 	private int car1Id;
 	private int car2Id;
 	private int car3Id;
+	private int car4Id;
+	private int car5Id;
 	private boolean isCompleted;
 	private Timestamp startTime;
 	private Timestamp endTime;
@@ -21,13 +23,15 @@ public class Race implements Serializable{
 	
 	public Race(){}
 	
-	public Race(int raceId, String RaceFullName, int car1Id, int car2Id, int car3Id,
+	public Race(int raceId, String RaceFullName, int car1Id, int car2Id, int car3Id, int car4Id, int car5Id,
 			boolean isCompleted, Timestamp startTime, Timestamp endTime,
 			int duration) {
 		setRaceId(raceId);
 		setCar1Id(car1Id);
 		setCar2Id(car2Id);
 		setCar3Id(car3Id);
+		setCar4Id(car4Id);
+		setCar5Id(car5Id);
 		setCompleted(isCompleted);
 		setRaceFullName(RaceFullName);
 		setDuration(duration);
@@ -89,13 +93,30 @@ public class Race implements Serializable{
 		this.duration = duration;
 	}
 
+
+	public int getCar4Id() {
+		return car4Id;
+	}
+
+	public void setCar4Id(int car4Id) {
+		this.car4Id = car4Id;
+	}
+
+	public int getCar5Id() {
+		return car5Id;
+	}
+
+	public void setCar5Id(int car5Id) {
+		this.car5Id = car5Id;
+	}
+
 	@Override
 	public String toString() {
 		return "Race [raceId=" + raceId + ", raceFullName=" + raceFullName
 				+ ", car1Id=" + car1Id + ", car2Id=" + car2Id + ", car3Id="
-				+ car3Id + ", isCompleted=" + isCompleted + ", startTime="
-				+ startTime + ", endTime=" + endTime + ", duration=" + duration
-				+ "]";
+				+ car3Id + ", car4Id=" + car4Id + ", car5Id=" + car5Id
+				+ ", isCompleted=" + isCompleted + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", duration=" + duration + "]";
 	}
 	
 	

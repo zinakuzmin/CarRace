@@ -23,6 +23,8 @@ public class BetView extends Application{
 	private TextField car1BetAmount;
 	private TextField car2BetAmount;
 	private TextField car3BetAmount;
+	private TextField car4BetAmount;
+	private TextField car5BetAmount;
 	private Button betBtn;
 	
 	
@@ -34,6 +36,8 @@ public class BetView extends Application{
 		car1BetAmount = new TextField();
 		car2BetAmount = new TextField();
 		car3BetAmount = new TextField();
+		car4BetAmount = new TextField();
+		car5BetAmount = new TextField();
 		
 	}
 	
@@ -62,9 +66,9 @@ public class BetView extends Application{
 		Label car1Namelbl = new Label("Car1: " + race.getCar1Id());
 		Label car2Namelbl = new Label("Car2: " + race.getCar2Id());
 		Label car3Namelbl = new Label("Car3: " + race.getCar3Id());
-//		TextField car1BetAmount = new TextField();
-//		TextField car2BetAmount = new TextField();
-//		TextField car3BetAmount = new TextField();
+		Label car4Namelbl = new Label("Car4: " + race.getCar4Id());
+		Label car5Namelbl = new Label("Car5: " + race.getCar5Id());
+
 		betBtn = new Button("Make a bet!");
 		betBtn.setDisable(true);
 		
@@ -75,12 +79,16 @@ public class BetView extends Application{
 		grid.add(car2BetAmount, 1, 2);
 		grid.add(car3Namelbl, 0, 3);
 		grid.add(car3BetAmount, 1, 3);
+		grid.add(car4Namelbl, 0, 4);
+		grid.add(car4BetAmount, 1, 4);
+		grid.add(car5Namelbl, 0, 5);
+		grid.add(car5BetAmount, 1, 5);
 		
 		
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(betBtn);
-		grid.add(hbBtn, 1, 5);
+		grid.add(hbBtn, 1, 6);
 		
 		
 		car1BetAmount.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -122,11 +130,37 @@ public class BetView extends Application{
 		    }
 		});
 		
+		car4BetAmount.textProperty().addListener((observable, oldValue, newValue) -> {
+//		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
+		    if (!newValue.isEmpty()){
+		    	try {
+		    		Integer.parseInt(newValue);
+		    		betBtn.setDisable(false);
+		    	}
+		    	catch (Exception e){
+		    		System.out.println(e.getStackTrace());
+		    	}
+		    }
+		});
+		
+		car5BetAmount.textProperty().addListener((observable, oldValue, newValue) -> {
+//		    System.out.println("textfield changed from " + oldValue + " to " + newValue);
+		    if (!newValue.isEmpty()){
+		    	try {
+		    		Integer.parseInt(newValue);
+		    		betBtn.setDisable(false);
+		    	}
+		    	catch (Exception e){
+		    		System.out.println(e.getStackTrace());
+		    	}
+		    }
+		});
+		
 		
 		betBtn.setOnAction(e -> createBets(stage));
 		
 		
-		Scene scene = new Scene(grid, 300, 275);
+		Scene scene = new Scene(grid, 400, 375);
 		stage.setScene(scene);
 		stage.show();
 	}
@@ -134,44 +168,44 @@ public class BetView extends Application{
 	public synchronized void createBets(Stage stage){
 		ArrayList<Bet> bets = new ArrayList<Bet>();
 		if (!car1BetAmount.getText().isEmpty()){
-			try{
-				double amount = Integer.parseInt(car1BetAmount.getText());
-				Bet bet = new Bet(0, race.getRaceId(), race.getCar1Id(), userID, amount, null);
-				bets.add(bet);
-				stage.close();
-			}
-			catch (Exception e){
-	    		System.out.println(e.getStackTrace());
-	    	}
+			bets.add(generateBet(car1BetAmount.getText(), race.getRaceId(), race.getCar1Id()));
 		}
 		
 		if (!car2BetAmount.getText().isEmpty()){
-			try{
-				double amount = Integer.parseInt(car2BetAmount.getText());
-				Bet bet = new Bet(0, race.getRaceId(), race.getCar2Id(), userID, amount, null);
-				bets.add(bet);
-			}
-			catch (Exception e){
-	    		System.out.println(e.getStackTrace());
-	    	}
+			bets.add(generateBet(car2BetAmount.getText(), race.getRaceId(), race.getCar2Id()));
 		}
 		
 		if (!car3BetAmount.getText().isEmpty()){
-			try{
-				double amount = Integer.parseInt(car3BetAmount.getText());
-				Bet bet = new Bet(0, race.getRaceId(), race.getCar2Id(), userID, amount, null);
-				bets.add(bet);
-			}
-			catch (Exception e){
-	    		System.out.println(e.getStackTrace());
-	    	}
+			bets.add(generateBet(car3BetAmount.getText(), race.getRaceId(), race.getCar3Id()));
 		}
 		
+		if (!car4BetAmount.getText().isEmpty()){
+			bets.add(generateBet(car4BetAmount.getText(), race.getRaceId(), race.getCar4Id()));
+		}
+		
+		if (!car5BetAmount.getText().isEmpty()){
+			bets.add(generateBet(car5BetAmount.getText(), race.getRaceId(), race.getCar5Id()));
+		}
 		
 		gameController.sendBetsToServer(bets);
 		betBtn.setDisable(true);
 		stage.close();
 		
 	}
+	
+	public synchronized Bet generateBet(String betAmount, int raceId, int carId){
+		Bet bet = null;
+		try{
+			double amount = Integer.parseInt(betAmount);
+			if (amount > 0){
+				bet = new Bet(0, race.getRaceId(), carId, userID, amount, null);	
+			}	
+		}
+		catch (Exception e){
+    		System.out.println(e.getStackTrace());
+    	}
+		return bet;
+	}
+	
 
 }

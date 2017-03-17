@@ -65,6 +65,7 @@ public class ServerController {
 		db = new DBHandler();
 		activeRaces = new ArrayList<Race>();
 		setActiveRaces();
+		System.out.println("Active races " + activeRaces);
 		initServer();
 	}
 	
@@ -98,7 +99,11 @@ public class ServerController {
 	
 	
 	public void setActiveRaces(){
+		
+		//Get from DB where isCompleted = false
 		ArrayList<Race> notCompletedRaces = db.getAllActiveRacesAsArray(false);
+		
+		System.out.println("not completed races " + notCompletedRaces);
 		if (notCompletedRaces.size() < RunParameters.NUMBER_OF_CARS_IN_RACE){
 			int missingRaces = RunParameters.NUMBER_OF_CARS_IN_RACE - notCompletedRaces.size();
 			activeRaces.addAll(notCompletedRaces);
@@ -119,8 +124,7 @@ public class ServerController {
 		
 	}
 	
-	//Number of cars in Race class should be configurable!
-	//Add ID generator
+	
 	public Race generateRace() throws Exception{
 		ArrayList<Car> cars = db.getAllCarsAsArray();
 		System.out.println(cars);
@@ -129,8 +133,8 @@ public class ServerController {
 		
 		//Choose randomly cars for race
 		if (cars.size() >= RunParameters.NUMBER_OF_CARS_IN_RACE){
-			while (selectedCars.size() < 3){
-				int randomNum = 0 + (int)(Math.random() * (RunParameters.NUMBER_OF_CARS_IN_RACE)); 
+			while (selectedCars.size() < RunParameters.NUMBER_OF_CARS_IN_RACE){
+				int randomNum = 0 + (int)(Math.random() * (cars.size())); 
 				if (!selectedCars.contains(cars.get(randomNum))){
 					selectedCars.add(cars.get(randomNum));
 				}
@@ -141,11 +145,15 @@ public class ServerController {
 			race.setCar1Id(selectedCars.get(0).getCarId());
 			race.setCar2Id(selectedCars.get(1).getCarId());
 			race.setCar3Id(selectedCars.get(2).getCarId());
+			race.setCar4Id(selectedCars.get(3).getCarId());
+			race.setCar5Id(selectedCars.get(4).getCarId());
 			race.setCompleted(false);
 			race.setRaceId(0);
 			race.setRaceFullName("race-" + race.getRaceId());
 			
+			
 			race = db.insertRace(race);
+			System.out.println("generated race " + race);
 			return race;
 		}
 		

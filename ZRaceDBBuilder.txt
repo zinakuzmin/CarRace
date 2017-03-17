@@ -34,7 +34,9 @@ create table Races (
   raceFullName varchar(20) not null, 
   car1Id integer not null,
   car2Id integer not null,
-  car3Id integer not null, 
+  car3Id integer not null,
+  car4Id integer not null, 
+  car5Id integer not null,  
   isCompleted boolean not null default 0,
   startTime timestamp null,
   endTime timestamp null,
@@ -100,9 +102,9 @@ insert into Cars values (
 
 
 insert into Races values (
-  NULL, 'Race1', 20001, 20002, 20003, 0, null, null, null);
+  NULL, 'Race1', 20001, 20002, 20003, 20005, 20007, 0, null, null, null);
 insert into Races values (
-  NULL, 'Race2', 20001, 20007, 20009, 1, '2016-10-10 10:00:00',  '2016-10-10 10:02:00', 110);
+  NULL, 'Race2', 20001, 20007, 20009, 20002, 20003, 1, '2016-10-10 10:00:00',  '2016-10-10 10:02:00', 110);
 
 
 commit;
