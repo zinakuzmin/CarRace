@@ -1,13 +1,17 @@
 package zrace.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
+
+import com.sun.swing.internal.plaf.synth.resources.synth;
 
 import main.runner.RunParameters;
 import zrace.server.db.DBHandler;
@@ -23,6 +27,7 @@ import dbModels.User;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
+import javafx.scene.media.Media;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -35,6 +40,7 @@ public class ServerController {
 	private TextArea logActivity;
 	private ServerLogger logger;
 	private ArrayList<RaceRun> raceRuns;
+	private ArrayList<String> listOfSongs;
 	
 	
 	
@@ -319,6 +325,23 @@ public class ServerController {
 		this.raceRuns = raceRuns;
 	}
 	
+	
+	public void setSongArray(){
+		listOfSongs = new ArrayList<>();
+        listOfSongs.add("Guns N Roses - Sweet.mp3");
+        listOfSongs.add("I Like To Move It.mp3");
+        listOfSongs.add("Michael Jackson - Smooth Criminal.mp3");
+	}
+	
+	//Return song duration in seconds 
+	public synchronized int getSongDuration(int songId){
+        if (songId >= 0 && songId < 3){
+        	String bip = listOfSongs.get(songId);
+        	Media hit = new Media(new File(bip).toURI().toString());
+        	return (int) hit.getDuration().toSeconds();
+        }
+        return 0;
+	}
 
 
 }
