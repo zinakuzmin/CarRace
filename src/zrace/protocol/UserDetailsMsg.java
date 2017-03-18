@@ -10,7 +10,8 @@ public class UserDetailsMsg extends Message{
 	private static final long serialVersionUID = 1L;
 	private User user;
 	
-	public UserDetailsMsg(User user) {
+	public UserDetailsMsg(int messageId, User user) {
+		super(messageId);
 		this.setUser(user);
 	}
 
@@ -24,8 +25,11 @@ public class UserDetailsMsg extends Message{
 
 	@Override
 	public String toString() {
-		return "UserDetailsMsg [user=" + user + "]";
+		return "UserDetailsMsg [user=" + user + ", getMessageId()="
+				+ getMessageId() + "]";
 	}
+
+	
   
 	
 }

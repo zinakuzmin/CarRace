@@ -41,6 +41,9 @@ public class ClientView extends Application {
 	private Label raceStatus1;
 	private Label raceStatus2;
 	private Label raceStatus3;
+	private Label race1Name;
+	private Label race2Name;
+	private Label race3Name;
 
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
@@ -48,6 +51,9 @@ public class ClientView extends Application {
 		raceStatus1 = new Label(); // gameController.getRaceRuns().get(0).getRaceStatus().toString());
 		raceStatus2 = new Label(); // gameController.getRaceRuns().get(1).getRaceStatus().toString());
 		raceStatus3 = new Label(); // gameController.getRaceRuns().get(2).getRaceStatus().toString());
+		race1Name = new Label();
+		race2Name = new Label();
+		race3Name = new Label();
 
 	}
 
@@ -58,7 +64,7 @@ public class ClientView extends Application {
 			public void handle(WindowEvent event) {
 				try {
 					gameController.getOut().writeObject(
-							new ClientDisconnectMsg(gameController.getUser()));
+							new ClientDisconnectMsg(0 , gameController.getUser()));
 					gameController.getSocket().close();
 				} catch (IOException e) {
 				}
@@ -163,13 +169,15 @@ public class ClientView extends Application {
 		// //gameController.getRaceRuns().get(1).getRaceStatus().toString());
 		// raceStatus3 = new Label();
 		// //gameController.getRaceRuns().get(2).getRaceStatus().toString());
+		
+		race1Name.setText("Race 1: " + gameController.getActiveRaces().get(0).getRaceFullName());
+		race1Name.setText("Race 2: " + gameController.getActiveRaces().get(1).getRaceFullName());
+		race1Name.setText("Race 3: " + gameController.getActiveRaces().get(2).getRaceFullName());
 
-		Button viewRace1 = new Button("View Race1 "
-				+ gameController.getActiveRaces().get(0).getRaceFullName());
-		Button viewRace2 = new Button("View Race2 "
-				+ gameController.getActiveRaces().get(1).getRaceFullName());
-		Button viewRace3 = new Button("View Race3 "
-				+ gameController.getActiveRaces().get(2).getRaceFullName());
+		Button viewRace1 = new Button("View Race 1");
+		Button viewRace2 = new Button("View Race 2");		
+		Button viewRace3 = new Button("View Race 3");
+				
 		Button betBtn1 = new Button("Make a bet for race1");
 		Button betBtn2 = new Button("Make a bet for race3");
 		Button betBtn3 = new Button("Make a bet for race3");
@@ -177,54 +185,60 @@ public class ClientView extends Application {
 		GridPane paneRace1 = new GridPane();
 		GridPane paneRace2 = new GridPane();
 		GridPane paneRace3 = new GridPane();
-		
-//		ColumnConstraints column1 = new ColumnConstraints();
-//	    column1.setPercentWidth(50);
-//	    ColumnConstraints column2 = new ColumnConstraints();
-//	    column2.setPercentWidth(50);
-//	    paneRace1.getColumnConstraints().addAll(column1, column2);
-//	    paneRace2.getColumnConstraints().addAll(column1, column2);
-//	    paneRace3.getColumnConstraints().addAll(column1, column2);
-	    
-		paneRace1.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-		paneRace1.setVgap(10); //vertical gap in pixels
-		paneRace1.setPadding(new Insets(10, 10, 10, 10));
-		
-		paneRace2.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-		paneRace2.setVgap(10); //vertical gap in pixels
-		paneRace2.setPadding(new Insets(10, 10, 10, 10));
-		
-		paneRace3.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-		paneRace3.setVgap(10); //vertical gap in pixels
-		paneRace3.setPadding(new Insets(10, 10, 10, 10));
-		
-		
-	
 
-		paneRace1.add(viewRace1, 0, 1);
-		paneRace2.add(viewRace2, 0, 3);
-		paneRace3.add(viewRace3, 0, 5);
-		paneRace1.add(betBtn1, 1, 1);
-		paneRace2.add(betBtn2, 1, 3);
-		paneRace3.add(betBtn3, 1, 5);
-		paneRace1.add(raceStatus1, 2, 1);
-		paneRace2.add(raceStatus2, 2, 3);
+		// ColumnConstraints column1 = new ColumnConstraints();
+		// column1.setPercentWidth(50);
+		// ColumnConstraints column2 = new ColumnConstraints();
+		// column2.setPercentWidth(50);
+		// paneRace1.getColumnConstraints().addAll(column1, column2);
+		// paneRace2.getColumnConstraints().addAll(column1, column2);
+		// paneRace3.getColumnConstraints().addAll(column1, column2);
+
+		paneRace1.setHgap(10); // horizontal gap in pixels => that's what you
+								// are asking for
+		paneRace1.setVgap(10); // vertical gap in pixels
+		paneRace1.setPadding(new Insets(10, 10, 10, 10));
+
+		paneRace2.setHgap(10); // horizontal gap in pixels => that's what you
+								// are asking for
+		paneRace2.setVgap(10); // vertical gap in pixels
+		paneRace2.setPadding(new Insets(10, 10, 10, 10));
+
+		paneRace3.setHgap(10); // horizontal gap in pixels => that's what you
+								// are asking for
+		paneRace3.setVgap(10); // vertical gap in pixels
+		paneRace3.setPadding(new Insets(10, 10, 10, 10));
+
+		paneRace1.add(race1Name, 1, 1);
+		paneRace1.add(raceStatus1, 1, 2);
+		paneRace1.add(viewRace1, 1, 3);
+		paneRace1.add(betBtn1, 2, 3);
+		
+		paneRace1.add(race2Name, 1, 1);
+		paneRace2.add(raceStatus2, 2, 1);
+		paneRace2.add(viewRace2, 3, 1);
+		paneRace2.add(betBtn2, 4, 1);
+		
+		paneRace1.add(race3Name, 1, 1);
 		paneRace3.add(raceStatus3, 2, 5);
+		paneRace3.add(viewRace3, 0, 5);
+		paneRace3.add(betBtn3, 1, 5);
 
 		GridPane grid = new GridPane();
-		
-//		ColumnConstraints column1 = new ColumnConstraints();
-//	    column1.setPercentWidth(50);
-//	    ColumnConstraints column2 = new ColumnConstraints();
-//	    column2.setPercentWidth(50);
-//	    grid.getColumnConstraints().addAll(column1, column2); 
-		
-		grid.setHgap(10); //horizontal gap in pixels => that's what you are asking for
-	    grid.setVgap(10); //vertical gap in pixels
-	    grid.setPadding(new Insets(10, 10, 10, 10)); //margins around the whole grid
-	                                                 //(top/right/bottom/left)
-		
-		
+
+		// ColumnConstraints column1 = new ColumnConstraints();
+		// column1.setPercentWidth(50);
+		// ColumnConstraints column2 = new ColumnConstraints();
+		// column2.setPercentWidth(50);
+		// grid.getColumnConstraints().addAll(column1, column2);
+
+		grid.setHgap(10); // horizontal gap in pixels => that's what you are
+							// asking for
+		grid.setVgap(10); // vertical gap in pixels
+		grid.setPadding(new Insets(10, 10, 10, 10)); // margins around the whole
+														// grid
+														// (top/right/bottom/left)
+
 		grid.add(paneRace1, 0, 1);
 		grid.add(paneRace2, 0, 3);
 		grid.add(paneRace3, 0, 5);
@@ -366,7 +380,7 @@ public class ClientView extends Application {
 	}
 
 	public void setStatusLabelStyle(Label label, String status) {
-//		label.setText(status);
+		// label.setText(status);
 		if (status.equals(RaceStatus.waiting)) {
 			System.out.println("waiting status");
 			label.setStyle("-fx-font-size: 30px; -fx-text-fill: blue;");
@@ -378,5 +392,29 @@ public class ClientView extends Application {
 		} else if (status.equals(RaceStatus.ready_to_run)) {
 			label.setStyle("-fx-font-size: 20px; -fx-text-fill: orange;");
 		}
+	}
+
+	public Label getRace1Name() {
+		return race1Name;
+	}
+
+	public void setRace1Name(Label race1Name) {
+		this.race1Name = race1Name;
+	}
+
+	public Label getRace2Name() {
+		return race2Name;
+	}
+
+	public void setRace2Name(Label race2Name) {
+		this.race2Name = race2Name;
+	}
+
+	public Label getRace3Name() {
+		return race3Name;
+	}
+
+	public void setRace3Name(Label race3Name) {
+		this.race3Name = race3Name;
 	}
 }

@@ -27,12 +27,14 @@ public class RacesMonitor implements Runnable {
 
 	@Override
 	public void run() {
-
+		int messageId = 1;
 		while (shouldRun) {
 
 			try {
-				startRace();
+				System.out.println("Current loop " + messageId);
+				startRace(messageId);
 				setRaceCompleted();
+				messageId++;
 //				addNewActiveRace();
 
 				Thread.sleep(10_000);
@@ -60,13 +62,14 @@ public class RacesMonitor implements Runnable {
 		this.shouldRun = shouldRun;
 	}
 
-	public void startRace() {
+	public void startRace(int messageId) {
 		/** if there is no running races
 		 * try to find race that is ready to run
 		 * update race startTime to now + 10 seconds
 		 * update DB (?)
 		 * update raceRun of this race to status ready to run
 		 * send updated activeRaces and raceRuns to client*/
+		
 		if (!controller.isRunningRace()) {
 			Race race = controller.checkIfOneOfRacesCanRun();
 			if (race != null) {
@@ -78,10 +81,26 @@ public class RacesMonitor implements Runnable {
 				RaceRun raceRun = controller.getRaceRunByRaceId(race.getRaceId());
 				if (raceRun != null){
 					int raceRunIndex = controller.getRaceRuns().lastIndexOf(raceRun);
-					controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.ready_to_run);
+					if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.waiting)){
+						controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.ready_to_run);
+					}
+					else if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.ready_to_run)){
+						if (controller.getActiveRaces().get(raceIndex).getStartTime().compareTo(new Timestamp(System.currentTimeMillis())) >= 0){
+							controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.in_progress);
+						}
+							
+						
+					}
+//					else if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.in_progress)){
+//						if (controller.getActiveRaces().get(raceIndex).getStartTime().compareTo(new Timestamp(System.currentTimeMillis())) >= 0){
+//							controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.completed);
+//						}
+//					}
+					
 				}
-				controller.sendBroadcastMessage(new UpdateRacesMsg(controller.getActiveRaces()));
-				controller.sendBroadcastMessage(new UpdateRaceRunsMsg(controller.getRaceRuns()));
+				controller.sendBroadcastMessage(new UpdateRacesMsg(messageId, controller.getActiveRaces()));
+				controller.sendBroadcastMessage(new UpdateRaceRunsMsg(messageId, controller.getRaceRuns()));
+//				messageId++;
 			}
 		}
 	}
@@ -109,7 +128,7 @@ public class RacesMonitor implements Runnable {
 				long songDurationInMillis = controller.getSongDuration(raceRun.getSong().getId());
 				if (System.currentTimeMillis() - (songDurationInMillis + 2000) >= startTimeInMillis){
 					controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.completed);
-					controller.sendBroadcastMessage(new UpdateRaceRunsMsg(controller.getRaceRuns()));
+					controller.sendBroadcastMessage(new UpdateRaceRunsMsg(0, controller.getRaceRuns()));
 					controller.getActiveRaces().get(raceIndex).setCompleted(true);
 					controller.getActiveRaces().get(raceIndex).setEndTime(new Timestamp(System.currentTimeMillis()));
 					controller.getActiveRaces().get(raceIndex).setDuration((int) ((songDurationInMillis + 2000)/1000));
@@ -133,8 +152,8 @@ public class RacesMonitor implements Runnable {
 	public void addNewActiveRace() {
 		try {
 			controller.getActiveRaces().add(controller.generateRace());
-			controller.sendBroadcastMessage(new UpdateRacesMsg(controller.getActiveRaces()));
-			controller.sendBroadcastMessage(new UpdateRaceRunsMsg(controller.getRaceRuns()));
+			controller.sendBroadcastMessage(new UpdateRacesMsg(0, controller.getActiveRaces()));
+			controller.sendBroadcastMessage(new UpdateRaceRunsMsg(0, controller.getRaceRuns()));
 //			controller.ge
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

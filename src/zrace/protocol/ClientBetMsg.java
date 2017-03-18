@@ -12,7 +12,8 @@ public class ClientBetMsg extends Message{
 	private ArrayList<Bet> bets;
 	
 	
-	public ClientBetMsg(ArrayList<Bet> bets) {
+	public ClientBetMsg(int messageId, ArrayList<Bet> bets) {
+		super(messageId);
 		this.bets = bets;
 	}
 	
@@ -23,4 +24,11 @@ public class ClientBetMsg extends Message{
 		this.bets = bets;
 	}
 
+	@Override
+	public String toString() {
+		return "ClientBetMsg [bets=" + bets + "]";
+	}
+
+	
+	
 }

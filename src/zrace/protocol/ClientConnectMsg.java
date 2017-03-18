@@ -8,7 +8,8 @@ public class ClientConnectMsg extends Message{
 	private int userId;
 	private String userFullName;
 	
-	public ClientConnectMsg(int userId, String userFullName){
+	public ClientConnectMsg(int messageId, int userId, String userFullName){
+		super(messageId);
 		this.userId = userId;
 		this.userFullName = userFullName;
 		
