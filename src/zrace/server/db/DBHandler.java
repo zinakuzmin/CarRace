@@ -85,8 +85,8 @@ public class DBHandler {
 		String theQuery = " insert into Races (raceId, raceFullName, car1Id, car2Id, car3Id, car4Id, car5Id, isCompleted, startTime, endTime, duration)"
 				+ " values (?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,?)";
 		try {
-			PreparedStatement preparedStmt = theConnection
-					.prepareStatement(theQuery, Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement preparedStmt = theConnection.prepareStatement(
+					theQuery, Statement.RETURN_GENERATED_KEYS);
 			preparedStmt.setInt(1, 0);
 			preparedStmt.setString(2, theRace.getRaceFullName());
 			preparedStmt.setInt(3, theRace.getCar1Id());
@@ -267,7 +267,6 @@ public class DBHandler {
 			e.printStackTrace();
 		}
 
-		
 		return null;
 
 	}
@@ -374,7 +373,6 @@ public class DBHandler {
 
 		return executeQuery(theQuery);
 	}
-	
 
 	public synchronized Race getRaceByIdAsObject(int raceId) {
 		return (Race) convertResultSetToObject(getRaceById(raceId), "Race");
@@ -398,14 +396,14 @@ public class DBHandler {
 		}
 		return -1;
 	}
-	
-	
 
 	public synchronized int updateRaceCompleted(Race race) {
 		String theQuery = " update Races set isCompleted = ? ,startTime = ?, endTime = ?, duration = ? where raceId = ?";
 
-		
-		/**update races set isCompleted = true, startTime = '2017-10-10 10:00:00', endTime = '2017-10-11 10:00:00' where raceId = 1;*/
+		/**
+		 * update races set isCompleted = true, startTime = '2017-10-10
+		 * 10:00:00', endTime = '2017-10-11 10:00:00' where raceId = 1;
+		 */
 		try {
 			PreparedStatement preparedStmt = theConnection
 					.prepareStatement(theQuery);
@@ -451,8 +449,6 @@ public class DBHandler {
 		return -1;
 
 	}
-
-	
 
 	/**
 	 * @param gameEventsList
@@ -503,7 +499,7 @@ public class DBHandler {
 	 *            - new user name value.
 	 * @return return true in the name was updated successfully in the database.
 	 */
-	
+
 	/**
 	 * Boolean if a game already exist in DB & updating the gameScore database
 	 * value.
@@ -513,7 +509,7 @@ public class DBHandler {
 	 * @return return true in the game.gameScore was updated successfully in the
 	 *         database.
 	 */
-	
+
 	/**
 	 * @return return a ResultSet that Contains all games of all users in the
 	 *         database.
@@ -584,13 +580,15 @@ public class DBHandler {
 	 */
 	public synchronized ResultSet getUserByName(String userFullName) {
 
-		String theQuery = "select * from Users where userFullName = '" + userFullName  + "'";
+		String theQuery = "select * from Users where userFullName = '"
+				+ userFullName + "'";
 		return executeQuery(theQuery);
 
 	}
-	
+
 	public synchronized User getUserByNameAsObject(String userFullName) {
-		return (User) convertResultSetToObject(getUserByName(userFullName), "User");
+		return (User) convertResultSetToObject(getUserByName(userFullName),
+				"User");
 	}
 
 	/**
@@ -772,43 +770,61 @@ public class DBHandler {
 			} else
 				System.out.println("Result is null");
 		}
-		
-		
+
+		// try {
+		// if (!result.next()) {
+		// System.out.println("no data found");
+		// } else {
+		//
+		// do {
+		// User user;
+		//
+		// user = new User(result.getString("userFullName"),
+		// result.getInt("userId"),
+		// result.getDouble("userRevenue"));
+		// users.add(user);
+		// } while (result.next());
+		// return users.get(0);
+		// }
+		// }
+
 		else if (classType.equals("User")) {
 			ArrayList<User> users = new ArrayList<>();
-			if (result != null) {
-				try {
-					while (result.next()) {
+			try {
+				if (!result.next()) {
+					System.out.println("no data found");
+				} else {
+					do {
 						User user;
 
 						user = new User(result.getInt("userId"),
 								result.getString("userFullName"),
 								result.getDouble("userRevenue"));
-								
+
 						users.add(user);
-					}
+
+					} while (result.next());
 					return users;
 				}
 
-				catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			} else
-				System.out.println("Result is null");
+			}
+
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return null;
 		}
-
 		return null;
-
 	}
 
 	public synchronized Object convertResultSetToObject(ResultSet result,
 			String objectType) {
-		Object object = null;
+		Object object = convertResultSetToArraylist(result, objectType);
 
-		if (result != null) {
-			object = convertResultSetToArraylist(result, objectType).get(0);
-		}
+		if (object != null)
+			return convertResultSetToArraylist(result, objectType).get(0);
 
 		return object;
 	}

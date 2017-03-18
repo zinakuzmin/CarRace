@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import dbModels.Race;
 import dbModels.RaceRun;
+import dbModels.RaceRun.RaceStatus;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +15,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Glow;
+import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -38,31 +41,29 @@ public class ClientView extends Application {
 	private Label raceStatus2;
 	private Label raceStatus3;
 
-	
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
-		
-		raceStatus1 = new Label(); //gameController.getRaceRuns().get(0).getRaceStatus().toString());
-		raceStatus2 = new Label(); //gameController.getRaceRuns().get(1).getRaceStatus().toString());
-		raceStatus3 = new Label(); //gameController.getRaceRuns().get(2).getRaceStatus().toString());
+
+		raceStatus1 = new Label(); // gameController.getRaceRuns().get(0).getRaceStatus().toString());
+		raceStatus2 = new Label(); // gameController.getRaceRuns().get(1).getRaceStatus().toString());
+		raceStatus3 = new Label(); // gameController.getRaceRuns().get(2).getRaceStatus().toString());
 
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		
+
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent event) {
 				try {
-					gameController.getOut().writeObject(new ClientDisconnectMsg(gameController.getUser()));
+					gameController.getOut().writeObject(
+							new ClientDisconnectMsg(gameController.getUser()));
 					gameController.getSocket().close();
 				} catch (IOException e) {
 				}
 			}
 		});
 
-		
-		
 		createLoginPage(stage);
 
 	}
@@ -84,14 +85,6 @@ public class ClientView extends Application {
 
 		userTextField = new TextField();
 		grid.add(userTextField, 1, 1);
-
-//		Label userID = new Label("User ID:");
-//		grid.add(userID, 0, 2);
-//
-//		userIDtextField = new TextField();
-//		grid.add(userIDtextField, 1, 2);
-		
-
 		Button signInButton = new Button("Sign in");
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
@@ -106,12 +99,13 @@ public class ClientView extends Application {
 			@Override
 			public void handle(ActionEvent e) {
 
-//				if (isLoginInputValid(userIDtextField, userTextField)){
-				if (isLoginInputValid(userTextField)){
-					gameController.sendLoginOrRegisterMessage(userTextField.getText());
-					
-					while(!gameController.isGotUserFromServer()){
-						
+				// if (isLoginInputValid(userIDtextField, userTextField)){
+				if (isLoginInputValid(userTextField)) {
+					gameController.sendLoginOrRegisterMessage(userTextField
+							.getText());
+
+					while (!gameController.isGotUserFromServer()) {
+
 						try {
 							Thread.sleep(200);
 						} catch (InterruptedException e1) {
@@ -121,12 +115,12 @@ public class ClientView extends Application {
 					}
 					if (gameController.getUser() != null)
 						createClientView(primaryStage);
-					
+
 					else {
-						
+
 						actiontarget.setFill(Color.FIREBRICK);
 						actiontarget.setText("User already logged in");
-						
+
 					}
 				}
 			}
@@ -140,46 +134,76 @@ public class ClientView extends Application {
 	public void createClientView(Stage primaryStage) {
 		BorderPane pane = new BorderPane();
 		Label userNameLabel = new Label();
-		
-		while (!(gameController.isGotUserFromServer() && gameController.isGotRacesFromServer() && gameController.isGotRacesRunsFromServer())){
+
+		while (!(gameController.isGotUserFromServer()
+				&& gameController.isGotRacesFromServer() && gameController
+					.isGotRacesRunsFromServer())) {
 			try {
-//				System.out.println("client get user " + gameController.isGotUserFromServer());
-//				System.out.println("client get races " + gameController.isGotRacesFromServer());
-				
-				
+				// System.out.println("client get user " +
+				// gameController.isGotUserFromServer());
+				// System.out.println("client get races " +
+				// gameController.isGotRacesFromServer());
+
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
-		
-		userNameLabel.setText("Welcome " + gameController.getUser().getUserFullName());
+
+		userNameLabel.setText("Welcome "
+				+ gameController.getUser().getUserFullName());
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		pane.setTop(userNameLabel);
 
-//		raceStatus1 = new Label(); //gameController.getRaceRuns().get(0).getRaceStatus().toString());
-//		raceStatus2 = new Label(); //gameController.getRaceRuns().get(1).getRaceStatus().toString());
-//		raceStatus3 = new Label(); //gameController.getRaceRuns().get(2).getRaceStatus().toString());
+		// raceStatus1 = new Label();
+		// //gameController.getRaceRuns().get(0).getRaceStatus().toString());
+		// raceStatus2 = new Label();
+		// //gameController.getRaceRuns().get(1).getRaceStatus().toString());
+		// raceStatus3 = new Label();
+		// //gameController.getRaceRuns().get(2).getRaceStatus().toString());
 
-		Button viewRace1 = new Button("View Race1 " + gameController.getActiveRaces().get(0).getRaceFullName());
-		Button viewRace2 = new Button("View Race2 " + gameController.getActiveRaces().get(1).getRaceFullName());
-		Button viewRace3 = new Button("View Race3 " + gameController.getActiveRaces().get(2).getRaceFullName());
+		Button viewRace1 = new Button("View Race1 "
+				+ gameController.getActiveRaces().get(0).getRaceFullName());
+		Button viewRace2 = new Button("View Race2 "
+				+ gameController.getActiveRaces().get(1).getRaceFullName());
+		Button viewRace3 = new Button("View Race3 "
+				+ gameController.getActiveRaces().get(2).getRaceFullName());
 		Button betBtn1 = new Button("Make a bet for race1");
 		Button betBtn2 = new Button("Make a bet for race3");
 		Button betBtn3 = new Button("Make a bet for race3");
+		
+		GridPane paneRace1 = new GridPane();
+		GridPane paneRace2 = new GridPane();
+		GridPane paneRace3 = new GridPane();
+		
+		paneRace1.add(viewRace1, 0, 1);
+		paneRace2.add(viewRace2, 0, 3);
+		paneRace3.add(viewRace3, 0, 5);
+		paneRace1.add(betBtn1, 1, 1);
+		paneRace2.add(betBtn2, 1, 3);
+		paneRace3.add(betBtn3, 1, 5);
+		paneRace1.add(raceStatus1, 2, 1);
+		paneRace2.add(raceStatus2, 2, 3);
+		paneRace3.add(raceStatus3, 2, 5);
+		
 
 		GridPane grid = new GridPane();
-		grid.add(viewRace1, 0, 1);
-		grid.add(viewRace2, 0, 2);
-		grid.add(viewRace3, 0, 3);
-		grid.add(betBtn1, 1, 1);
-		grid.add(betBtn2, 1, 2);
-		grid.add(betBtn3, 1, 3);
-		grid.add(raceStatus1, 2, 1);
-		grid.add(raceStatus2, 2, 2);
-		grid.add(raceStatus3, 2, 3);
-
+		grid.add(paneRace1, 1, 1);
+		grid.add(paneRace2, 2, 2);
+		grid.add(paneRace3, 3, 3);
+		
+		
+		
+//		grid.add(viewRace1, 0, 1);
+//		grid.add(viewRace2, 0, 3);
+//		grid.add(viewRace3, 0, 5);
+//		grid.add(betBtn1, 1, 1);
+//		grid.add(betBtn2, 1, 3);
+//		grid.add(betBtn3, 1, 5);
+//		grid.add(raceStatus1, 2, 1);
+//		grid.add(raceStatus2, 2, 3);
+//		grid.add(raceStatus3, 2, 5);
 
 		pane.setRight(grid);
 
@@ -190,16 +214,25 @@ public class ClientView extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces().get(0), racePane, primaryStage, gameController.getRaceRuns().get(0)));
-		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces().get(1), racePane, primaryStage, gameController.getRaceRuns().get(1)));
-		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces().get(2), racePane, primaryStage, gameController.getRaceRuns().get(2)));
+		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces()
+				.get(0), racePane, primaryStage, gameController.getRaceRuns()
+				.get(0)));
+		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces()
+				.get(1), racePane, primaryStage, gameController.getRaceRuns()
+				.get(1)));
+		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces()
+				.get(2), racePane, primaryStage, gameController.getRaceRuns()
+				.get(2)));
 
-		betBtn1.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(0).getRaceId()));
-		betBtn2.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(1).getRaceId()));
-		betBtn3.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(2).getRaceId()));
-		
+		betBtn1.setOnAction(e -> showBettingPage(gameController
+				.getActiveRaces().get(0).getRaceId()));
+		betBtn2.setOnAction(e -> showBettingPage(gameController
+				.getActiveRaces().get(1).getRaceId()));
+		betBtn3.setOnAction(e -> showBettingPage(gameController
+				.getActiveRaces().get(2).getRaceId()));
+
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-			
+
 			@Override
 			public void handle(WindowEvent event) {
 				if (mainClientApp != null)
@@ -208,7 +241,8 @@ public class ClientView extends Application {
 		});
 	}
 
-	private static void showRace(Race activeRace, Pane racePane, Stage primaryStage, RaceRun raceRun) {
+	private static void showRace(Race activeRace, Pane racePane,
+			Stage primaryStage, RaceRun raceRun) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
 		}
@@ -218,12 +252,14 @@ public class ClientView extends Application {
 			long raceDurationInMilis = 0;
 
 			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace());
-			
+
 			if (raceStarted)
-				raceDurationInMilis = activeRace.getEndTime().getTime() - activeRace.getStartTime().getTime();
-			
+				raceDurationInMilis = activeRace.getEndTime().getTime()
+						- activeRace.getStartTime().getTime();
+
 			mainClientApp.setIsRaceStarted(raceStarted, raceDurationInMilis);
-			mainClientApp.setMusic(raceRun.getSong(), Duration.millis(raceDurationInMilis));
+			mainClientApp.setMusic(raceRun.getSong(),
+					Duration.millis(raceDurationInMilis));
 			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException | InterruptedException e) {
@@ -235,7 +271,9 @@ public class ClientView extends Application {
 
 	private synchronized void showBettingPage(int raceID) {
 		try {
-			BetView betView = new BetView(gameController, gameController.findRaceByID(raceID) , gameController.getUser().getUserID());
+			BetView betView = new BetView(gameController,
+					gameController.findRaceByID(raceID), gameController
+							.getUser().getUserID());
 			betView.start(new Stage());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -243,38 +281,71 @@ public class ClientView extends Application {
 		}
 	}
 
+	// public boolean isLoginInputValid(TextField userIdTF, TextField
+	// userNameTF) {
+	// if (userIdTF.getText().isEmpty() || userNameTF.getText().isEmpty()) {
+	// return false;
+	// } else {
+	//
+	// try {
+	// Integer.parseInt(userIdTF.getText());
+	// return true;
+	// } catch (Exception e) {
+	// return false;
+	// }
+	//
+	// }
+	//
+	// }
 
-//	public boolean isLoginInputValid(TextField userIdTF, TextField userNameTF) {
-//		if (userIdTF.getText().isEmpty() || userNameTF.getText().isEmpty()) {
-//			return false;
-//		} else {
-//
-//			try {
-//				Integer.parseInt(userIdTF.getText());
-//				return true;
-//			} catch (Exception e) {
-//				return false;
-//			}
-//
-//		}
-//
-//	}
-	
 	public boolean isLoginInputValid(TextField userNameTF) {
-		if (userNameTF.getText().isEmpty()) 
+		if (userNameTF.getText().isEmpty())
 			return false;
 
 		return true;
 	}
-	
-	public synchronized void setRacesStatusInView(){
-		if (!gameController.getRaceRuns().isEmpty() && gameController.getRaceRuns().size() >= 3){
-			String statusRace1 = gameController.getRaceRuns().get(0).getRaceStatus().toString();
+
+	public synchronized void setRacesStatusInView() {
+		if (!gameController.getRaceRuns().isEmpty()
+				&& gameController.getRaceRuns().size() >= 3) {
+			String statusRace1 = gameController.getRaceRuns().get(0)
+					.getRaceStatus().toString();
 			raceStatus1.setText(statusRace1);
-			raceStatus1.setFont(Font.font("Verdana", 20));
-			raceStatus2.setText(gameController.getRaceRuns().get(1).getRaceStatus().toString());
-			raceStatus3.setText(gameController.getRaceRuns().get(2).getRaceStatus().toString());
+
+			raceStatus1.setStyle("-fx-font-size: 20px; -fx-text-fill: green;");
+			raceStatus1.setEffect(new Reflection());
+			raceStatus1.setMaxWidth(250);
+			raceStatus1.setWrapText(true);
+			// raceStatus1.setFont(Font.font("Verdana", 20));
+			raceStatus2.setText(gameController.getRaceRuns().get(1)
+					.getRaceStatus().toString());
+			raceStatus3.setText(gameController.getRaceRuns().get(2)
+					.getRaceStatus().toString());
+//			setStatusLabelStyle(raceStatus1, gameController.getRaceRuns().get(0)
+//					.getRaceStatus().toString());
+//			setStatusLabelStyle(raceStatus2, gameController.getRaceRuns().get(1)
+//					.getRaceStatus().toString());
+//			setStatusLabelStyle(raceStatus3, gameController.getRaceRuns().get(2)
+//					.getRaceStatus().toString());
 			
+
+		}
+	}
+
+	public void setStatusLabelStyle(Label label, String status) {
+		label.setText(status);
+		if (status.equals(RaceStatus.before_start)) {
+			label.setStyle("-fx-font-size: 30px; -fx-text-fill: blue;");
+		} 
+		else if (status.equals(RaceStatus.completed)) {
+			label.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
+		}
+		else if (status.equals(RaceStatus.in_progress)) {
+			label.setStyle("-fx-font-size: 20px; -fx-text-fill: green;");
+
+		}
+		else if (status.equals(RaceStatus.ready_to_run)) {
+			label.setStyle("-fx-font-size: 20px; -fx-text-fill: orange;");
 		}
 	}
 }
