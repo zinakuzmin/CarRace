@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,8 @@ import com.sun.swing.internal.plaf.synth.resources.synth;
 
 import main.runner.RunParameters;
 import zrace.client.app.world.cars.objs.Songs;
+import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
+import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
 import zrace.protocol.Message;
 import zrace.server.db.DBHandler;
 import zrace.server.view.ServerMainView;
@@ -58,7 +61,7 @@ public class ServerController {
 		}
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent event) {
-				
+
 				try {
 					disconnectAllConnectedClients();
 					racesMonitorThread.setShouldRun(false);
@@ -74,9 +77,9 @@ public class ServerController {
 		setActiveRaces();
 		System.out.println("Active races " + activeRaces);
 
-		for (int i = 0; i < activeRaces.size(); i++) {
-			raceRuns.add(generateRaceRun(activeRaces.get(i)));
-		}
+//		for (int i = 0; i < activeRaces.size(); i++) {
+//			raceRuns.add(generateRaceRun(activeRaces.get(i)));
+//		}
 		initServer();
 	}
 
@@ -84,31 +87,26 @@ public class ServerController {
 
 		activeClients = new ArrayList<>();
 
-		new Thread(
-				() -> {
-					try {
+		new Thread(() -> {
+			try {
 
-						Platform.runLater(() -> {
-							logActivity
-									.appendText("Zrace Game Server connected at "
-											+ new Date() + '\n');
-						});
-						while (true) {
-							System.out
-									.println("server: waiting for connection");
-							socket = serverSocket.accept();
-							System.out.println("server: accepted connection");
-							ClientHandler client = new ClientHandler(socket,
-									this);
-//							activeClients.add(client);
-							System.out
-									.println("init server: run client handler thread");
-							new Thread(client).start();
-						}
-					} catch (IOException ex) {
-						System.err.println(ex);
-					}
-				}).start();
+				Platform.runLater(() -> {
+					logActivity.appendText("Zrace Game Server connected at "
+							+ new Date() + '\n');
+				});
+				while (true) {
+					System.out.println("server: waiting for connection");
+					socket = serverSocket.accept();
+					System.out.println("server: accepted connection");
+					ClientHandler client = new ClientHandler(socket, this);
+					// activeClients.add(client);
+				System.out.println("init server: run client handler thread");
+				new Thread(client).start();
+			}
+		} catch (IOException ex) {
+			System.err.println(ex);
+		}
+	}	).start();
 
 		new Thread(racesMonitorThread).start();
 	}
@@ -122,7 +120,13 @@ public class ServerController {
 		if (notCompletedRaces.size() < RunParameters.NUMBER_OF_ACTIVE_RACES) {
 			int missingRaces = RunParameters.NUMBER_OF_ACTIVE_RACES
 					- notCompletedRaces.size();
-			activeRaces.addAll(notCompletedRaces);
+//			activeRaces.addAll(notCompletedRaces);
+			
+			for (int i = 0; i < notCompletedRaces.size(); i++){
+				activeRaces.add(notCompletedRaces.get(i));
+				raceRuns.add(generateRaceRun(activeRaces.get(i)));
+			}
+			
 			for (int i = 0; i < missingRaces; i++) {
 				try {
 					activeRaces.add(generateRace());
@@ -134,6 +138,7 @@ public class ServerController {
 		} else {
 			for (int i = 0; i < RunParameters.NUMBER_OF_ACTIVE_RACES; i++) {
 				activeRaces.add(notCompletedRaces.get(i));
+				raceRuns.add(generateRaceRun(activeRaces.get(i)));
 			}
 		}
 
@@ -164,11 +169,11 @@ public class ServerController {
 			race.setCompleted(false);
 			race.setRaceId(0);
 			race.setRaceFullName("race-" + race.getRaceId());
-			
-			raceRuns.add(generateRaceRun(race));
+
 
 			race = db.insertRace(race);
 			System.out.println("generated race " + race);
+			raceRuns.add(generateRaceRun(race));
 			return race;
 		}
 
@@ -180,7 +185,7 @@ public class ServerController {
 
 	public synchronized User userLoginOrRegister(int userId, String userFullName) {
 		User user = db.getUserByNameAsObject(userFullName);
-//		User user = db.getUserById(userId);
+		// User user = db.getUserById(userId);
 		if (user != null) {
 			if (!isUserAlreadyLoggedIn(userFullName)) {
 				System.out.println("login of existing user submitted");
@@ -188,10 +193,8 @@ public class ServerController {
 			}
 
 			else {
-				System.out
-						.println("login failed - user already logged in");
-				new Exception(
-						"login failed - user already logged in");
+				System.out.println("login failed - user already logged in");
+				new Exception("login failed - user already logged in");
 				return null;
 			}
 		}
@@ -208,17 +211,17 @@ public class ServerController {
 	public synchronized void addClientToActiveClients(ClientHandler client) {
 		activeClients.add(client);
 	}
-	
-	public synchronized boolean isUserAlreadyLoggedIn(String userFullName){
+
+	public synchronized boolean isUserAlreadyLoggedIn(String userFullName) {
 		boolean isLoggedIn = false;
 		for (ClientHandler clientHandler : activeClients) {
-			if (clientHandler != null){
-				if (!clientHandler.getUserFullName().isEmpty()){
-					if (clientHandler.getUserFullName().equals(userFullName)){
+			if (clientHandler != null) {
+				if (!clientHandler.getUserFullName().isEmpty()) {
+					if (clientHandler.getUserFullName().equals(userFullName)) {
 						isLoggedIn = true;
 						return isLoggedIn;
 					}
-					
+
 				}
 			}
 		}
@@ -302,7 +305,8 @@ public class ServerController {
 				if (race.getStartTime().compareTo(
 						new Timestamp(System.currentTimeMillis())) >= 0) {
 					foundRunningRace = true;
-					System.out.println("there is running race " + foundRunningRace);
+					System.out.println("there is running race "
+							+ foundRunningRace);
 					return foundRunningRace;
 				}
 			}
@@ -311,10 +315,10 @@ public class ServerController {
 		return foundRunningRace;
 	}
 
-	public void disconnectClient(ClientHandler client){
+	public void disconnectClient(ClientHandler client) {
 		activeClients.remove(client);
 	}
-	
+
 	public void disconnectAllConnectedClients() {
 		for (ClientHandler hc : activeClients) {
 			// if(hc.isClientConnected())
@@ -343,7 +347,7 @@ public class ServerController {
 		cars.add(new CarInRace(race.getCar3Id(), 2));
 		cars.add(new CarInRace(race.getCar4Id(), 3));
 		cars.add(new CarInRace(race.getCar5Id(), 4));
-		RaceRun raceRun = new RaceRun(RaceStatus.before_start,
+		RaceRun raceRun = new RaceRun(race.getRaceId(), RaceStatus.before_start,
 				Songs.getSongByUid(songId), cars);
 		return raceRun;
 	}
@@ -393,7 +397,8 @@ public class ServerController {
 	public void sendBroadcastMessage(Message message) {
 		for (ClientHandler client : activeClients) {
 			try {
-				System.out.println("server send to all clients message " + message);
+				System.out.println("server send to all clients message "
+						+ message);
 				client.getStreamToClient().writeObject(message);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -402,8 +407,22 @@ public class ServerController {
 		}
 	}
 
-	public synchronized int getRaceWinnerCarID() {
-		return 0;
+	public synchronized int getRaceWinnerCarID(RaceRun raceRun) {
+		int carWinner = -1;
+		float carMilage = -1;
+		for (CarInRace car : raceRun.getCarsInRace()) {
+			CarPositionCalculator.CalculatedCarInRace carRun = CarPositionCalculator.calculateTotalMilageOfCar(car.getRadius(), car.getSpeedList(), getSongDuration(raceRun.getSong().getId()));
+			System.out.println("Car " + car.getUid() + " passed " + carRun.getTotalMilage() + " in " + getSongDuration(raceRun.getSong().getId()));
+			if (carRun.getTotalMilage() > carMilage){
+				carWinner = car.getUid();
+				carMilage = carRun.getTotalMilage();	
+			}
+		}
+		
+//		CalculatedCarInRace max = Collections.max(calcs, Comparator.comparing(CarPositionCalculator.CalculatedCarInRace::getTotalMilage));
+        System.out.println("Car won the race:" + carWinner);
+
+		return carWinner;
 	}
 
 }

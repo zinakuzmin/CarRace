@@ -113,7 +113,7 @@ public class RacesMonitor implements Runnable {
 					controller.getActiveRaces().get(raceIndex).setCompleted(true);
 					controller.getActiveRaces().get(raceIndex).setEndTime(new Timestamp(System.currentTimeMillis()));
 					controller.getActiveRaces().get(raceIndex).setDuration((int) ((songDurationInMillis + 2000)/1000));
-					int winnerCarId = controller.getRaceWinnerCarID();
+					int winnerCarId = controller.getRaceWinnerCarID(raceRun);
 					
 					controller.completeRace(race, winnerCarId);
 					controller.getActiveRaces().remove(raceIndex);

@@ -29,6 +29,7 @@ public class ZRaceGameController {
 	private boolean gotRacesFromServer = false;
 	private boolean gotRacesRunsFromServer = false;
 	private boolean serverListenerActivated = false;
+	private ClientView clientView;
 
 	public ZRaceGameController(Stage primaryStage) {
 		activeRaces = new ArrayList<Race>();
@@ -63,7 +64,7 @@ public class ZRaceGameController {
 				
 			}
 			System.out.println("start GUI");
-			ClientView clientView = new ClientView(this);
+			clientView = new ClientView(this);
 			clientView.start(new Stage());
 			//thread
 			
@@ -91,7 +92,7 @@ public class ZRaceGameController {
 	}
 	
 	public synchronized void setActiveRaces(ArrayList<Race> races){
-		activeRaces.clear();
+//		activeRaces.clear();
 		this.activeRaces = races;
 	}
 	
@@ -223,6 +224,16 @@ public class ZRaceGameController {
 
 	public void setSocket(Socket socket) {
 		this.socket = socket;
+	}
+
+
+	public ClientView getClientView() {
+		return clientView;
+	}
+
+
+	public void setClientView(ClientView clientView) {
+		this.clientView = clientView;
 	}
 
 }

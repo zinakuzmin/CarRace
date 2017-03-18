@@ -18,10 +18,11 @@ public class RaceRun implements Serializable{
 	private Songs song;
 	private ArrayList<CarInRace> carsInRace;
 
-	public RaceRun(RaceStatus raceStatus, Songs song, ArrayList<CarInRace> carsInRace) {
+	public RaceRun(int raceId, RaceStatus raceStatus, Songs song, ArrayList<CarInRace> carsInRace) {
 		this.setRaceStatus(raceStatus);
 		this.song = song;
 		this.carsInRace = carsInRace;
+		this.raceId = raceId;
 	}
 	
 	public RaceStatus getRaceStatus() {
@@ -37,12 +38,13 @@ public class RaceRun implements Serializable{
 	}
 	
 
+	
+
 	@Override
 	public String toString() {
-		return "RaceRun [raceStatus=" + getRaceStatus() + ", songUid=" + getSong().getId()
-				+ ", carsInRace=" + carsInRace + "]";
+		return "RaceRun [raceId=" + raceId + ", raceStatus=" + raceStatus
+				+ ", song=" + song + ", carsInRace=" + carsInRace + "]";
 	}
-
 
 	public int getRaceId() {
 		return raceId;

@@ -168,23 +168,33 @@ public class BetView extends Application{
 	public synchronized void createBets(Stage stage){
 		ArrayList<Bet> bets = new ArrayList<Bet>();
 		if (!car1BetAmount.getText().isEmpty()){
-			bets.add(generateBet(car1BetAmount.getText(), race.getRaceId(), race.getCar1Id()));
+			Bet bet = generateBet(car1BetAmount.getText(), race.getRaceId(), race.getCar1Id());
+			if (bet != null)
+				bets.add(bet);
 		}
 		
 		if (!car2BetAmount.getText().isEmpty()){
-			bets.add(generateBet(car2BetAmount.getText(), race.getRaceId(), race.getCar2Id()));
+			Bet bet = generateBet(car2BetAmount.getText(), race.getRaceId(), race.getCar2Id());
+			if (bet != null)
+				bets.add(bet);
 		}
 		
 		if (!car3BetAmount.getText().isEmpty()){
-			bets.add(generateBet(car3BetAmount.getText(), race.getRaceId(), race.getCar3Id()));
+			Bet bet = generateBet(car3BetAmount.getText(), race.getRaceId(), race.getCar3Id());
+			if (bet != null)
+				bets.add(bet);
 		}
 		
 		if (!car4BetAmount.getText().isEmpty()){
-			bets.add(generateBet(car4BetAmount.getText(), race.getRaceId(), race.getCar4Id()));
+			Bet bet = generateBet(car4BetAmount.getText(), race.getRaceId(), race.getCar4Id());
+			if (bet != null)
+				bets.add(bet);
 		}
 		
 		if (!car5BetAmount.getText().isEmpty()){
-			bets.add(generateBet(car5BetAmount.getText(), race.getRaceId(), race.getCar5Id()));
+			Bet bet = generateBet(car5BetAmount.getText(), race.getRaceId(), race.getCar5Id());
+			if (bet != null)
+				bets.add(bet);
 		}
 		
 		gameController.sendBetsToServer(bets);

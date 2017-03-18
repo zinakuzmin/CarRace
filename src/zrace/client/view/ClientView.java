@@ -34,9 +34,18 @@ public class ClientView extends Application {
 	private TextField userTextField;
 	private TextField userIDtextField;
 	private static MainClientApp mainClientApp;
+	private Label raceStatus1;
+	private Label raceStatus2;
+	private Label raceStatus3;
+
 	
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
+		
+		raceStatus1 = new Label(); //gameController.getRaceRuns().get(0).getRaceStatus().toString());
+		raceStatus2 = new Label(); //gameController.getRaceRuns().get(1).getRaceStatus().toString());
+		raceStatus3 = new Label(); //gameController.getRaceRuns().get(2).getRaceStatus().toString());
+
 	}
 
 	@Override
@@ -149,9 +158,9 @@ public class ClientView extends Application {
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		pane.setTop(userNameLabel);
 
-		Label raceStatus1 = new Label(gameController.getRaceRuns().get(0).getRaceStatus().toString());
-		Label raceStatus2 = new Label(gameController.getRaceRuns().get(1).getRaceStatus().toString());
-		Label raceStatus3 = new Label(gameController.getRaceRuns().get(2).getRaceStatus().toString());
+//		raceStatus1 = new Label(); //gameController.getRaceRuns().get(0).getRaceStatus().toString());
+//		raceStatus2 = new Label(); //gameController.getRaceRuns().get(1).getRaceStatus().toString());
+//		raceStatus3 = new Label(); //gameController.getRaceRuns().get(2).getRaceStatus().toString());
 
 		Button viewRace1 = new Button("View Race1 " + gameController.getActiveRaces().get(0).getRaceFullName());
 		Button viewRace2 = new Button("View Race2 " + gameController.getActiveRaces().get(1).getRaceFullName());
@@ -214,7 +223,7 @@ public class ClientView extends Application {
 				raceDurationInMilis = activeRace.getEndTime().getTime() - activeRace.getStartTime().getTime();
 			
 			mainClientApp.setIsRaceStarted(raceStarted, raceDurationInMilis);
-			mainClientApp.setMusic(raceRun.getSongUid(), Duration.millis(raceDurationInMilis));
+			mainClientApp.setMusic(raceRun.getSong(), Duration.millis(raceDurationInMilis));
 			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException | InterruptedException e) {
@@ -256,7 +265,16 @@ public class ClientView extends Application {
 			return false;
 
 		return true;
-
-
+	}
+	
+	public synchronized void setRacesStatusInView(){
+		if (!gameController.getRaceRuns().isEmpty() && gameController.getRaceRuns().size() >= 3){
+			String statusRace1 = gameController.getRaceRuns().get(0).getRaceStatus().toString();
+			raceStatus1.setText(statusRace1);
+			raceStatus1.setFont(Font.font("Verdana", 20));
+			raceStatus2.setText(gameController.getRaceRuns().get(1).getRaceStatus().toString());
+			raceStatus3.setText(gameController.getRaceRuns().get(2).getRaceStatus().toString());
+			
+		}
 	}
 }
