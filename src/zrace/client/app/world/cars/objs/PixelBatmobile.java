@@ -1,7 +1,5 @@
 package zrace.client.app.world.cars.objs;
 
-import java.util.Random;
-
 import com.interactivemesh.jfx.importer.ModelImporter;
 
 import javafx.geometry.Point3D;
@@ -25,16 +23,15 @@ public class PixelBatmobile extends Car{
 	@Override
 	public Xform loadCar() {
 		carForm = new Xform();
-        Random random = new Random();
 		
-        Box body = Pixel.getPixelBox(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)), 10, 5, 20);
+        Box body = Pixel.getPixelBox(Color.DARKKHAKI, 10, 5, 20);
         
         Box wheelLeftFront = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(5, -2.5, 5));
         Box wheelLeftRear = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(5, -2.5, -5));
         Box wheelRightRear = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(-5, -2.5, -5));
         Box wheelRightFront = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(-5, -2.5, 5));
         
-        Color rgbOfUpperBodyAndGant = Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+        Color rgbOfUpperBodyAndGant = Color.POWDERBLUE;
 		Box upperCar = Pixel.getPixelBox(rgbOfUpperBodyAndGant, 8, 4, 1, new Translate(0, 3, 3));
 		upperCar.setRotate(-45);
 		upperCar.setRotationAxis(new Point3D(1, 0, 0));
@@ -84,7 +81,7 @@ public class PixelBatmobile extends Car{
 
 	@Override
 	public double getRandomScaleOnLoad() {
-		return new Random().nextFloat() * (0.5) + 0.6;
+		return 0.6;
 	}
 
 	@Override
