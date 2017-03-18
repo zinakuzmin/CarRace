@@ -395,13 +395,15 @@ public class ServerController {
 	}
 
 	// Return song duration in seconds
-	public synchronized int getSongDuration(int songId) {
-		if (songId >= 0 && songId < 3) {
-			String bip = Songs.getSongByUid(songId).getSongName();
+	public synchronized int getSongDuration(Songs song) {
+		
+			String bip = song.getSongName();
 			Media hit = new Media(new File(bip).toURI().toString());
-			return (int) hit.getDuration().toSeconds();
-		}
-		return 0;
+			int durationInSeconds = (int) hit.getDuration().toSeconds();
+			System.out.println("duration in seconds is " + durationInSeconds);
+			return durationInSeconds;
+		
+		
 	}
 
 	public void sendBroadcastMessage(Message message) {
@@ -466,8 +468,8 @@ public class ServerController {
 		int carWinner = -1;
 		float carMilage = -1;
 		for (CarInRace car : raceRun.getCarsInRace()) {
-			CarPositionCalculator.CalculatedCarInRace carRun = CarPositionCalculator.calculateTotalMilageOfCar(car.getRadius(), car.getSpeedList(), getSongDuration(raceRun.getSong().getId()));
-			System.out.println("Car " + car.getUid() + " passed " + carRun.getTotalMilage() + " in " + getSongDuration(raceRun.getSong().getId()));
+			CarPositionCalculator.CalculatedCarInRace carRun = CarPositionCalculator.calculateTotalMilageOfCar(car.getRadius(), car.getSpeedList(), getSongDuration(raceRun.getSong())*1000);
+			System.out.println("Car " + car.getUid() + " passed " + carRun.getTotalMilage() + " in " + getSongDuration(raceRun.getSong())*1000);
 			if (carRun.getTotalMilage() > carMilage){
 				carWinner = car.getUid();
 				carMilage = carRun.getTotalMilage();	

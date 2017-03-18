@@ -1,21 +1,6 @@
 package main.runner;
 
 import java.util.ArrayList;
-
-
-
-
-import com.sun.corba.se.impl.activation.ServerMain;
-
-
-
-import com.sun.corba.se.impl.encoding.CodeSetConversion.BTCConverter;
-
-import dbModels.Bet;
-import dbModels.Car;
-import dbModels.Race;
-import dbModels.RaceResult;
-import dbModels.User;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -32,13 +17,14 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import zrace.client.ZRaceGameController;
-import zrace.client.ZRaceMVCClient;
-import zrace.client.app.MainClientApp;
 import zrace.server.ServerController;
-import zrace.server.ZRaceMVCServer;
 import zrace.server.db.DBHandler;
 import zrace.server.db.ZRaceGameDBScript;
-import zrace.server.view.ServerMainView;
+import dbModels.Bet;
+import dbModels.Car;
+import dbModels.Race;
+import dbModels.RaceResult;
+import dbModels.User;
 
 public class Runner extends Application {
 	
