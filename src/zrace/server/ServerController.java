@@ -21,6 +21,7 @@ import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
 import zrace.protocol.Message;
 import zrace.protocol.UserDetailsMsg;
+import zrace.protocol.WinnerCarMsg;
 import zrace.server.db.DBHandler;
 import zrace.server.view.ServerMainView;
 import dbModels.Bet;
@@ -261,6 +262,7 @@ public class ServerController {
 					
 				}
 				user.setUserRevenue(user.getUserRevenue() + raceResult.getUserRevenue());
+				sendUserDetailsUpdateToClient(user);
 				db.insertRaceResult(raceResult);
 				db.updateUserRevenue(user);
 				db.updateRaceCompleted(race);
@@ -311,7 +313,7 @@ public class ServerController {
 		for (Race race : activeRaces) {
 			if (race.getStartTime() != null) {
 				if (race.getStartTime().compareTo(
-						new Timestamp(System.currentTimeMillis())) >= 0) {
+						new Timestamp(System.currentTimeMillis())) <= 0 && getRaceRunByRaceId(race.getRaceId()).getRaceStatus().equals(RaceStatus.in_progress)) {
 					foundRunningRace = true;
 					System.out.println("there is running race "
 							+ foundRunningRace);
@@ -438,6 +440,27 @@ public class ServerController {
 			}
 		}
 	}
+	
+//	public synchronized void sendBroadcastWinnerCar(WinnerCarMsg message){
+//		for (ClientHandler client : activeClients) {
+//			try {
+//				
+//					
+//					System.out.println("server send to client message " + client + " "
+//							+ message);
+//					client.getStreamToClient().reset();
+//					client.getStreamToClient().writeObject(message);
+//					client.getStreamToClient().flush();
+//					
+//				
+//
+//				
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 	public synchronized int getRaceWinnerCarID(RaceRun raceRun) {
 		int carWinner = -1;

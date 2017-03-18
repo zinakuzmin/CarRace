@@ -29,6 +29,7 @@ public class ZRaceGameController {
 	private boolean gotRacesRunsFromServer = false;
 	private boolean serverListenerActivated = false;
 	private ClientView clientView;
+	private int lastWinnerCarId = 0;
 
 	public ZRaceGameController(Stage primaryStage) {
 		activeRaces = new ArrayList<Race>();
@@ -211,7 +212,7 @@ public class ZRaceGameController {
 	}
 
 
-	public void setOut(ObjectOutputStream out) {
+	public synchronized void setOut(ObjectOutputStream out) {
 		this.out = out;
 	}
 
@@ -231,8 +232,18 @@ public class ZRaceGameController {
 	}
 
 
-	public void setClientView(ClientView clientView) {
+	public synchronized void setClientView(ClientView clientView) {
 		this.clientView = clientView;
+	}
+
+
+	public int getLastWinnerCarId() {
+		return lastWinnerCarId;
+	}
+
+
+	public synchronized void setLastWinnerCarId(int lastWinnerCarId) {
+		this.lastWinnerCarId = lastWinnerCarId;
 	}
 
 }

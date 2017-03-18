@@ -282,7 +282,7 @@ public class DBHandler {
 				while (result.next()) {
 					ZraceSystem systemObj;
 
-					systemObj = new ZraceSystem(result.getInt("systemIdId"),
+					systemObj = new ZraceSystem(result.getInt("systemId"),
 							result.getDouble("systemRevenue"));
 					system.add(systemObj);
 				}

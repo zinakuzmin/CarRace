@@ -13,6 +13,7 @@ import zrace.protocol.Message;
 import zrace.protocol.UpdateRaceRunsMsg;
 import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.UserDetailsMsg;
+import zrace.protocol.WinnerCarMsg;
 
 
 public class ServerListener extends Thread{
@@ -55,6 +56,7 @@ public class ServerListener extends Thread{
 							gameController.setGotUserFromServer(true);
 							Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());
 //						}).start();
+							
 						
 						
 
@@ -70,6 +72,19 @@ public class ServerListener extends Thread{
 						Platform.runLater(() -> gameController.getClientView().setRacesStatusInView());
 //					}).start();
 				}
+					
+				 else if (message instanceof WinnerCarMsg) {
+//					new Thread(() -> {
+//					Platform.runLater(() -> {
+						System.out.println("Client got message " + message);
+						gameController.setLastWinnerCarId(((WinnerCarMsg) message).getCarId());
+//						User user = ((UserDetailsMsg)message).getUser();
+//						gameController.setUserDetails(user);
+//						System.out.println("client got user details " + user);
+//						gameController.setGotUserFromServer(true);
+						Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());
+				 }
+//					}).start();
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
