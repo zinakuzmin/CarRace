@@ -2,6 +2,7 @@ package zrace.client.view;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 
 import dbModels.Race;
 import dbModels.RaceRun;
@@ -297,17 +298,23 @@ public class ClientView extends Application {
 		racePane.getChildren().clear();
 		try {
 			boolean raceStarted = activeRace.getStartTime() != null;
-			long raceDurationInMilis = 0;
+			long raceDurationInMilis = 5_000;
 
 			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace(), gameController, raceNumber);
 
-			if (raceStarted)
-				raceDurationInMilis = activeRace.getEndTime().getTime()
-						- activeRace.getStartTime().getTime();
+//			long raceStartTime = activeRace.getStartTime().getTime();
+//			long currentTimeMillis = System.currentTimeMillis();
+//			System.out.println("Race Start:"+new Date(raceStartTime));
+//			System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
+//			System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
+//			
+//			if (raceStarted) {
+//				raceDurationInMilis = raceStartTime - currentTimeMillis;
+//			}
 
+			System.out.println("Race duration in millis:" + raceDurationInMilis);
 			mainClientApp.setIsRaceStarted(raceStarted, raceDurationInMilis);
-			mainClientApp.setMusic(raceRun.getSong(),
-					Duration.millis(raceDurationInMilis));
+			mainClientApp.setMusic(raceRun.getSong(), Duration.millis(raceDurationInMilis));
 			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException | InterruptedException e) {

@@ -30,6 +30,8 @@ import zrace.client.app.world.ZCamera;
 import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.Songs;
 import zrace.client.app.world.cars.objs.abstracts.Car;
+import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
+import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
 import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 
 public class MainClientApp extends Application {
@@ -151,7 +153,6 @@ public class MainClientApp extends Application {
 						try {
 							Thread.sleep(200);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						continue;
@@ -159,7 +160,11 @@ public class MainClientApp extends Application {
 					
 					mediaPlayer.play();
 					for (int i=0; i<cars.size() ; i++) {
-						cars.get(i).startCar(new CarRadialMove(carsInRace.get(i).getSpeedList()));
+						Car car = cars.get(i);
+						CalculatedCarInRace carCurrentPos = CarPositionCalculator.
+								calculateTotalMilageOfCar(car.getOrbitRadius(), carsInRace.get(i).getSpeedList(), raceDurationInMillis);
+//						System.out.println("Done calculation for car:" + car.getCarName());
+						car.startCar(new CarRadialMove(carsInRace.get(i).getSpeedList(), carCurrentPos));
 					}
 					carsStarted = true;
 					return;
@@ -167,13 +172,6 @@ public class MainClientApp extends Application {
 			}
 		}).start();
         
-//	        
-//	        
-//	        System.out.println("Setting milis to 100");
-//	        Car.STEP_DURATION_IN_MILLISECONDS = 100;
-//	        
-//        }
-		
 		mediaPlayer.setOnEndOfMedia(new Runnable() {
 			
 			@Override

@@ -92,15 +92,20 @@ public abstract class Car {
     public static int STEP_DURATION_IN_MILLISECONDS = 100;
 	public static int firstCarRadius = 80;
 	Timeline timeline;
-	private CarRadialMove speedList;
+	private CarRadialMove radialMoveParams;
 	public long totalNumOfLoops = 0;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-    public void startCar(CarRadialMove speed) {
-		this.speedList = speed;
+    public void startCar(CarRadialMove radialMoveParams) {
+		this.radialMoveParams = radialMoveParams;
+		System.out.println(radialMoveParams);
+		carForm.setTranslateX(radialMoveParams.getLastXPos());
+		carForm.setTranslateZ(radialMoveParams.getLastZPos());
+		carForm.setRotateY(radialMoveParams.getLastDegree());
+		
 		timeline = new Timeline(new KeyFrame(Duration.ZERO, new EventHandler() {
-	        float movingStep = 0;
-	        float movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*speed.getRadialPoint();
+	        float movingStep = radialMoveParams.getLastMovingStep();//0;
+	        float movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*radialMoveParams.getRadialPoint();
 	        float lastMovingPoint = movingPoints;
 	        long timeInMillis = 0;
 	
@@ -133,7 +138,7 @@ public abstract class Car {
 	            	movingStep = 0;
 	            }
 				if (timeInMillis > timeToChangeSpeed) {
-	            	movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*speed.getRadialPoint();
+	            	movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*radialMoveParams.getRadialPoint();
 	            	timeInMillis = 0;
 	            }
 	            timeInMillis += STEP_DURATION_IN_MILLISECONDS;
@@ -183,7 +188,7 @@ public abstract class Car {
 		
 	}
 	public ArrayList<Integer> getSpeedList() {
-		return speedList.getList();
+		return radialMoveParams.getList();
 	}
 	
 }
