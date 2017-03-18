@@ -8,8 +8,8 @@ public class CarPositionCalculator {
 		float totalMilage = 0;
 		double lastXPos = 0;
 		double lastZPos = 0;
-		double lastDegree = 0;
-		double lastMovingStep = 0;
+		float lastDegree = 0;
+		float lastMovingStep = 0;
 		
 		int speedArrayPos = 0;
 		float movingStep = 0;
@@ -53,16 +53,16 @@ public class CarPositionCalculator {
             }
 			if (timePassedInLap > Car.timeToChangeSpeed) {
 				speedArrayPos++;
-				System.out.println("Speed changed new:" + speedList.get(speedArrayPos));
+//				System.out.println("Speed changed new:" + speedList.get(speedArrayPos));
             	movingPoints = ((float)orbitRadius/(float)Car.firstCarRadius)*speedList.get(speedArrayPos);
             	timePassedInLap = 0;
             }
 			timePassedInLap += Car.STEP_DURATION_IN_MILLISECONDS;
 		}
 //		System.out.println("Calculated milage:" + totalMilage);
-		System.out.println("Calculated loops:" + totalNumOfLoops);
+//		System.out.println("Calculated loops:" + totalNumOfLoops);
 		
-		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep);
+		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep, movingPoints);
 	}
 	
 	public static class CalculatedCarInRace{
@@ -70,22 +70,24 @@ public class CarPositionCalculator {
 		private float totalMilage;
 		private double lastXPos;
 		private double lastZPos;
-		private double lastDegree;
-		private double lastMovingStep;
+		private float lastDegree;
+		private float lastMovingStep;
+		private float lastMovingPoints;
 
-		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, double lastDegree, double lastMovingStep) {
+		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep, float lastMovingPoints) {
 			this.totalMilage = totalMilage;
 			this.lastXPos = lastXPos;
 			this.lastZPos = lastZPos;
 			this.lastDegree = lastDegree;
 			this.lastMovingStep = lastMovingStep;
+			this.lastMovingPoints = lastMovingPoints;
 		}
 
-		public double getLastDegree() {
+		public float getLastDegree() {
 			return lastDegree;
 		}
 
-		public double getLastMovingStep() {
+		public float getLastMovingStep() {
 			return lastMovingStep;
 		}
 
@@ -99,6 +101,10 @@ public class CarPositionCalculator {
 
 		public float getTotalMilage() {
 			return totalMilage;
+		}
+
+		public float getLastMovingPoints() {
+			return lastMovingPoints;
 		}
 		
 		
