@@ -352,7 +352,7 @@ public class ServerController {
 		return raceRun;
 	}
 
-	public ArrayList<RaceRun> getRaceRuns() {
+	public synchronized ArrayList<RaceRun> getRaceRuns() {
 		return raceRuns;
 	}
 
@@ -399,7 +399,10 @@ public class ServerController {
 			try {
 				System.out.println("server send to all clients message "
 						+ message);
+				client.getStreamToClient().reset();
 				client.getStreamToClient().writeObject(message);
+				client.getStreamToClient().flush();
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

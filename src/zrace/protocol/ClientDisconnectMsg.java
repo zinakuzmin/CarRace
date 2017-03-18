@@ -10,7 +10,8 @@ public class ClientDisconnectMsg extends Message{
 	private static final long serialVersionUID = 1L;
 	private User user;
 	
-	public ClientDisconnectMsg(User user) {
+	public ClientDisconnectMsg(int messageId, User user) {
+		super(messageId);
 		this.user = user;
 	}
 	

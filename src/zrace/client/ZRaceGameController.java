@@ -5,17 +5,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Date;
 
-import dbModels.Bet;
-import dbModels.Race;
-import dbModels.RaceRun;
-import dbModels.User;
-import javafx.stage.Stage;
+import dbModels.*;
 import zrace.client.view.ClientView;
 import zrace.client.view.listeners.ServerListener;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
 import zrace.protocol.ClientDisconnectMsg;
+import zrace.server.ClientHandler;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
 public class ZRaceGameController {
 	private Socket socket;
@@ -77,7 +77,7 @@ public class ZRaceGameController {
 	
 	
 	public synchronized void sendLoginOrRegisterMessage(String userFullName){
-		ClientConnectMsg msg = new ClientConnectMsg(0, userFullName.toLowerCase());
+		ClientConnectMsg msg = new ClientConnectMsg(0, 0, userFullName.toLowerCase());
 		
 		System.out.println("client: send login msg");
 		try {
@@ -130,7 +130,7 @@ public class ZRaceGameController {
 		new Thread(() -> {
 			
 			try {
-				getOut().writeObject(new ClientBetMsg(bets));
+				getOut().writeObject(new ClientBetMsg(0, bets));
 				System.out.println("client sent bets " + bets);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -175,7 +175,7 @@ public class ZRaceGameController {
 	
 	public void disconnectClient(){
 		try {
-			getOut().writeObject(new ClientDisconnectMsg(user));
+			getOut().writeObject(new ClientDisconnectMsg(0, user));
 			in.close();
 			getOut().close();
 			getSocket().close();

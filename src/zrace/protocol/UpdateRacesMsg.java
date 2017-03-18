@@ -11,10 +11,19 @@ public class UpdateRacesMsg extends Message{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<Race> races;
 	
-	public UpdateRacesMsg(ArrayList<Race> races) {
-		this.races = races;
+	
+	public UpdateRacesMsg(int messageId, ArrayList<Race> races) {
+		super(messageId);
+		this.races = new ArrayList<Race>();
+		this.races.addAll(races);
 		
 	}
+	
+//	public UpdateRacesMsg(int id, ArrayList<Race> races) {
+//		this.races = races;
+//		this.messageId = id;
+//		
+//	}
 	
 	
 	public ArrayList<Race> getRaces() {
@@ -24,12 +33,16 @@ public class UpdateRacesMsg extends Message{
 		this.races = races;
 	}
 
-
 	@Override
 	public String toString() {
-		return "UpdateRacesMsg [races=" + races + "]";
+		return  " getMessageId()= "
+				+ getMessageId() + " UpdateRacesMsg [races=" + races + "]";
 	}
+
+
 	
+
+
 	
 
 }
