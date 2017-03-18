@@ -1,7 +1,5 @@
 package zrace.client.app.world.cars.objs;
 
-import java.util.Random;
-
 import com.interactivemesh.jfx.importer.ModelImporter;
 
 import javafx.scene.paint.Color;
@@ -24,16 +22,15 @@ public class PixelBugatty extends Car{
 	@Override
 	public Xform loadCar() {
 		carForm = new Xform();
-        Random random = new Random();
 		
-        Box body = Pixel.getPixelBox(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)), 10, 5, 20);
+        Box body = Pixel.getPixelBox(Color.CYAN, 10, 5, 20);
         
         Box wheelLeftFront = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(5, -2.5, 5));
         Box wheelLeftRear = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(5, -2.5, -5));
         Box wheelRightRear = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(-5, -2.5, -5));
         Box wheelRightFront = Pixel.getPixelBox(Color.BLACK, 2, 3, 3, new Translate(-5, -2.5, 5));
         
-        Color rgbOfUpperBodyAndGant = Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+        Color rgbOfUpperBodyAndGant = Color.FUCHSIA;
 		Box upperCar = Pixel.getPixelBox(rgbOfUpperBodyAndGant, 8, 3, 10, new Translate(0, 4, -2));
 
         Box gantLeftFront = Pixel.getPixelBox(rgbOfUpperBodyAndGant, 1, 1, 1, new Translate(6, -2.5, 5));
@@ -73,7 +70,7 @@ public class PixelBugatty extends Car{
 
 	@Override
 	public double getRandomScaleOnLoad() {
-		return new Random().nextFloat() * (0.6) + 0.7;
+		return 0.7;
 	}
 
 	@Override
