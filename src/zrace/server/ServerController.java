@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +16,7 @@ import com.sun.swing.internal.plaf.synth.resources.synth;
 
 import main.runner.RunParameters;
 import zrace.client.app.world.cars.objs.Songs;
+import zrace.protocol.Message;
 import zrace.server.db.DBHandler;
 import zrace.server.view.ServerMainView;
 import dbModels.Bet;
@@ -41,22 +43,14 @@ public class ServerController {
 	private TextArea logActivity;
 	private ServerLogger logger;
 	private ArrayList<RaceRun> raceRuns;
-	
-	
-	
-	
-	
+	private RacesMonitor racesMonitorThread;
 
 	public ServerController(Stage primaryStage) {
 		try {
 			serverSocket = new ServerSocket(8000);
-		} catch (IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		logActivity = new TextArea();
-		setLogger(new  ServerLogger(logActivity));
-		try {
+			logActivity = new TextArea();
+			setLogger(new ServerLogger(logActivity));
+			racesMonitorThread = new RacesMonitor(this);
 			new ServerMainView(logActivity).start(new Stage());
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -64,68 +58,72 @@ public class ServerController {
 		}
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent event) {
-				disconnectAllConnectedClients();
+				
 				try {
+					disconnectAllConnectedClients();
+					racesMonitorThread.setShouldRun(false);
 					serverSocket.close();
 				} catch (IOException e) {
 				}
 			}
 		});
-		
-		
-		
+
 		db = new DBHandler();
 		activeRaces = new ArrayList<Race>();
+		raceRuns = new ArrayList<RaceRun>();
 		setActiveRaces();
 		System.out.println("Active races " + activeRaces);
-		
-		
-		raceRuns = new ArrayList<RaceRun>();
-		for (int i = 0; i < activeRaces.size(); i++){
-			raceRuns.add(generateRaceRun(activeRaces.get(0)));
+
+		for (int i = 0; i < activeRaces.size(); i++) {
+			raceRuns.add(generateRaceRun(activeRaces.get(i)));
 		}
 		initServer();
 	}
-	
-	
-	public void initServer(){
 
-		
+	public void initServer() {
+
 		activeClients = new ArrayList<>();
-		
-		
-		new Thread(() -> {
-			try {
-				
-				Platform.runLater(() -> {
-					logActivity.appendText("Zrace Game Server connected at " + new Date() + '\n');
-				});
-				while (true) {
-					System.out.println("server: waiting for connection");
-					socket = serverSocket.accept();
-					System.out.println("server: accepted connection");
-					ClientHandler client = new ClientHandler(socket, this);
-					activeClients.add(client);
-					System.out.println("init server: run client handler thread");
-					new Thread(client).start();
-				}
-			} catch (IOException ex) {
-				System.err.println(ex);
-			}
-		}).start();
+
+		new Thread(
+				() -> {
+					try {
+
+						Platform.runLater(() -> {
+							logActivity
+									.appendText("Zrace Game Server connected at "
+											+ new Date() + '\n');
+						});
+						while (true) {
+							System.out
+									.println("server: waiting for connection");
+							socket = serverSocket.accept();
+							System.out.println("server: accepted connection");
+							ClientHandler client = new ClientHandler(socket,
+									this);
+//							activeClients.add(client);
+							System.out
+									.println("init server: run client handler thread");
+							new Thread(client).start();
+						}
+					} catch (IOException ex) {
+						System.err.println(ex);
+					}
+				}).start();
+
+		new Thread(racesMonitorThread).start();
 	}
-	
-	
-	public void setActiveRaces(){
-		
-		//Get from DB where isCompleted = false
+
+	public void setActiveRaces() {
+
+		// Get from DB where isCompleted = false
 		ArrayList<Race> notCompletedRaces = db.getAllActiveRacesAsArray(false);
-		
+
 		System.out.println("not completed races " + notCompletedRaces);
-		if (notCompletedRaces.size() < RunParameters.NUMBER_OF_CARS_IN_RACE){
-			int missingRaces = RunParameters.NUMBER_OF_CARS_IN_RACE - notCompletedRaces.size();
+		if (notCompletedRaces.size() < RunParameters.NUMBER_OF_ACTIVE_RACES) {
+			int missingRaces = RunParameters.NUMBER_OF_ACTIVE_RACES
+					- notCompletedRaces.size();
 			activeRaces.addAll(notCompletedRaces);
-			for (int i = 0; i < missingRaces; i++){
+			for (int i = 0; i < missingRaces; i++) {
 				try {
 					activeRaces.add(generateRace());
 				} catch (Exception e) {
@@ -133,32 +131,30 @@ public class ServerController {
 					e.printStackTrace();
 				}
 			}
-		}
-		else {
-			for (int i = 0; i < RunParameters.NUMBER_OF_CARS_IN_RACE; i++){
+		} else {
+			for (int i = 0; i < RunParameters.NUMBER_OF_ACTIVE_RACES; i++) {
 				activeRaces.add(notCompletedRaces.get(i));
 			}
 		}
-		
+
 	}
-	
-	
-	public Race generateRace() throws Exception{
+
+	public Race generateRace() throws Exception {
 		ArrayList<Car> cars = db.getAllCarsAsArray();
 		System.out.println(cars);
-		
+
 		ArrayList<Car> selectedCars = new ArrayList<Car>();
-		
-		//Choose randomly cars for race
-		if (cars.size() >= RunParameters.NUMBER_OF_CARS_IN_RACE){
-			while (selectedCars.size() < RunParameters.NUMBER_OF_CARS_IN_RACE){
-				int randomNum = 0 + (int)(Math.random() * (cars.size())); 
-				if (!selectedCars.contains(cars.get(randomNum))){
+
+		// Choose randomly cars for race
+		if (cars.size() >= RunParameters.NUMBER_OF_CARS_IN_RACE) {
+			while (selectedCars.size() < RunParameters.NUMBER_OF_CARS_IN_RACE) {
+				int randomNum = 0 + (int) (Math.random() * (cars.size()));
+				if (!selectedCars.contains(cars.get(randomNum))) {
 					selectedCars.add(cars.get(randomNum));
 				}
 			}
 			System.out.println("cars selected for race " + selectedCars);
-			
+
 			Race race = new Race();
 			race.setCar1Id(selectedCars.get(0).getCarId());
 			race.setCar2Id(selectedCars.get(1).getCarId());
@@ -169,71 +165,91 @@ public class ServerController {
 			race.setRaceId(0);
 			race.setRaceFullName("race-" + race.getRaceId());
 			
-			
+			raceRuns.add(generateRaceRun(race));
+
 			race = db.insertRace(race);
 			System.out.println("generated race " + race);
 			return race;
 		}
-		
-		else{
+
+		else {
 			throw new Exception("Not enough cars available for race");
-		}			
-		
+		}
+
 	}
-	
-	
-	public synchronized User userLoginOrRegister(int userId, String userFullName){
-		User user = db.getUserById(userId);
-		if (user != null){
-			if (user.getUserFullName().equals(userFullName)){
+
+	public synchronized User userLoginOrRegister(int userId, String userFullName) {
+		User user = db.getUserByNameAsObject(userFullName);
+//		User user = db.getUserById(userId);
+		if (user != null) {
+			if (!isUserAlreadyLoggedIn(userFullName)) {
 				System.out.println("login of existing user submitted");
 				return user;
 			}
-			
-			else{
-				System.out.println("login failed - existing userID with different name");
-				new Exception("login failed - existing userID with different name");
+
+			else {
+				System.out
+						.println("login failed - user already logged in");
+				new Exception(
+						"login failed - user already logged in");
 				return null;
 			}
 		}
-		
+
 		else {
-			User newUser = new User(userFullName, userId, RunParameters.USER_INITIAL_AMOUNT_OF_MONEY);
+			User newUser = new User(userFullName, userId,
+					RunParameters.USER_INITIAL_AMOUNT_OF_MONEY);
 			newUser = db.insertUser(newUser);
 			System.out.println("Created a new user " + newUser);
 			return newUser;
 		}
 	}
-	
-	
-	public synchronized void addClientToActiveClients(ClientHandler client){
+
+	public synchronized void addClientToActiveClients(ClientHandler client) {
 		activeClients.add(client);
 	}
 	
-	public synchronized void removeClientFromActiveClients(ClientHandler client){
+	public synchronized boolean isUserAlreadyLoggedIn(String userFullName){
+		boolean isLoggedIn = false;
+		for (ClientHandler clientHandler : activeClients) {
+			if (clientHandler != null){
+				if (!clientHandler.getUserFullName().isEmpty()){
+					if (clientHandler.getUserFullName().equals(userFullName)){
+						isLoggedIn = true;
+						return isLoggedIn;
+					}
+					
+				}
+			}
+		}
+		return isLoggedIn;
+	}
+
+	public synchronized void removeClientFromActiveClients(ClientHandler client) {
 		activeClients.remove(client);
 	}
-	
-	public synchronized void registerBet(Bet bet){
+
+	public synchronized void registerBet(Bet bet) {
 		db.insertBet(bet);
 	}
-	
-	public synchronized void completeRace(Race race, int winnerCarId){
+
+	public synchronized void completeRace(Race race, int winnerCarId) {
 		ArrayList<Bet> bets = db.getBetsByRaceIDAsArray(race.getRaceId());
-		if (bets != null){
+		if (bets != null) {
 			for (Bet bet : bets) {
 				Double betAmount = bet.getAmount();
 				RaceResult raceResult = new RaceResult();
 				raceResult.setWinner(true);
 				raceResult.setRaceId(race.getRaceId());
 				raceResult.setBetId(bet.getBetId());
-				if (bet.getCarId() == winnerCarId){
-					raceResult.setUserRevenue(betAmount - betAmount*0.1);
-					raceResult.setSystemRevenue(betAmount*0.1);
-				}
-				else{
-					raceResult.setUserRevenue(betAmount - betAmount*RunParameters.SYSTEM_COMISSION);
-					raceResult.setSystemRevenue(betAmount*RunParameters.SYSTEM_COMISSION);
+				if (bet.getCarId() == winnerCarId) {
+					raceResult.setUserRevenue(betAmount - betAmount * 0.1);
+					raceResult.setSystemRevenue(betAmount * 0.1);
+				} else {
+					raceResult.setUserRevenue(betAmount - betAmount
+							* RunParameters.SYSTEM_COMISSION);
+					raceResult.setSystemRevenue(betAmount
+							* RunParameters.SYSTEM_COMISSION);
 				}
 				db.insertRaceResult(raceResult);
 				db.updateUserRevenue(db.getUserById(bet.getUserId()));
@@ -241,24 +257,23 @@ public class ServerController {
 				db.updateSystemRevenue(raceResult.getSystemRevenue());
 			}
 		}
-		
-		
+
 	}
-	
-	
-	public Race checkIfOneOfRacesCanRun(){
-//		int numberOfCarsWithBet = 0;
+
+	public synchronized Race checkIfOneOfRacesCanRun() {
+		// int numberOfCarsWithBet = 0;
 		double totalSumInBets = 0;
-//		int raceReadyToRunIndex = -1;
+		// int raceReadyToRunIndex = -1;
 		double maxBetAmount = 0;
 		Race runRace = null;
-		
+
 		HashMap<Race, Double> possibleReadyRace = new HashMap<>();
-		
-		//Loop over the active races (isCompleted = false) and check if is has enough bets
+
+		// Loop over the active races (isCompleted = false) and check if is has
+		// enough bets
 		for (Race race : activeRaces) {
 			HashMap<Integer, Integer> carsWithBet = new HashMap<>();
-			ArrayList<Bet>  bets = db.getBetsByRaceIDAsArray(race.getRaceId());
+			ArrayList<Bet> bets = db.getBetsByRaceIDAsArray(race.getRaceId());
 			for (Bet bet : bets) {
 				totalSumInBets += bet.getAmount();
 				carsWithBet.put(bet.getCarId(), 1);
@@ -266,77 +281,129 @@ public class ServerController {
 			if (carsWithBet.size() >= RunParameters.NUMBER_OF_CARS_IN_RACE_THAT_HAVE_BET)
 				possibleReadyRace.put(race, totalSumInBets);
 		}
-		
-		//If there are several ready to run races, the one with more bets amount is chosen
+
+		// If there are several ready to run races, the one with more bets
+		// amount is chosen
 		Iterator<Race> iterator = possibleReadyRace.keySet().iterator();
-		while (iterator.hasNext()){
+		while (iterator.hasNext()) {
 			Race readyRace = iterator.next();
-			if (maxBetAmount < possibleReadyRace.get(readyRace)){
+			if (maxBetAmount < possibleReadyRace.get(readyRace)) {
 				maxBetAmount = possibleReadyRace.get(readyRace);
 				runRace = readyRace;
 			}
 		}
 		return runRace;
 	}
-	
-	public void disconnectAllConnectedClients(){
-		for(ClientHandler hc : activeClients){
-//			if(hc.isClientConnected())
-//				hc.closeConnection();
-			
+
+	public synchronized boolean isRunningRace() {
+		boolean foundRunningRace = false;
+		for (Race race : activeRaces) {
+			if (race.getStartTime() != null) {
+				if (race.getStartTime().compareTo(
+						new Timestamp(System.currentTimeMillis())) >= 0) {
+					foundRunningRace = true;
+					System.out.println("there is running race " + foundRunningRace);
+					return foundRunningRace;
+				}
+			}
 		}
+		System.out.println("there is running race " + foundRunningRace);
+		return foundRunningRace;
 	}
 
+	public void disconnectClient(ClientHandler client){
+		activeClients.remove(client);
+	}
+	
+	public void disconnectAllConnectedClients() {
+		for (ClientHandler hc : activeClients) {
+			// if(hc.isClientConnected())
+			// hc.closeConnection();
+
+		}
+	}
 
 	public ServerLogger getLogger() {
 		return logger;
 	}
 
-
 	public void setLogger(ServerLogger logger) {
 		this.logger = logger;
 	}
-	
-	public synchronized ArrayList<Race> getActiveRaces(){
+
+	public synchronized ArrayList<Race> getActiveRaces() {
 		return activeRaces;
 	}
-	
-	
-	public synchronized RaceRun generateRaceRun(Race race){
-		int songId = 0 + (int)(Math.random() * (RunParameters.NUMBER_OF_SONGS));
+
+	public synchronized RaceRun generateRaceRun(Race race) {
+		int songId = 0 + (int) (Math.random() * (RunParameters.NUMBER_OF_SONGS));
 		ArrayList<CarInRace> cars = new ArrayList<RaceRun.CarInRace>();
-		cars.add(new CarInRace(race.getCar1Id()));
-		cars.add(new CarInRace(race.getCar2Id()));
-		cars.add(new CarInRace(race.getCar3Id()));
-		cars.add(new CarInRace(race.getCar4Id()));
-		cars.add(new CarInRace(race.getCar5Id()));
-		RaceRun raceRun = new RaceRun(RaceStatus.before_start, Songs.getSongByUid(songId), cars);
+		cars.add(new CarInRace(race.getCar1Id(), 0));
+		cars.add(new CarInRace(race.getCar2Id(), 1));
+		cars.add(new CarInRace(race.getCar3Id(), 2));
+		cars.add(new CarInRace(race.getCar4Id(), 3));
+		cars.add(new CarInRace(race.getCar5Id(), 4));
+		RaceRun raceRun = new RaceRun(RaceStatus.before_start,
+				Songs.getSongByUid(songId), cars);
 		return raceRun;
 	}
-	
-	
-
 
 	public ArrayList<RaceRun> getRaceRuns() {
 		return raceRuns;
 	}
 
+	public synchronized RaceRun getRaceRunByRaceId(int raceId) {
+		for (RaceRun raceRun : raceRuns) {
+			if (raceRun.getRaceId() == raceId)
+				return raceRun;
+		}
+		return null;
+	}
 
-	public void setRaceRuns(ArrayList<RaceRun> raceRuns) {
+	public synchronized Race getActiveRaceByRaceId(int raceId) {
+		for (Race race : activeRaces) {
+			if (race.getRaceId() == raceId)
+				return race;
+		}
+		return null;
+	}
+
+	public synchronized RaceRun getRaceRunByStatus(RaceStatus status) {
+		for (RaceRun raceRun : raceRuns) {
+			if (raceRun.getRaceStatus().equals(status))
+				return raceRun;
+		}
+		return null;
+	}
+
+	public synchronized void setRaceRuns(ArrayList<RaceRun> raceRuns) {
 		this.raceRuns = raceRuns;
 	}
-	
 
-	
-	//Return song duration in seconds 
-	public synchronized int getSongDuration(int songId){
-        if (songId >= 0 && songId < 3){
-        	String bip = Songs.getSongByUid(songId).getSongName();
-        	Media hit = new Media(new File(bip).toURI().toString());
-        	return (int) hit.getDuration().toSeconds();
-        }
-        return 0;
+	// Return song duration in seconds
+	public synchronized int getSongDuration(int songId) {
+		if (songId >= 0 && songId < 3) {
+			String bip = Songs.getSongByUid(songId).getSongName();
+			Media hit = new Media(new File(bip).toURI().toString());
+			return (int) hit.getDuration().toSeconds();
+		}
+		return 0;
 	}
 
+	public void sendBroadcastMessage(Message message) {
+		for (ClientHandler client : activeClients) {
+			try {
+				System.out.println("server send to all clients message " + message);
+				client.getStreamToClient().writeObject(message);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public synchronized int getRaceWinnerCarID() {
+		return 0;
+	}
 
 }

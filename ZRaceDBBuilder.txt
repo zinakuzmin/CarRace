@@ -104,7 +104,7 @@ insert into Cars values (
 insert into Races values (
   NULL, 'Race1', 20001, 20002, 20003, 20005, 20007, 0, null, null, null);
 insert into Races values (
-  NULL, 'Race2', 20001, 20007, 20009, 20002, 20003, 1, '2016-10-10 10:00:00',  '2016-10-10 10:02:00', 110);
+  NULL, 'Race2', 20001, 20007, 20009, 20002, 20003, 0, null,  null, null);
 
 
 commit;

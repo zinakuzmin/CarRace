@@ -33,7 +33,9 @@ public class HandleMessage implements Runnable{
 		if (messageFromClient instanceof ClientConnectMsg){
 			System.out.println("Server: got client connect message");
 			client.setUserId(((ClientConnectMsg) messageFromClient).getUserId());
+			client.setUserFullName(((ClientConnectMsg) messageFromClient).getUserFullName());
 			User user = client.getController().userLoginOrRegister(((ClientConnectMsg) messageFromClient).getUserId(), ((ClientConnectMsg) messageFromClient).getUserFullName());
+			client.getController().addClientToActiveClients(client);
 			client.getController().getLogger().logMessage(messageFromClient);
 			
 			new Thread(() -> {
@@ -53,6 +55,7 @@ public class HandleMessage implements Runnable{
 					e.printStackTrace();
 				}
 			}).start();
+			client.getController().getLogger().logMessage(messageFromClient);
 		}
 		
 		else if (messageFromClient instanceof ClientBetMsg){
@@ -69,7 +72,8 @@ public class HandleMessage implements Runnable{
 		}
 		
 		else if (messageFromClient instanceof ClientDisconnectMsg){
-			
+			client.getController().getLogger().logMessage(messageFromClient);
+			client.clientDisconnect(((ClientDisconnectMsg)messageFromClient).getUser());
 		}
 
 	

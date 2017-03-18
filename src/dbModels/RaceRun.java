@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import zrace.client.app.world.cars.objs.Songs;
+import zrace.client.app.world.cars.objs.abstracts.Car;
 
 public class RaceRun implements Serializable{
 	/**
@@ -18,7 +19,7 @@ public class RaceRun implements Serializable{
 	private ArrayList<CarInRace> carsInRace;
 
 	public RaceRun(RaceStatus raceStatus, Songs song, ArrayList<CarInRace> carsInRace) {
-		this.raceStatus = raceStatus;
+		this.setRaceStatus(raceStatus);
 		this.song = song;
 		this.carsInRace = carsInRace;
 	}
@@ -27,7 +28,7 @@ public class RaceRun implements Serializable{
 		return raceStatus;
 	}
 
-	public Songs getSongUid() {
+	public Songs getSong() {
 		return song;
 	}
 
@@ -38,7 +39,7 @@ public class RaceRun implements Serializable{
 
 	@Override
 	public String toString() {
-		return "RaceRun [raceStatus=" + raceStatus + ", songUid=" + song.getId()
+		return "RaceRun [raceStatus=" + getRaceStatus() + ", songUid=" + getSong().getId()
 				+ ", carsInRace=" + carsInRace + "]";
 	}
 
@@ -54,8 +55,17 @@ public class RaceRun implements Serializable{
 
 
 
+	public void setRaceStatus(RaceStatus raceStatus) {
+		this.raceStatus = raceStatus;
+	}
+
+
+
+
+
+
 	public enum RaceStatus{
-		before_start, in_progress, completed;
+		before_start, ready_to_run, in_progress, completed;
 	}
 	
 	public static class CarInRace implements Serializable{
@@ -64,24 +74,28 @@ public class RaceRun implements Serializable{
 		 */
 		private static final long serialVersionUID = 1L;
 		private int carId;
+		private int radius;
 		private ArrayList<Integer> speedList;
 		private static final int speed_end = 180;
 		private static final int speed_start = 72;
 		private static final int num_of_speeds = 10;
+		private static final int first_car_radius = 80;
 		
 		public CarInRace(int uid, ArrayList<Integer> speedList) {
 			this.carId = uid;
 			this.speedList = speedList;
 		}
 		
-		public CarInRace(int uid, Integer... speedList) {
-			this.carId = uid;
-			this.speedList = new ArrayList<Integer>(Arrays.asList(speedList));
-		}
+//		public CarInRace(int uid, Integer... speedList) {
+//			this.carId = uid;
+//			this.speedList = new ArrayList<Integer>(Arrays.asList(speedList));
+//		}
 		
-		public CarInRace(int uid){
+		//orbit 0 - 4
+		public CarInRace(int uid, int orbit){
 			this.carId = uid;
 			this.speedList = generateCarSpeedVector();
+//			this.radius = first_car_radius+(orbit+1)*20;
 		}
 		
 		
@@ -106,6 +120,14 @@ public class RaceRun implements Serializable{
 		public String toString() {
 			return "CarInRace [carId=" + carId + ", speedList=" + speedList
 					+ "]";
+		}
+
+		public int getRadius() {
+			return radius;
+		}
+
+		public void setRadius(int radius) {
+			this.radius = radius;
 		}
 		
 		

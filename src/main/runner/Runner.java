@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 
 
+
 import com.sun.corba.se.impl.activation.ServerMain;
 
 
+
+import com.sun.corba.se.impl.encoding.CodeSetConversion.BTCConverter;
 
 import dbModels.Bet;
 import dbModels.Car;
@@ -58,6 +61,7 @@ public class Runner extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		clientBtn.setDisable(true);
 		
 		if (RunParameters.SHOULD_INIT_DB)
 			ZRaceGameDBScript.runScript();
@@ -74,6 +78,8 @@ public class Runner extends Application {
 				e1.printStackTrace();
 			}
 			serverBtn.setDisable(true);
+			clientBtn.setDisable(false);
+			
 		});
 		
 		clientBtn.setOnAction(e -> {

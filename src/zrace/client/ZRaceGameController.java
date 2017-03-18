@@ -37,12 +37,12 @@ public class ZRaceGameController {
 			try {
 				
 				System.out.println("client start game");
-				socket = new Socket("localhost", 8000);
+				setSocket(new Socket("localhost", 8000));
 				System.out.println("Client Socket inited");
-				out = new ObjectOutputStream(socket.getOutputStream());
-				out.flush();
+				setOut(new ObjectOutputStream(getSocket().getOutputStream()));
+				getOut().flush();
 				System.out.println("client init out");
-				in = new ObjectInputStream(socket.getInputStream());
+				in = new ObjectInputStream(getSocket().getInputStream());
 				System.out.println("client init in");
 				//Start listen to server
 				System.out.println("client - start serverListener");
@@ -77,13 +77,13 @@ public class ZRaceGameController {
 	
 	
 	public synchronized void sendLoginOrRegisterMessage(String userFullName){
-		ClientConnectMsg msg = new ClientConnectMsg(0, userFullName);
+		ClientConnectMsg msg = new ClientConnectMsg(0, userFullName.toLowerCase());
 		
 		System.out.println("client: send login msg");
 		try {
-			out.writeObject(msg);
-			out.reset();
-		    out.flush();
+			getOut().writeObject(msg);
+			getOut().reset();
+		    getOut().flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -130,7 +130,7 @@ public class ZRaceGameController {
 		new Thread(() -> {
 			
 			try {
-				out.writeObject(new ClientBetMsg(bets));
+				getOut().writeObject(new ClientBetMsg(bets));
 				System.out.println("client sent bets " + bets);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -175,10 +175,10 @@ public class ZRaceGameController {
 	
 	public void disconnectClient(){
 		try {
-			out.writeObject(new ClientDisconnectMsg());
+			getOut().writeObject(new ClientDisconnectMsg(user));
 			in.close();
-			out.close();
-			socket.close();
+			getOut().close();
+			getSocket().close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -203,6 +203,26 @@ public class ZRaceGameController {
 
 	public void setGotRacesRunsFromServer(boolean gotRacesRunsFromServer) {
 		this.gotRacesRunsFromServer = gotRacesRunsFromServer;
+	}
+
+
+	public ObjectOutputStream getOut() {
+		return out;
+	}
+
+
+	public void setOut(ObjectOutputStream out) {
+		this.out = out;
+	}
+
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 
 }

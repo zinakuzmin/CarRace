@@ -49,6 +49,12 @@ public class User implements Serializable {
 		this.userFullName = name;
 		this.userRevenue = revenue;
 	}
+	
+	public User(int id, String name, double revenue) {
+		this.userId = id;
+		this.userFullName = name;
+		this.userRevenue = revenue;
+	}
 
 	/**
 	 * @return the user's name.

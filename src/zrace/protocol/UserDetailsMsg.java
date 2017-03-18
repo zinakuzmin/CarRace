@@ -21,6 +21,11 @@ public class UserDetailsMsg extends Message{
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDetailsMsg [user=" + user + "]";
+	}
   
 	
 }

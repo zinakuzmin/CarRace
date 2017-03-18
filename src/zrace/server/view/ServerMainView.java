@@ -71,8 +71,8 @@ public class ServerMainView extends Application {
 		stage.setScene(scene);
 		stage.show();
 
-		for (int i = 0; i < 20; i++)
-			addActivityLog("log " + i + "\n");
+//		for (int i = 0; i < 20; i++)
+//			addActivityLog("log " + i + "\n");
 
 	}
 
@@ -111,20 +111,20 @@ public class ServerMainView extends Application {
 		textArea.prefHeightProperty().bind(scroll.heightProperty());
 		// textArea.setPrefSize(400,400 );
 
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
-		textArea.appendText("zina\n");
-		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
+//		textArea.appendText("zina\n");
+//		textArea.appendText("second line\n");
 		scroll.setContent(textArea);
 
 		pane.getChildren().addAll(scroll);

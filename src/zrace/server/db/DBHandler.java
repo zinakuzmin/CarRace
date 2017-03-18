@@ -267,26 +267,7 @@ public class DBHandler {
 			e.printStackTrace();
 		}
 
-		// if (result != null) {
-		// try {
-		// while (!result.next()) {
-		// User user;
-		//
-		// user = new User(result.getString("userFullName"),
-		// result.getInt("userId"),
-		// result.getDouble("userRevenue"));
-		// users.add(user);
-		// }
-		// return users.get(0);
-		// }
-		//
-		// catch (SQLException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// } else
-		// System.out.println("Result is null");
-
+		
 		return null;
 
 	}
@@ -417,15 +398,22 @@ public class DBHandler {
 		}
 		return -1;
 	}
+	
+	
 
 	public synchronized int updateRaceCompleted(Race race) {
-		String theQuery = " update Races set isCompleted = ? where raceId = ?";
+		String theQuery = " update Races set isCompleted = ? ,startTime = ?, endTime = ?, duration = ? where raceId = ?";
 
+		
+		/**update races set isCompleted = true, startTime = '2017-10-10 10:00:00', endTime = '2017-10-11 10:00:00' where raceId = 1;*/
 		try {
 			PreparedStatement preparedStmt = theConnection
 					.prepareStatement(theQuery);
 			preparedStmt.setBoolean(1, true);
-			preparedStmt.setInt(2, race.getRaceId());
+			preparedStmt.setTimestamp(2, race.getStartTime());
+			preparedStmt.setTimestamp(3, race.getEndTime());
+			preparedStmt.setInt(4, race.getDuration());
+			preparedStmt.setInt(5, race.getRaceId());
 
 			int insertResult = preparedStmt.executeUpdate();
 
@@ -596,14 +584,13 @@ public class DBHandler {
 	 */
 	public synchronized ResultSet getUserByName(String userFullName) {
 
-		String theQuery;
-		if (!userFullName.equals(""))
-			theQuery = "select userId,userFullName from Users where userFullName = '"
-					+ userFullName + "' order by userFullName";
-		else
-			theQuery = "select userId,userFullName from Users order by userFullName";
+		String theQuery = "select * from Users where userFullName = '" + userFullName  + "'";
 		return executeQuery(theQuery);
 
+	}
+	
+	public synchronized User getUserByNameAsObject(String userFullName) {
+		return (User) convertResultSetToObject(getUserByName(userFullName), "User");
 	}
 
 	/**
@@ -776,6 +763,31 @@ public class DBHandler {
 						bets.add(bet);
 					}
 					return bets;
+				}
+
+				catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else
+				System.out.println("Result is null");
+		}
+		
+		
+		else if (classType.equals("User")) {
+			ArrayList<User> users = new ArrayList<>();
+			if (result != null) {
+				try {
+					while (result.next()) {
+						User user;
+
+						user = new User(result.getInt("userId"),
+								result.getString("userFullName"),
+								result.getDouble("userRevenue"));
+								
+						users.add(user);
+					}
+					return users;
 				}
 
 				catch (SQLException e) {

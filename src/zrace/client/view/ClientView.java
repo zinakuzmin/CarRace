@@ -1,6 +1,7 @@
 package zrace.client.view;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -23,6 +24,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
+import zrace.protocol.ClientDisconnectMsg;
 
 public class ClientView extends Application {
 	private ZRaceGameController gameController;
@@ -36,6 +38,19 @@ public class ClientView extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			public void handle(WindowEvent event) {
+				try {
+					gameController.getOut().writeObject(new ClientDisconnectMsg(gameController.getUser()));
+					gameController.getSocket().close();
+				} catch (IOException e) {
+				}
+			}
+		});
+
+		
+		
 		createLoginPage(stage);
 
 	}
@@ -82,14 +97,25 @@ public class ClientView extends Application {
 //				if (isLoginInputValid(userIDtextField, userTextField)){
 				if (isLoginInputValid(userTextField)){
 					gameController.sendLoginOrRegisterMessage(userTextField.getText());
-					createClientView(primaryStage);
 					
-				}
-				else {
+					while(!gameController.isGotUserFromServer()){
+						
+						try {
+							Thread.sleep(200);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					if (gameController.getUser() != null)
+						createClientView(primaryStage);
 					
-					actiontarget.setFill(Color.FIREBRICK);
-					actiontarget.setText("Invalid user ID");
-					
+					else {
+						
+						actiontarget.setFill(Color.FIREBRICK);
+						actiontarget.setText("User already logged in");
+						
+					}
 				}
 			}
 		});
@@ -103,28 +129,30 @@ public class ClientView extends Application {
 		BorderPane pane = new BorderPane();
 		Label userNameLabel = new Label();
 		
-		while (!(gameController.isGotUserFromServer() && gameController.isGotRacesFromServer())){
+		while (!(gameController.isGotUserFromServer() && gameController.isGotRacesFromServer() && gameController.isGotRacesRunsFromServer())){
 			try {
 //				System.out.println("client get user " + gameController.isGotUserFromServer());
 //				System.out.println("client get races " + gameController.isGotRacesFromServer());
-
+				
+				
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
+		
 		userNameLabel.setText("Welcome " + gameController.getUser().getUserFullName());
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 		pane.setTop(userNameLabel);
 
-		Label raceStatus1 = new Label("RAC1fromserver");
-		Label raceStatus2 = new Label("RAC2fromserver");
-		Label raceStatus3 = new Label("RAC3fromserver");
+		Label raceStatus1 = new Label(gameController.getRaceRuns().get(0).getRaceStatus().toString());
+		Label raceStatus2 = new Label(gameController.getRaceRuns().get(1).getRaceStatus().toString());
+		Label raceStatus3 = new Label(gameController.getRaceRuns().get(2).getRaceStatus().toString());
 
 		Button viewRace1 = new Button("View Race1 " + gameController.getActiveRaces().get(0).getRaceFullName());
-		Button viewRace2 = new Button("View Race2 " + gameController.getActiveRaces().get(0).getRaceFullName());
-		Button viewRace3 = new Button("View Race3 " + gameController.getActiveRaces().get(0).getRaceFullName());
+		Button viewRace2 = new Button("View Race2 " + gameController.getActiveRaces().get(1).getRaceFullName());
+		Button viewRace3 = new Button("View Race3 " + gameController.getActiveRaces().get(2).getRaceFullName());
 		Button betBtn1 = new Button("Make a bet for race1");
 		Button betBtn2 = new Button("Make a bet for race3");
 		Button betBtn3 = new Button("Make a bet for race3");

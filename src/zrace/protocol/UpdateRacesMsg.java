@@ -24,4 +24,12 @@ public class UpdateRacesMsg extends Message{
 		this.races = races;
 	}
 
+
+	@Override
+	public String toString() {
+		return "UpdateRacesMsg [races=" + races + "]";
+	}
+	
+	
+
 }
