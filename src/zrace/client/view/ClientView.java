@@ -331,7 +331,7 @@ public class ClientView extends Application {
 				System.out.println("Race Start:"+new Date(raceStartTime));
 				System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
 				System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
-				raceDurationInMilis = raceStartTime - currentTimeMillis;
+				raceDurationInMilis = currentTimeMillis - raceStartTime;
 			}
 
 			System.out.println("Race duration in millis:" + raceDurationInMilis);
