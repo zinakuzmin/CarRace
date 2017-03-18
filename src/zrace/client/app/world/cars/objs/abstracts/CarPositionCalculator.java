@@ -23,7 +23,7 @@ public class CarPositionCalculator {
         
         long timePassedInLap=0;
 		double flooredTotalTime = Math.floor(raceDurationInMillis/100)*100;
-//		System.out.println("Floored time:" + flooredTotalTime);
+		System.out.println("Floored time:" + flooredTotalTime);
 		for(long i=0 ; i < flooredTotalTime ; i+=Car.STEP_DURATION_IN_MILLISECONDS) {
 			totalNumOfLoops++;
 			movingStep++;

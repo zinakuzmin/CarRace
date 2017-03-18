@@ -155,10 +155,9 @@ public class MainClientApp extends Application {
 		return isClosed;
 	}
 
-	public void setMusic(Songs song, Duration seek) {
+	public void setMusic(Songs song) {
 		Media songToPlay = new Media(new File(song.getSongName()).toURI().toString());
 		mediaPlayer = new MediaPlayer(songToPlay);
-		mediaPlayer.setStartTime(seek);
 	}
 
 	@SuppressWarnings("unused")

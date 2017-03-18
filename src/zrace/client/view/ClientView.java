@@ -314,23 +314,22 @@ public class ClientView extends Application {
 		}
 		racePane.getChildren().clear();
 		try {
-			boolean raceStarted = activeRace.getStartTime() != null;
-			long raceDurationInMilis = 0;
+//			boolean raceStarted = activeRace.getStartTime() != null;
+//			long raceDurationInMilis = 0;
 
 			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace(), gameController, raceNumber);
 
 			
-			if (raceStarted) {
-				long raceStartTime = activeRace.getStartTime().getTime();
-				long currentTimeMillis = System.currentTimeMillis();
-				System.out.println("Race Start:"+new Date(raceStartTime));
-				System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
-				System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
-				raceDurationInMilis = currentTimeMillis - raceStartTime;
-			}
+//			if (raceStarted) {
+//				long raceStartTime = activeRace.getStartTime().getTime();
+//				long currentTimeMillis = System.currentTimeMillis();
+//				System.out.println("Race Start:"+new Date(raceStartTime));
+//				System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
+//				System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
+//				raceDurationInMilis = currentTimeMillis - raceStartTime;
+//			}
 
-			System.out.println("Race duration in millis:" + raceDurationInMilis);
-			mainClientApp.setMusic(raceRun.getSong(), Duration.millis(raceDurationInMilis));
+			mainClientApp.setMusic(raceRun.getSong());
 			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException | InterruptedException e) {

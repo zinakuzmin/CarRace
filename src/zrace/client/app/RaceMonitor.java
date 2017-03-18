@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import dbModels.RaceRun.CarInRace;
 import dbModels.RaceRun.RaceStatus;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.world.cars.objs.abstracts.Car;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
@@ -40,13 +41,14 @@ public class RaceMonitor implements Runnable{
 				}
 				continue;
 			}
-			
+
+			long raceDurationInMillis = System.currentTimeMillis()-gameController.getActiveRaces().get(raceNumber).getStartTime().getTime();
+			mediaPlayer.setStartTime(Duration.millis(raceDurationInMillis));
 			mediaPlayer.play();
 			for (int i=0; i<cars.size() ; i++) {
 				Car car = cars.get(i);
 				CalculatedCarInRace carCurrentPos = CarPositionCalculator.
-						calculateTotalMilageOfCar(car.getOrbitRadius(), carsInRace.get(i).getSpeedList(), 
-								System.currentTimeMillis()-gameController.getActiveRaces().get(raceNumber).getStartTime().getTime());
+						calculateTotalMilageOfCar(car.getOrbitRadius(), carsInRace.get(i).getSpeedList(), raceDurationInMillis);
 //				System.out.println("Done calculation for car:" + car.getCarName());
 				carCurrentPos.runFromStart(false);
 				car.startCar(new CarRadialMove(carsInRace.get(i).getSpeedList(), carCurrentPos));
