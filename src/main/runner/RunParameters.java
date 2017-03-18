@@ -19,6 +19,7 @@ public class RunParameters {
 	public static int NUMBER_OF_SONGS = 3;
 	public static int RACE_DELAY_IN_MILLISECONDS = 5_000;
 	public static int NUMBER_OF_ACTIVE_RACES = 3;
+	public static boolean AUTOMATIC_SERVER_START = true;
 	
 	
 	

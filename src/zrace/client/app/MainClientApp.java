@@ -107,7 +107,7 @@ public class MainClientApp extends Application {
 		world.getChildren().add(tribunes.getTribunes());
 		world.getChildren().add(Crowd.generateCrowd(tribunes).getCrowdGroup());
 		
-		SubScene subScene = new SubScene(root, 800, 600, true, SceneAntialiasing.BALANCED);
+		SubScene subScene = new SubScene(root, 750, 550, true, SceneAntialiasing.BALANCED);
 		
         subScene.setFill(Color.FORESTGREEN);
 //        cam.handleKeyboard(subScene, world, cars);
