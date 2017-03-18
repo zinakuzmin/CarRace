@@ -67,7 +67,7 @@ public class RaceRun implements Serializable{
 
 
 	public enum RaceStatus{
-		before_start, ready_to_run, in_progress, completed;
+		waiting, ready_to_run, in_progress, completed;
 	}
 	
 	public static class CarInRace implements Serializable{
@@ -97,7 +97,7 @@ public class RaceRun implements Serializable{
 		public CarInRace(int uid, int orbit){
 			this.carId = uid;
 			this.speedList = generateCarSpeedVector();
-//			this.radius = first_car_radius+(orbit+1)*20;
+			this.radius = first_car_radius+(orbit+1)*20;
 		}
 		
 		

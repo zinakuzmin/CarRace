@@ -5,18 +5,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 
-import dbModels.*;
+import dbModels.Bet;
+import dbModels.Race;
+import dbModels.RaceRun;
+import dbModels.User;
+import javafx.stage.Stage;
 import zrace.client.view.ClientView;
 import zrace.client.view.listeners.ServerListener;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
 import zrace.protocol.ClientDisconnectMsg;
-import zrace.protocol.ClientGetRaces;
-import zrace.server.ClientHandler;
-import javafx.application.Platform;
-import javafx.stage.Stage;
 
 public class ZRaceGameController {
 	private Socket socket;

@@ -15,7 +15,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.Glow;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -214,13 +213,13 @@ public class ClientView extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces()
+		viewRace1.setOnAction(e -> showRace(0, gameController, gameController.getActiveRaces()
 				.get(0), racePane, primaryStage, gameController.getRaceRuns()
 				.get(0)));
-		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces()
+		viewRace2.setOnAction(e -> showRace(1, gameController, gameController.getActiveRaces()
 				.get(1), racePane, primaryStage, gameController.getRaceRuns()
 				.get(1)));
-		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces()
+		viewRace3.setOnAction(e -> showRace(2, gameController, gameController.getActiveRaces()
 				.get(2), racePane, primaryStage, gameController.getRaceRuns()
 				.get(2)));
 
@@ -235,13 +234,14 @@ public class ClientView extends Application {
 
 			@Override
 			public void handle(WindowEvent event) {
-				if (mainClientApp != null)
+				if (mainClientApp != null) {
 					mainClientApp.closeApp();
+				}
 			}
 		});
 	}
 
-	private static void showRace(Race activeRace, Pane racePane,
+	private static void showRace(int raceNumber, ZRaceGameController gameController, Race activeRace, Pane racePane,
 			Stage primaryStage, RaceRun raceRun) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
@@ -251,7 +251,7 @@ public class ClientView extends Application {
 			boolean raceStarted = activeRace.getStartTime() != null;
 			long raceDurationInMilis = 0;
 
-			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace());
+			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace(), gameController, raceNumber);
 
 			if (raceStarted)
 				raceDurationInMilis = activeRace.getEndTime().getTime()
@@ -334,7 +334,7 @@ public class ClientView extends Application {
 
 	public void setStatusLabelStyle(Label label, String status) {
 		label.setText(status);
-		if (status.equals(RaceStatus.before_start)) {
+		if (status.equals(RaceStatus.waiting)) {
 			label.setStyle("-fx-font-size: 30px; -fx-text-fill: blue;");
 		} 
 		else if (status.equals(RaceStatus.completed)) {
@@ -347,5 +347,9 @@ public class ClientView extends Application {
 		else if (status.equals(RaceStatus.ready_to_run)) {
 			label.setStyle("-fx-font-size: 20px; -fx-text-fill: orange;");
 		}
+	}
+	
+	public static MainClientApp getMainClientApp() {
+		return mainClientApp;
 	}
 }

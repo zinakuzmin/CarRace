@@ -146,7 +146,6 @@ public abstract class Car {
     
     public void stopCar() {
     	timeline.stop();
-    	System.out.println("run loops:" + totalNumOfLoops);
     }
     
     private void moveCar(double x, double z) {

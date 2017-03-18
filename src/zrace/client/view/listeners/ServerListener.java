@@ -4,21 +4,14 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
-
-
-
-
-
+import dbModels.Race;
+import dbModels.RaceRun;
+import dbModels.User;
 import zrace.client.ZRaceGameController;
 import zrace.protocol.Message;
 import zrace.protocol.UpdateRaceRunsMsg;
 import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.UserDetailsMsg;
-import dbModels.Race;
-import dbModels.User;
-import dbModels.RaceRun;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
 
 
 public class ServerListener extends Thread{
@@ -69,6 +62,7 @@ public class ServerListener extends Thread{
 						System.out.println("client got races runs from server " + raceRuns);
 						gameController.setGotRacesRunsFromServer(true);
 						gameController.getClientView().setRacesStatusInView();
+						gameController.getClientView();
 					}).start();
 				}
 				} catch (ClassNotFoundException e) {
