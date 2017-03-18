@@ -177,7 +177,7 @@ public class ClientView extends Application {
 		}
 
 		userNameLabel.setText("     *** Welcome "
-				+ gameController.getUser().getUserFullName() + ".  Your user ID is " + gameController.getUser().getUserID() + " ***    ");
+				+ gameController.getUser().getUserFullName() + ".  Your user ID is " + gameController.getUser().getUserID() + ". User revenue is :" + gameController.getUser().getUserRevenue() +  " ***    ");
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
 		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
 		pane.setTop(userNameLabel);
