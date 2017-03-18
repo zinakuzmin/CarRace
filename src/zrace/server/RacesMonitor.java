@@ -74,7 +74,7 @@ public class RacesMonitor implements Runnable {
 				if (raceRun != null){
 					int raceRunIndex = controller.getRaceRuns().lastIndexOf(raceRun);
 					if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.waiting)){
-						controller.getActiveRaces().get(raceIndex).setStartTime(new Timestamp(System.currentTimeMillis() + RunParameters.RACE_DELAY_IN_MILLISECONDS));
+						controller.getActiveRaces().get(raceIndex).setStartTime(new Timestamp(System.currentTimeMillis() + RunParameters.RACE_START_DELAY_IN_MILLISECONDS));
 						controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.ready_to_run);
 					}
 					else if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.ready_to_run)){

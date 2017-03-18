@@ -50,6 +50,7 @@ public class ClientView extends Application {
 	private Label race1Name;
 	private Label race2Name;
 	private Label race3Name;
+	private Label userNameLabel;
 
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
@@ -60,6 +61,7 @@ public class ClientView extends Application {
 		race1Name = new Label();
 		race2Name = new Label();
 		race3Name = new Label();
+		userNameLabel = new Label();
 		
 
 	}
@@ -155,7 +157,7 @@ public class ClientView extends Application {
 		
 	
 		
-		Label userNameLabel = new Label();
+		
 
 		while (!(gameController.isGotUserFromServer()
 				&& gameController.isGotRacesFromServer() && gameController
@@ -172,10 +174,7 @@ public class ClientView extends Application {
 			}
 		}
 
-		userNameLabel.setText("     *** Welcome "
-				+ gameController.getUser().getUserFullName() + ".  Your user ID is " + gameController.getUser().getUserID() + " ***    ");
-		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
-		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
+		
 		pane.setTop(userNameLabel);
 
 		// raceStatus1 = new Label();
@@ -428,6 +427,13 @@ public class ClientView extends Application {
 			race3Name.setText("Race name: " + gameController.getActiveRaces().get(2).getRaceFullName());
 			race3Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
 		}
+	}
+	
+	public synchronized void setUserDetailsInView(){
+		userNameLabel.setText("     *** Welcome "
+				+ gameController.getUser().getUserFullName() + ".  Your user ID is " + gameController.getUser().getUserID() + ". User revenue is :" + gameController.getUser().getUserRevenue() +  " ***    ");
+		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
+		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
 	}
 	
 	

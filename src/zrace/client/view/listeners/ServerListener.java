@@ -53,6 +53,7 @@ public class ServerListener extends Thread{
 							gameController.setUserDetails(user);
 							System.out.println("client got user details " + user);
 							gameController.setGotUserFromServer(true);
+							Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());
 //						}).start();
 						
 						
