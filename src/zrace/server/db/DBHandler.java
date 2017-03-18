@@ -422,6 +422,28 @@ public class DBHandler {
 		}
 		return -1;
 	}
+	
+	
+	
+	public synchronized int updateRaceName(Race race) {
+		String theQuery = " update Races set raceFullName = ? where raceId = ?";
+
+		
+		try {
+			PreparedStatement preparedStmt = theConnection
+					.prepareStatement(theQuery);
+			preparedStmt.setString(1, race.getRaceFullName());
+			preparedStmt.setInt(2, race.getRaceId());
+
+			int insertResult = preparedStmt.executeUpdate();
+
+			preparedStmt.close();
+			return insertResult;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	public synchronized int updateSystemRevenue(Double amount) {
 		ZraceSystem system = getSystem();

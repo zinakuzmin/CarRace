@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
+import main.runner.RunParameters;
 import dbModels.Race;
 import dbModels.RaceRun;
 import dbModels.RaceRun.RaceStatus;
@@ -18,6 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
 import javafx.scene.effect.Reflection;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -55,6 +62,7 @@ public class ClientView extends Application {
 		race1Name = new Label();
 		race2Name = new Label();
 		race3Name = new Label();
+		
 
 	}
 
@@ -141,6 +149,30 @@ public class ClientView extends Application {
 
 	public void createClientView(Stage primaryStage) {
 		BorderPane pane = new BorderPane();
+		
+		
+		BackgroundImage myBI= new BackgroundImage(new Image(RunParameters.IMG_RUNNER_BACKGROUND),
+				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
+				new BackgroundSize(1160, 600, false, false, false, false));
+		pane.setBackground(new Background(myBI));
+		
+		
+		
+		
+//		Image image = new Image(CurrentClass.class.getResource("/path/to/package/bg.jpg"));
+//		// new BackgroundSize(width, height, widthAsPercentage, heightAsPercentage, contain, cover)
+//		BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
+//		// new BackgroundImage(image, repeatX, repeatY, position, size)
+//		BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
+//		// new Background(images...)
+//		Background background = new Background(backgroundImage);
+		
+//		String image = JavaFXApplication9.class.getResource("splash.jpg").toExternalForm();
+//		pane.setStyle("-fx-background-image: url('" + myBI + "'); " +
+//		           "-fx-background-position: center center; " +
+//		           "-fx-background-repeat: stretch;");
+		
+		
 		Label userNameLabel = new Label();
 
 		while (!(gameController.isGotUserFromServer()
@@ -159,9 +191,10 @@ public class ClientView extends Application {
 			}
 		}
 
-		userNameLabel.setText("Welcome "
-				+ gameController.getUser().getUserFullName());
-		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+		userNameLabel.setText("     *** Welcome "
+				+ gameController.getUser().getUserFullName() + ". Your user ID is " + gameController.getUser().getUserID() + " ***    ");
+		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
+		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
 		pane.setTop(userNameLabel);
 
 		// raceStatus1 = new Label();
@@ -171,9 +204,9 @@ public class ClientView extends Application {
 		// raceStatus3 = new Label();
 		// //gameController.getRaceRuns().get(2).getRaceStatus().toString());
 		
-		race1Name.setText("Race 1: " + gameController.getActiveRaces().get(0).getRaceFullName());
-		race1Name.setText("Race 2: " + gameController.getActiveRaces().get(1).getRaceFullName());
-		race1Name.setText("Race 3: " + gameController.getActiveRaces().get(2).getRaceFullName());
+//		race1Name.setText("Race 1: " + gameController.getActiveRaces().get(0).getRaceFullName());
+//		race2Name.setText("Race 2: " + gameController.getActiveRaces().get(1).getRaceFullName());
+//		race3Name.setText("Race 3: " + gameController.getActiveRaces().get(2).getRaceFullName());
 
 		Button viewRace1 = new Button("View Race 1");
 		Button viewRace2 = new Button("View Race 2");		
@@ -215,15 +248,15 @@ public class ClientView extends Application {
 		paneRace1.add(viewRace1, 1, 3);
 		paneRace1.add(betBtn1, 2, 3);
 		
-		paneRace1.add(race2Name, 1, 1);
-		paneRace2.add(raceStatus2, 2, 1);
-		paneRace2.add(viewRace2, 3, 1);
-		paneRace2.add(betBtn2, 4, 1);
+		paneRace2.add(race2Name, 1, 1);
+		paneRace2.add(raceStatus2, 1, 2);
+		paneRace2.add(viewRace2, 1, 3);
+		paneRace2.add(betBtn2, 2, 3);
 		
-		paneRace1.add(race3Name, 1, 1);
-		paneRace3.add(raceStatus3, 2, 5);
-		paneRace3.add(viewRace3, 0, 5);
-		paneRace3.add(betBtn3, 1, 5);
+		paneRace3.add(race3Name, 1, 1);
+		paneRace3.add(raceStatus3, 1, 2);
+		paneRace3.add(viewRace3, 1, 3);
+		paneRace3.add(betBtn3, 2, 3);
 
 		GridPane grid = new GridPane();
 
@@ -258,6 +291,10 @@ public class ClientView extends Application {
 
 		Pane racePane = new Pane();
 		pane.setCenter(racePane);
+		
+		Pane leftPane = new Pane();
+		leftPane.getChildren().add(new Label("    "));
+		pane.setLeft(leftPane);
 
 		Scene scene = new Scene(pane, 1160, 600);
 		primaryStage.setScene(scene);
@@ -363,43 +400,59 @@ public class ClientView extends Application {
 	public synchronized void setRacesStatusInView() {
 		if (!gameController.getRaceRuns().isEmpty()
 				&& gameController.getRaceRuns().size() >= 3) {
-			String statusRace1 = gameController.getRaceRuns().get(0)
-					.getRaceStatus().toString();
-			raceStatus1.setText(statusRace1);
+
+			raceStatus1.setText("Status: " + gameController.getRaceRuns().get(0)
+					.getRaceStatus().toString() );
 
 			// raceStatus1.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
 			// raceStatus1.setEffect(new Reflection());
 			// raceStatus1.setMaxWidth(250);
 			// raceStatus1.setWrapText(true);
 			// raceStatus1.setFont(Font.font("Verdana", 20));
-			raceStatus2.setText(gameController.getRaceRuns().get(1)
+			raceStatus2.setText("Status: " + gameController.getRaceRuns().get(1)
 					.getRaceStatus().toString());
-			raceStatus3.setText(gameController.getRaceRuns().get(2)
+			raceStatus3.setText("Status: " + gameController.getRaceRuns().get(2)
 					.getRaceStatus().toString());
 			setStatusLabelStyle(raceStatus1, gameController.getRaceRuns()
-					.get(0).getRaceStatus().toString());
+					.get(0).getRaceStatus());
 			setStatusLabelStyle(raceStatus2, gameController.getRaceRuns()
-					.get(1).getRaceStatus().toString());
+					.get(1).getRaceStatus());
 			setStatusLabelStyle(raceStatus3, gameController.getRaceRuns()
-					.get(2).getRaceStatus().toString());
+					.get(2).getRaceStatus());
 
 		}
 	}
 
-	public void setStatusLabelStyle(Label label, String status) {
+	public void setStatusLabelStyle(Label label, RaceStatus status) {
 		// label.setText(status);
+		label.setEffect(new Glow());
 		if (status.equals(RaceStatus.waiting)) {
 			System.out.println("waiting status");
-			label.setStyle("-fx-font-size: 30px; -fx-text-fill: blue;");
+			label.setStyle("-fx-font-size: 25px; -fx-text-fill: blue;");
 		} else if (status.equals(RaceStatus.completed)) {
-			label.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
+			label.setStyle("-fx-font-size: 25px; -fx-text-fill: red;");
 		} else if (status.equals(RaceStatus.in_progress)) {
-			label.setStyle("-fx-font-size: 20px; -fx-text-fill: green;");
+			label.setStyle("-fx-font-size: 25px; -fx-text-fill: green;");
 
 		} else if (status.equals(RaceStatus.ready_to_run)) {
-			label.setStyle("-fx-font-size: 20px; -fx-text-fill: orange;");
+			label.setStyle("-fx-font-size: 30px; -fx-text-fill: orange;");
 		}
 	}
+	
+	
+	
+	public synchronized void setRacesNamesInView() {
+		if (!gameController.getActiveRaces().isEmpty() && gameController.getActiveRaces().size() >= 3) {
+			race1Name.setText("Race name: " + gameController.getActiveRaces().get(0).getRaceFullName());
+			race1Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
+			race2Name.setText("Race name: " + gameController.getActiveRaces().get(1).getRaceFullName());
+			race2Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
+			race3Name.setText("Race name: " + gameController.getActiveRaces().get(2).getRaceFullName());
+			race3Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
+		}
+	}
+	
+	
 
 	public Label getRace1Name() {
 		return race1Name;

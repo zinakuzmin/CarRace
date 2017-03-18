@@ -66,21 +66,30 @@ public class Runner extends Application {
 		if (RunParameters.SHOULD_INIT_DB)
 			ZRaceGameDBScript.runScript();
 		
-//		dbTests();
-		
-		serverBtn.setOnAction(e -> {
-//			new ZRaceMVCServer().start(new Stage());
-			try {
-				ServerController controller = new ServerController(new Stage());
-//				new ServerMainView().start(new Stage());
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		if (!RunParameters.AUTOMATIC_SERVER_START){
+			serverBtn.setOnAction(e -> {
+//				new ZRaceMVCServer().start(new Stage());
+				try {
+					ServerController controller = new ServerController(new Stage());
+//					new ServerMainView().start(new Stage());
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				serverBtn.setDisable(true);
+				clientBtn.setDisable(false);
+				
+			});
+		}
+		else {
 			serverBtn.setDisable(true);
 			clientBtn.setDisable(false);
-			
-		});
+			ServerController controller = new ServerController(new Stage());
+		}
+		
+
+		
+		
 		
 		clientBtn.setOnAction(e -> {
 			try {

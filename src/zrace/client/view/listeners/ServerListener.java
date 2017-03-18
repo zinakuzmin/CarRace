@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import dbModels.Race;
 import dbModels.RaceRun;
 import dbModels.User;
@@ -42,6 +43,7 @@ public class ServerListener extends Thread{
 							gameController.setActiveRaces(activaRaces);
 							System.out.println("client got races from server " + activaRaces);
 							gameController.setGotRacesFromServer(true);
+							Platform.runLater(() -> gameController.getClientView().setRacesNamesInView());
 //						}).start();
 					} else if (message instanceof UserDetailsMsg) {
 //						new Thread(() -> {
@@ -64,7 +66,7 @@ public class ServerListener extends Thread{
 						gameController.setRaceRuns(raceRuns);
 						System.out.println("client got races runs from server " + raceRuns);
 						gameController.setGotRacesRunsFromServer(true);
-//						gameController.getClientView().setRacesStatusInView();
+						Platform.runLater(() -> gameController.getClientView().setRacesStatusInView());
 //					}).start();
 				}
 				} catch (ClassNotFoundException e) {

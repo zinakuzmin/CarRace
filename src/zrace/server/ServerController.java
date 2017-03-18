@@ -168,11 +168,14 @@ public class ServerController {
 			race.setCar5Id(selectedCars.get(4).getCarId());
 			race.setCompleted(false);
 			race.setRaceId(0);
-			race.setRaceFullName("race-" + race.getRaceId());
+			race.setRaceFullName("Race");
 
 
 			race = db.insertRace(race);
 			System.out.println("generated race " + race);
+			
+			race.setRaceFullName("Race-" + race.getRaceId());
+			db.updateRaceName(race);
 			raceRuns.add(generateRaceRun(race));
 			return race;
 		}
