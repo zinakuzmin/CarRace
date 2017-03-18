@@ -62,7 +62,6 @@ public class ServerListener extends Thread{
 						System.out.println("client got races runs from server " + raceRuns);
 						gameController.setGotRacesRunsFromServer(true);
 						gameController.getClientView().setRacesStatusInView();
-						gameController.getClientView();
 					}).start();
 				}
 				} catch (ClassNotFoundException e) {

@@ -15,8 +15,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.Glow;
 import javafx.scene.effect.Reflection;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -171,11 +173,34 @@ public class ClientView extends Application {
 		Button betBtn1 = new Button("Make a bet for race1");
 		Button betBtn2 = new Button("Make a bet for race3");
 		Button betBtn3 = new Button("Make a bet for race3");
-		
+
 		GridPane paneRace1 = new GridPane();
 		GridPane paneRace2 = new GridPane();
 		GridPane paneRace3 = new GridPane();
 		
+//		ColumnConstraints column1 = new ColumnConstraints();
+//	    column1.setPercentWidth(50);
+//	    ColumnConstraints column2 = new ColumnConstraints();
+//	    column2.setPercentWidth(50);
+//	    paneRace1.getColumnConstraints().addAll(column1, column2);
+//	    paneRace2.getColumnConstraints().addAll(column1, column2);
+//	    paneRace3.getColumnConstraints().addAll(column1, column2);
+	    
+		paneRace1.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+		paneRace1.setVgap(10); //vertical gap in pixels
+		paneRace1.setPadding(new Insets(10, 10, 10, 10));
+		
+		paneRace2.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+		paneRace2.setVgap(10); //vertical gap in pixels
+		paneRace2.setPadding(new Insets(10, 10, 10, 10));
+		
+		paneRace3.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+		paneRace3.setVgap(10); //vertical gap in pixels
+		paneRace3.setPadding(new Insets(10, 10, 10, 10));
+		
+		
+	
+
 		paneRace1.add(viewRace1, 0, 1);
 		paneRace2.add(viewRace2, 0, 3);
 		paneRace3.add(viewRace3, 0, 5);
@@ -185,24 +210,34 @@ public class ClientView extends Application {
 		paneRace1.add(raceStatus1, 2, 1);
 		paneRace2.add(raceStatus2, 2, 3);
 		paneRace3.add(raceStatus3, 2, 5);
-		
 
 		GridPane grid = new GridPane();
-		grid.add(paneRace1, 1, 1);
-		grid.add(paneRace2, 2, 2);
-		grid.add(paneRace3, 3, 3);
+		
+//		ColumnConstraints column1 = new ColumnConstraints();
+//	    column1.setPercentWidth(50);
+//	    ColumnConstraints column2 = new ColumnConstraints();
+//	    column2.setPercentWidth(50);
+//	    grid.getColumnConstraints().addAll(column1, column2); 
+		
+		grid.setHgap(10); //horizontal gap in pixels => that's what you are asking for
+	    grid.setVgap(10); //vertical gap in pixels
+	    grid.setPadding(new Insets(10, 10, 10, 10)); //margins around the whole grid
+	                                                 //(top/right/bottom/left)
 		
 		
-		
-//		grid.add(viewRace1, 0, 1);
-//		grid.add(viewRace2, 0, 3);
-//		grid.add(viewRace3, 0, 5);
-//		grid.add(betBtn1, 1, 1);
-//		grid.add(betBtn2, 1, 3);
-//		grid.add(betBtn3, 1, 5);
-//		grid.add(raceStatus1, 2, 1);
-//		grid.add(raceStatus2, 2, 3);
-//		grid.add(raceStatus3, 2, 5);
+		grid.add(paneRace1, 0, 1);
+		grid.add(paneRace2, 0, 3);
+		grid.add(paneRace3, 0, 5);
+
+		// grid.add(viewRace1, 0, 1);
+		// grid.add(viewRace2, 0, 3);
+		// grid.add(viewRace3, 0, 5);
+		// grid.add(betBtn1, 1, 1);
+		// grid.add(betBtn2, 1, 3);
+		// grid.add(betBtn3, 1, 5);
+		// grid.add(raceStatus1, 2, 1);
+		// grid.add(raceStatus2, 2, 3);
+		// grid.add(raceStatus3, 2, 5);
 
 		pane.setRight(grid);
 
@@ -213,15 +248,15 @@ public class ClientView extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		viewRace1.setOnAction(e -> showRace(0, gameController, gameController.getActiveRaces()
+		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(0), racePane, primaryStage, gameController.getRaceRuns()
-				.get(0)));
-		viewRace2.setOnAction(e -> showRace(1, gameController, gameController.getActiveRaces()
+				.get(0), gameController, 0));
+		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(1), racePane, primaryStage, gameController.getRaceRuns()
-				.get(1)));
-		viewRace3.setOnAction(e -> showRace(2, gameController, gameController.getActiveRaces()
+				.get(1), gameController, 1));
+		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(2), racePane, primaryStage, gameController.getRaceRuns()
-				.get(2)));
+				.get(2), gameController, 2));
 
 		betBtn1.setOnAction(e -> showBettingPage(gameController
 				.getActiveRaces().get(0).getRaceId()));
@@ -234,15 +269,14 @@ public class ClientView extends Application {
 
 			@Override
 			public void handle(WindowEvent event) {
-				if (mainClientApp != null) {
+				if (mainClientApp != null)
 					mainClientApp.closeApp();
-				}
 			}
 		});
 	}
 
-	private static void showRace(int raceNumber, ZRaceGameController gameController, Race activeRace, Pane racePane,
-			Stage primaryStage, RaceRun raceRun) {
+	private static void showRace(Race activeRace, Pane racePane,
+			Stage primaryStage, RaceRun raceRun, ZRaceGameController gameController, int raceNumber) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
 		}
@@ -312,44 +346,37 @@ public class ClientView extends Application {
 					.getRaceStatus().toString();
 			raceStatus1.setText(statusRace1);
 
-			raceStatus1.setStyle("-fx-font-size: 20px; -fx-text-fill: green;");
-			raceStatus1.setEffect(new Reflection());
-			raceStatus1.setMaxWidth(250);
-			raceStatus1.setWrapText(true);
+			// raceStatus1.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
+			// raceStatus1.setEffect(new Reflection());
+			// raceStatus1.setMaxWidth(250);
+			// raceStatus1.setWrapText(true);
 			// raceStatus1.setFont(Font.font("Verdana", 20));
 			raceStatus2.setText(gameController.getRaceRuns().get(1)
 					.getRaceStatus().toString());
 			raceStatus3.setText(gameController.getRaceRuns().get(2)
 					.getRaceStatus().toString());
-//			setStatusLabelStyle(raceStatus1, gameController.getRaceRuns().get(0)
-//					.getRaceStatus().toString());
-//			setStatusLabelStyle(raceStatus2, gameController.getRaceRuns().get(1)
-//					.getRaceStatus().toString());
-//			setStatusLabelStyle(raceStatus3, gameController.getRaceRuns().get(2)
-//					.getRaceStatus().toString());
-			
+			setStatusLabelStyle(raceStatus1, gameController.getRaceRuns()
+					.get(0).getRaceStatus().toString());
+			setStatusLabelStyle(raceStatus2, gameController.getRaceRuns()
+					.get(1).getRaceStatus().toString());
+			setStatusLabelStyle(raceStatus3, gameController.getRaceRuns()
+					.get(2).getRaceStatus().toString());
 
 		}
 	}
 
 	public void setStatusLabelStyle(Label label, String status) {
-		label.setText(status);
+//		label.setText(status);
 		if (status.equals(RaceStatus.waiting)) {
+			System.out.println("waiting status");
 			label.setStyle("-fx-font-size: 30px; -fx-text-fill: blue;");
-		} 
-		else if (status.equals(RaceStatus.completed)) {
+		} else if (status.equals(RaceStatus.completed)) {
 			label.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
-		}
-		else if (status.equals(RaceStatus.in_progress)) {
+		} else if (status.equals(RaceStatus.in_progress)) {
 			label.setStyle("-fx-font-size: 20px; -fx-text-fill: green;");
 
-		}
-		else if (status.equals(RaceStatus.ready_to_run)) {
+		} else if (status.equals(RaceStatus.ready_to_run)) {
 			label.setStyle("-fx-font-size: 20px; -fx-text-fill: orange;");
 		}
-	}
-	
-	public static MainClientApp getMainClientApp() {
-		return mainClientApp;
 	}
 }

@@ -771,23 +771,6 @@ public class DBHandler {
 				System.out.println("Result is null");
 		}
 
-		// try {
-		// if (!result.next()) {
-		// System.out.println("no data found");
-		// } else {
-		//
-		// do {
-		// User user;
-		//
-		// user = new User(result.getString("userFullName"),
-		// result.getInt("userId"),
-		// result.getDouble("userRevenue"));
-		// users.add(user);
-		// } while (result.next());
-		// return users.get(0);
-		// }
-		// }
-
 		else if (classType.equals("User")) {
 			ArrayList<User> users = new ArrayList<>();
 			try {
@@ -802,6 +785,7 @@ public class DBHandler {
 								result.getDouble("userRevenue"));
 
 						users.add(user);
+						System.out.println("found users " + users);
 
 					} while (result.next());
 					return users;
@@ -821,10 +805,12 @@ public class DBHandler {
 
 	public synchronized Object convertResultSetToObject(ResultSet result,
 			String objectType) {
-		Object object = convertResultSetToArraylist(result, objectType);
+		@SuppressWarnings("unchecked")
+		ArrayList<Object> object = (ArrayList<Object>) convertResultSetToArraylist(result, objectType);
+		System.out.println("object is " + object);
 
 		if (object != null)
-			return convertResultSetToArraylist(result, objectType).get(0);
+			return object.get(0);
 
 		return object;
 	}

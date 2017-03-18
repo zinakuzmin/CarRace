@@ -157,6 +157,7 @@ public class MainClientApp extends Application {
 						continue;
 					}
 					
+					mediaPlayer.play();
 					for (int i=0; i<cars.size() ; i++) {
 						cars.get(i).startCar(new CarRadialMove(carsInRace.get(i).getSpeedList()));
 					}
@@ -173,7 +174,6 @@ public class MainClientApp extends Application {
 //	        
 //        }
 		
-		mediaPlayer.play();
 		mediaPlayer.setOnEndOfMedia(new Runnable() {
 			
 			@Override
