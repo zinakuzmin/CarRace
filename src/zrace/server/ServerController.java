@@ -20,6 +20,7 @@ import zrace.client.app.world.cars.objs.Songs;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
 import zrace.protocol.Message;
+import zrace.protocol.UserDetailsMsg;
 import zrace.server.db.DBHandler;
 import zrace.server.view.ServerMainView;
 import dbModels.Bet;
@@ -30,6 +31,7 @@ import dbModels.RaceRun;
 import dbModels.RaceRun.CarInRace;
 import dbModels.RaceRun.RaceStatus;
 import dbModels.User;
+import dbModels.ZraceSystem;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
@@ -243,24 +245,27 @@ public class ServerController {
 		ArrayList<Bet> bets = db.getBetsByRaceIDAsArray(race.getRaceId());
 		if (bets != null) {
 			for (Bet bet : bets) {
+				User user = db.getUserById(bet.getUserId());
 				Double betAmount = bet.getAmount();
 				RaceResult raceResult = new RaceResult();
 				raceResult.setWinner(true);
 				raceResult.setRaceId(race.getRaceId());
 				raceResult.setBetId(bet.getBetId());
 				if (bet.getCarId() == winnerCarId) {
-					raceResult.setUserRevenue(betAmount - betAmount * 0.1);
-					raceResult.setSystemRevenue(betAmount * 0.1);
+					raceResult.setUserRevenue(betAmount - betAmount * RunParameters.SYSTEM_COMISSION);
+					raceResult.setSystemRevenue(betAmount * RunParameters.SYSTEM_COMISSION);
+					
 				} else {
-					raceResult.setUserRevenue(betAmount - betAmount
-							* RunParameters.SYSTEM_COMISSION);
-					raceResult.setSystemRevenue(betAmount
-							* RunParameters.SYSTEM_COMISSION);
+					raceResult.setUserRevenue(0);
+					raceResult.setSystemRevenue(betAmount);
+					
 				}
+				user.setUserRevenue(user.getUserRevenue() + raceResult.getUserRevenue());
 				db.insertRaceResult(raceResult);
-				db.updateUserRevenue(db.getUserById(bet.getUserId()));
+				db.updateUserRevenue(user);
 				db.updateRaceCompleted(race);
 				db.updateSystemRevenue(raceResult.getSystemRevenue());
+				
 			}
 		}
 
@@ -405,6 +410,27 @@ public class ServerController {
 				client.getStreamToClient().reset();
 				client.getStreamToClient().writeObject(message);
 				client.getStreamToClient().flush();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public synchronized void sendUserDetailsUpdateToClient(User user){
+		for (ClientHandler client : activeClients) {
+			try {
+				if (client.getUserFullName().equals(user.getUserFullName())){
+					UserDetailsMsg message = new UserDetailsMsg(0, user);
+					System.out.println("server send to client message " + client + " "
+							+ message);
+					client.getStreamToClient().reset();
+					client.getStreamToClient().writeObject(message);
+					client.getStreamToClient().flush();
+					return;
+				}
+
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
