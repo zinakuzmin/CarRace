@@ -14,5 +14,9 @@ public class ServerLogger {
 	public void logMessage(Message msg){
 		logViewer.appendText(msg.toString() + "\n");
 	}
+	
+	public void logStringMessage(String msg){
+		logViewer.appendText(msg + "\n");
+	}
 
 }

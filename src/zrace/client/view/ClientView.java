@@ -53,6 +53,10 @@ public class ClientView extends Application {
 	private Label race2Name;
 	private Label race3Name;
 	private Label userNameLabel;
+	private Button betBtn1; // = new Button("Make a bet for race1");
+	private Button betBtn2; // = new Button("Make a bet for race3");
+	private Button betBtn3; // = new Button("Make a bet for race3");
+	
 
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
@@ -64,6 +68,11 @@ public class ClientView extends Application {
 		race2Name = new Label();
 		race3Name = new Label();
 		userNameLabel = new Label();
+		betBtn1 = new Button("Make a bet for race1");
+		betBtn2 = new Button("Make a bet for race3");
+		betBtn3 = new Button("Make a bet for race3");
+
+		
 		
 
 	}
@@ -150,6 +159,7 @@ public class ClientView extends Application {
 	}
 
 	public void createClientView(Stage primaryStage) {
+
 		BorderPane pane = new BorderPane();
 		
 		
@@ -166,11 +176,6 @@ public class ClientView extends Application {
 				&& gameController.isGotRacesFromServer() && gameController
 					.isGotRacesRunsFromServer())) {
 			try {
-				// System.out.println("client get user " +
-				// gameController.isGotUserFromServer());
-				// System.out.println("client get races " +
-				// gameController.isGotRacesFromServer());
-
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
@@ -181,24 +186,15 @@ public class ClientView extends Application {
 		
 		pane.setTop(userNameLabel);
 
-		// raceStatus1 = new Label();
-		// //gameController.getRaceRuns().get(0).getRaceStatus().toString());
-		// raceStatus2 = new Label();
-		// //gameController.getRaceRuns().get(1).getRaceStatus().toString());
-		// raceStatus3 = new Label();
-		// //gameController.getRaceRuns().get(2).getRaceStatus().toString());
 		
-//		race1Name.setText("Race 1: " + gameController.getActiveRaces().get(0).getRaceFullName());
-//		race2Name.setText("Race 2: " + gameController.getActiveRaces().get(1).getRaceFullName());
-//		race3Name.setText("Race 3: " + gameController.getActiveRaces().get(2).getRaceFullName());
 
 		Button viewRace1 = new Button("View Race 1");
 		Button viewRace2 = new Button("View Race 2");		
 		Button viewRace3 = new Button("View Race 3");
 				
-		Button betBtn1 = new Button("Make a bet for race1");
-		Button betBtn2 = new Button("Make a bet for race3");
-		Button betBtn3 = new Button("Make a bet for race3");
+//		Button betBtn1 = new Button("Make a bet for race1");
+//		Button betBtn2 = new Button("Make a bet for race3");
+//		Button betBtn3 = new Button("Make a bet for race3");
 
 		GridPane paneRace1 = new GridPane();
 		GridPane paneRace2 = new GridPane();
@@ -230,17 +226,17 @@ public class ClientView extends Application {
 		paneRace1.add(race1Name, 1, 1);
 		paneRace1.add(raceStatus1, 1, 2);
 		paneRace1.add(viewRace1, 1, 3);
-		paneRace1.add(betBtn1, 2, 3);
+		paneRace1.add(betBtn1, 1, 4);
 		
 		paneRace2.add(race2Name, 1, 1);
 		paneRace2.add(raceStatus2, 1, 2);
 		paneRace2.add(viewRace2, 1, 3);
-		paneRace2.add(betBtn2, 2, 3);
+		paneRace2.add(betBtn2, 1, 4);
 		
 		paneRace3.add(race3Name, 1, 1);
 		paneRace3.add(raceStatus3, 1, 2);
 		paneRace3.add(viewRace3, 1, 3);
-		paneRace3.add(betBtn3, 2, 3);
+		paneRace3.add(betBtn3, 1, 4);
 
 		GridPane grid = new GridPane();
 
@@ -305,8 +301,16 @@ public class ClientView extends Application {
 
 			@Override
 			public void handle(WindowEvent event) {
-				if (mainClientApp != null)
-					mainClientApp.closeApp();
+				try {
+					if (mainClientApp != null)
+						mainClientApp.closeApp();
+					gameController.getOut().writeObject(
+							new ClientDisconnectMsg(0 , gameController.getUser()));
+					gameController.getSocket().close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -385,41 +389,48 @@ public class ClientView extends Application {
 		if (!gameController.getRaceRuns().isEmpty()
 				&& gameController.getRaceRuns().size() >= 3) {
 
-			raceStatus1.setText("Status: " + gameController.getRaceRuns().get(0)
-					.getRaceStatus().toString() );
 
 			// raceStatus1.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
 			// raceStatus1.setEffect(new Reflection());
 			// raceStatus1.setMaxWidth(250);
 			// raceStatus1.setWrapText(true);
 			// raceStatus1.setFont(Font.font("Verdana", 20));
+			raceStatus1.setText("Status: " + gameController.getRaceRuns().get(0)
+					.getRaceStatus().toString());
 			raceStatus2.setText("Status: " + gameController.getRaceRuns().get(1)
 					.getRaceStatus().toString());
 			raceStatus3.setText("Status: " + gameController.getRaceRuns().get(2)
 					.getRaceStatus().toString());
 			setStatusLabelStyle(raceStatus1, gameController.getRaceRuns()
-					.get(0).getRaceStatus());
+					.get(0).getRaceStatus(), betBtn1);
 			setStatusLabelStyle(raceStatus2, gameController.getRaceRuns()
-					.get(1).getRaceStatus());
+					.get(1).getRaceStatus(), betBtn2);
 			setStatusLabelStyle(raceStatus3, gameController.getRaceRuns()
-					.get(2).getRaceStatus());
+					.get(2).getRaceStatus(), betBtn3);
 
 		}
 	}
 
-	public void setStatusLabelStyle(Label label, RaceStatus status) {
+	public void setStatusLabelStyle(Label label, RaceStatus status, Button betBtn) {
 		// label.setText(status);
 		label.setEffect(new Glow());
 		if (status.equals(RaceStatus.waiting)) {
 			System.out.println("waiting status");
 			label.setStyle("-fx-font-size: 25px; -fx-text-fill: blue;");
+			betBtn.setDisable(false);
 		} else if (status.equals(RaceStatus.completed)) {
 			label.setStyle("-fx-font-size: 25px; -fx-text-fill: red;");
+			betBtn.setDisable(true);
+			if (gameController.getLastWinnerCarId() != 0){
+				label.setText(label.getText() + ". Won car " + gameController.getLastWinnerCarId());
+				
+			}
 		} else if (status.equals(RaceStatus.in_progress)) {
 			label.setStyle("-fx-font-size: 25px; -fx-text-fill: green;");
-
+			betBtn.setDisable(true);
 		} else if (status.equals(RaceStatus.ready_to_run)) {
 			label.setStyle("-fx-font-size: 30px; -fx-text-fill: orange;");
+			betBtn.setDisable(true);
 		}
 	}
 	
@@ -442,6 +453,8 @@ public class ClientView extends Application {
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
 		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
 	}
+	
+	
 	
 	
 

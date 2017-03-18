@@ -1,13 +1,7 @@
 package zrace.server;
 
 
-import java.io.ObjectOutputStream;
-
-
-
 import java.util.ArrayList;
-
-
 import dbModels.*;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
@@ -55,7 +49,7 @@ public class HandleMessage implements Runnable{
 					e.printStackTrace();
 				}
 			}).start();
-			client.getController().getLogger().logMessage(messageFromClient);
+//			client.getController().getLogger().logMessage(messageFromClient);
 		}
 		
 		else if (messageFromClient instanceof ClientBetMsg){
