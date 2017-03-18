@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 
-import main.runner.RunParameters;
 import dbModels.Race;
 import dbModels.RaceRun;
 import dbModels.RaceRun.RaceStatus;
@@ -18,7 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
-import javafx.scene.effect.Reflection;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -26,7 +24,6 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -37,6 +34,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import main.runner.RunParameters;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
 import zrace.protocol.ClientDisconnectMsg;
@@ -125,7 +123,6 @@ public class ClientView extends Application {
 						try {
 							Thread.sleep(200);
 						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -171,7 +168,6 @@ public class ClientView extends Application {
 
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -287,13 +283,13 @@ public class ClientView extends Application {
 
 		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(0), racePane, primaryStage, gameController.getRaceRuns()
-				.get(0), gameController, 0, mainClientApp));
+				.get(0), gameController, 0));
 		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(1), racePane, primaryStage, gameController.getRaceRuns()
-				.get(1), gameController, 1, mainClientApp));
+				.get(1), gameController, 1));
 		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(2), racePane, primaryStage, gameController.getRaceRuns()
-				.get(2), gameController, 2, mainClientApp));
+				.get(2), gameController, 2));
 
 		betBtn1.setOnAction(e -> showBettingPage(gameController
 				.getActiveRaces().get(0).getRaceId()));
@@ -312,8 +308,8 @@ public class ClientView extends Application {
 		});
 	}
 
-	private static void showRace(Race activeRace, Pane racePane,
-			Stage primaryStage, RaceRun raceRun, ZRaceGameController gameController, int raceNumber, MainClientApp mainClientApp) {
+	private void showRace(Race activeRace, Pane racePane,
+			Stage primaryStage, RaceRun raceRun, ZRaceGameController gameController, int raceNumber) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
 		}
@@ -335,12 +331,10 @@ public class ClientView extends Application {
 			}
 
 			System.out.println("Race duration in millis:" + raceDurationInMilis);
-			mainClientApp.setIsRaceStarted(raceStarted, raceDurationInMilis);
 			mainClientApp.setMusic(raceRun.getSong(), Duration.millis(raceDurationInMilis));
 			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
 				| FileNotFoundException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -353,7 +347,6 @@ public class ClientView extends Application {
 							.getUser().getUserID());
 			betView.start(new Stage());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

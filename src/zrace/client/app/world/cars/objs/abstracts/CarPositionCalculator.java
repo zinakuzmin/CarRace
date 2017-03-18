@@ -15,7 +15,8 @@ public class CarPositionCalculator {
 		float movingStep = 0;
 		float movingPoints = ((float)orbitRadius/(float)Car.firstCarRadius)*speedList.get(speedArrayPos);
         float lastMovingPoint = movingPoints;
-        long totalNumOfLoops = 0;
+        @SuppressWarnings("unused")
+		long totalNumOfLoops = 0;
         
 
 //		System.out.println("Speed changed:" + car.getSpeedList().get(speedArrayPos));
@@ -73,6 +74,7 @@ public class CarPositionCalculator {
 		private float lastDegree;
 		private float lastMovingStep;
 		private float lastMovingPoints;
+		private boolean runFromStart;
 
 		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep, float lastMovingPoints) {
 			this.totalMilage = totalMilage;
@@ -105,6 +107,14 @@ public class CarPositionCalculator {
 
 		public float getLastMovingPoints() {
 			return lastMovingPoints;
+		}
+
+		public void runFromStart(boolean runFromStart) {
+			this.runFromStart = runFromStart;
+		}
+
+		public boolean isRunFromStart() {
+			return runFromStart;
 		}
 		
 		

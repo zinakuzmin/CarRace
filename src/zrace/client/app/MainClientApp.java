@@ -8,7 +8,6 @@ import com.interactivemesh.jfx.importer.ModelImporter;
 import com.interactivemesh.jfx.importer.col.ColModelImporter;
 
 import dbModels.RaceRun.CarInRace;
-import dbModels.RaceRun.RaceStatus;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -30,18 +29,15 @@ import zrace.client.app.world.ZCamera;
 import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.Songs;
 import zrace.client.app.world.cars.objs.abstracts.Car;
-import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
-import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
-import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 
 public class MainClientApp extends Application {
 
     private ArrayList<Car> cars = new ArrayList<>();
 	private Pane pane;
 	private ArrayList<CarInRace> carsInRace;
-//	private long hipoteticalStartTime;
 	private ZRaceGameController gameController;
 	private int raceNumber;
+	private RaceMonitor raceThread;
     
     public MainClientApp(Pane racePane, ArrayList<CarInRace> carsInRace, ZRaceGameController gameController, int raceNumber) {
 		this.pane = racePane;
@@ -60,18 +56,6 @@ public class MainClientApp extends Application {
 			car.getNode().setTranslateY(car.getCarHightFromGround()/2);
 			car.addOrbit(carInRace.getRadius());
 		}
-//    	for( int i=0 ; i < 5 ; i++) {
-//    		cars.add(CarResources.getCarByUid(carsInRace.get(i)));
-//    	}
-//
-//    	for (int i = 0; i < cars.size(); i++) {
-//			Car car = cars.get(i);
-//			world.getChildren().add(car.loadCar());
-//    		int startPositionPadding = Car.firstCarRadius+(i+1)*20;
-//			car.getNode().setTranslateX(-startPositionPadding);
-//			car.getNode().setTranslateY(car.getCarHightFromGround()/2);
-//			car.addOrbit(startPositionPadding);
-//		}
     }
 
     public void drawLanes(Xform world) throws FileNotFoundException {
@@ -112,25 +96,12 @@ public class MainClientApp extends Application {
 		SubScene subScene = new SubScene(root, 750, 550, true, SceneAntialiasing.BALANCED);
 		
         subScene.setFill(Color.FORESTGREEN);
-//        cam.handleKeyboard(subScene, world, cars);
         cam.handleMouse(subScene, world);
         
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 
 			@Override
 			public void handle(WindowEvent arg0) {
-//				long raceDurationInMillis2 = System.currentTimeMillis()-hipoteticalStartTime;
-//				System.out.println("Race time in millis:" + raceDurationInMillis2);
-//		        System.out.println("Cars driving mileage:");
-//		        for (Car car : cars) {
-//		        Car car = cars.get(0);
-//		        	System.out.println(car.getCarName() + ":" + car.getTotalDrivingMileage());
-//					Car.calculateTotalMilageOfCar(car, raceDurationInMillis2);
-//		        }
-//		        System.out.println("=============================");
-//		        Car max = Collections.max(cars, Comparator.comparing(Car::getTotalDrivingMileage));
-//		        System.out.println("Car won the race:" + max.getCarName());
-//		        System.out.println("=============================");
 		        closeApp();
 			}
 		});
@@ -138,39 +109,8 @@ public class MainClientApp extends Application {
         subScene.setCamera(cam.getCamera());
         pane.getChildren().add(subScene);
         
-//        if (raceStarted) {
-//        	System.out.println("Setting milis to 1");
-//	        Car.STEP_DURATION_IN_MILLISECONDS = 1;
-//	        
-//        hipoteticalStartTime = System.currentTimeMillis();
-        new Thread(new Runnable() {
-			
-
-			@Override
-			public void run() {
-				while(!isClosed()) {
-					if (!gameController.getRaceRuns().get(raceNumber).getRaceStatus().equals(RaceStatus.in_progress)) {
-						try {
-							Thread.sleep(200);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						continue;
-					}
-					
-					mediaPlayer.play();
-					for (int i=0; i<cars.size() ; i++) {
-						Car car = cars.get(i);
-						CalculatedCarInRace carCurrentPos = CarPositionCalculator.
-								calculateTotalMilageOfCar(car.getOrbitRadius(), carsInRace.get(i).getSpeedList(), raceDurationInMillis);
-//						System.out.println("Done calculation for car:" + car.getCarName());
-						car.startCar(new CarRadialMove(carsInRace.get(i).getSpeedList(), carCurrentPos));
-					}
-					carsStarted = true;
-					return;
-				}
-			}
-		}).start();
+        raceThread = new RaceMonitor(gameController, raceNumber, mediaPlayer, cars, carsInRace);
+        new Thread(raceThread).start();
         
 		mediaPlayer.setOnEndOfMedia(new Runnable() {
 			
@@ -180,10 +120,9 @@ public class MainClientApp extends Application {
 				try {
 					Thread.sleep(2_000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if (carsStarted) {
+				if (raceThread.isCarsStarted()) {
 					for (Car car : cars) {
 						car.stopCar();
 					}
@@ -194,15 +133,14 @@ public class MainClientApp extends Application {
     }
     
     MediaPlayer mediaPlayer ;
-	private boolean raceStarted;
-	private long raceDurationInMillis;
 	private boolean isClosed = false;
-	private boolean carsStarted;
 
 	public void closeApp() {
+		System.out.println("Closing Race view:" + raceNumber);
+		raceThread.stopThread();
 		mediaPlayer.stop();
 		
-		if (carsStarted) {
+		if (raceThread.isCarsStarted()) {
 			for (Car car : cars) {
 				car.stopCar();
 			}
@@ -221,11 +159,6 @@ public class MainClientApp extends Application {
 		Media songToPlay = new Media(new File(song.getSongName()).toURI().toString());
 		mediaPlayer = new MediaPlayer(songToPlay);
 		mediaPlayer.setStartTime(seek);
-	}
-
-	public void setIsRaceStarted(boolean raceStarted, long raceDuration) {
-		this.raceStarted = raceStarted;
-		this.raceDurationInMillis = raceDuration;
 	}
 
 	@SuppressWarnings("unused")

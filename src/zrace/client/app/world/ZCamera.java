@@ -1,19 +1,14 @@
 package zrace.client.app.world;
 
-import java.util.ArrayList;
-
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import zrace.client.app.Xform;
-import zrace.client.app.world.cars.objs.abstracts.Car;
-import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 
 public class ZCamera {
 	 final PerspectiveCamera camera = new PerspectiveCamera(true);

@@ -1,20 +1,13 @@
 package zrace.server;
 
-import java.io.File;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-
-import zrace.protocol.UpdateRaceRunsMsg;
-import zrace.protocol.UpdateRacesMsg;
-import main.runner.RunParameters;
-
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import dbModels.Race;
 import dbModels.RaceRun;
 import dbModels.RaceRun.RaceStatus;
-import javafx.scene.media.Media;
+import main.runner.RunParameters;
+import zrace.protocol.UpdateRaceRunsMsg;
+import zrace.protocol.UpdateRacesMsg;
 
 public class RacesMonitor implements Runnable {
 	private ServerController controller;
