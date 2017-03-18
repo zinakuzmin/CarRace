@@ -62,7 +62,7 @@ public class CarPositionCalculator {
 //		System.out.println("Calculated milage:" + totalMilage);
 //		System.out.println("Calculated loops:" + totalNumOfLoops);
 		
-		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep);
+		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep, movingPoints);
 	}
 	
 	public static class CalculatedCarInRace{
@@ -72,13 +72,15 @@ public class CarPositionCalculator {
 		private double lastZPos;
 		private float lastDegree;
 		private float lastMovingStep;
+		private float lastMovingPoints;
 
-		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep) {
+		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep, float lastMovingPoints) {
 			this.totalMilage = totalMilage;
 			this.lastXPos = lastXPos;
 			this.lastZPos = lastZPos;
 			this.lastDegree = lastDegree;
 			this.lastMovingStep = lastMovingStep;
+			this.lastMovingPoints = lastMovingPoints;
 		}
 
 		public float getLastDegree() {
@@ -99,6 +101,10 @@ public class CarPositionCalculator {
 
 		public float getTotalMilage() {
 			return totalMilage;
+		}
+
+		public float getLastMovingPoints() {
+			return lastMovingPoints;
 		}
 		
 		

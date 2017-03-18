@@ -12,6 +12,7 @@ public class CarRadialMove {
 	private double lastZPos;
 	private float lastDegree;
 	private float lastMovingStep;
+	private float lastMovingPoints;
 
 	
 	public double getLastXPos() {
@@ -40,6 +41,7 @@ public class CarRadialMove {
 		lastZPos = carCurrentPos.getLastZPos();
 		lastDegree = carCurrentPos.getLastDegree();
 		lastMovingStep = carCurrentPos.getLastMovingStep();
+		lastMovingPoints = carCurrentPos.getLastMovingPoints();
 	}
 
 	public Integer getRadialPoint() {
@@ -56,6 +58,10 @@ public class CarRadialMove {
 	public String toString() {
 		return "CarRadialMove [speedList=" + speedList + ", counter=" + counter + ", lastXPos=" + lastXPos
 				+ ", lastZPos=" + lastZPos + ", lastDegree=" + lastDegree + ", lastMovingStep=" + lastMovingStep + "]";
+	}
+
+	public float getLastMovingPoints() {
+		return lastMovingPoints;
 	}
 	
 }

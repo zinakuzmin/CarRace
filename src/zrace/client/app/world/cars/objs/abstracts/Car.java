@@ -105,7 +105,7 @@ public abstract class Car {
 		
 		timeline = new Timeline(new KeyFrame(Duration.ZERO, new EventHandler() {
 	        float movingStep = radialMoveParams.getLastMovingStep();//0;
-	        float movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*radialMoveParams.getRadialPoint();
+	        float movingPoints = radialMoveParams.getLastMovingPoints();//((float)getOrbitRadius()/(float)firstCarRadius)*radialMoveParams.getRadialPoint();
 	        float lastMovingPoint = movingPoints;
 	        long timeInMillis = 0;
 	
