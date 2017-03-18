@@ -20,7 +20,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.world.Crowd;
 import zrace.client.app.world.Road;

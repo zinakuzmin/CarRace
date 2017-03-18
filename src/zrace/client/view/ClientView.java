@@ -2,7 +2,6 @@ package zrace.client.view;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Date;
 
 import dbModels.Race;
 import dbModels.RaceRun;
@@ -33,7 +32,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
 import main.runner.RunParameters;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
@@ -42,7 +40,6 @@ import zrace.protocol.ClientDisconnectMsg;
 public class ClientView extends Application {
 	private ZRaceGameController gameController;
 	private TextField userTextField;
-	private TextField userIDtextField;
 	private MainClientApp mainClientApp;
 	private Label raceStatus1;
 	private Label raceStatus2;
@@ -314,20 +311,7 @@ public class ClientView extends Application {
 		}
 		racePane.getChildren().clear();
 		try {
-//			boolean raceStarted = activeRace.getStartTime() != null;
-//			long raceDurationInMilis = 0;
-
 			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace(), gameController, raceNumber);
-
-			
-//			if (raceStarted) {
-//				long raceStartTime = activeRace.getStartTime().getTime();
-//				long currentTimeMillis = System.currentTimeMillis();
-//				System.out.println("Race Start:"+new Date(raceStartTime));
-//				System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
-//				System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
-//				raceDurationInMilis = currentTimeMillis - raceStartTime;
-//			}
 
 			mainClientApp.setMusic(raceRun.getSong());
 			mainClientApp.start(primaryStage);

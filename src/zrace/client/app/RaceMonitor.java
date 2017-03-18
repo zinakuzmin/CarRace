@@ -30,10 +30,12 @@ public class RaceMonitor implements Runnable{
 		this.carsInRace = carsInRace;
 	}
 
+	boolean waited = false;
 	@Override
 	public void run() {
 		while(shoudRun) {
 			if (!gameController.getRaceRuns().get(raceNumber).getRaceStatus().equals(RaceStatus.in_progress)) {
+				waited = true;
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {
@@ -45,12 +47,13 @@ public class RaceMonitor implements Runnable{
 			long raceDurationInMillis = System.currentTimeMillis()-gameController.getActiveRaces().get(raceNumber).getStartTime().getTime();
 			mediaPlayer.setStartTime(Duration.millis(raceDurationInMillis));
 			mediaPlayer.play();
+			System.out.println("Started from begining:" + waited);
 			for (int i=0; i<cars.size() ; i++) {
 				Car car = cars.get(i);
 				CalculatedCarInRace carCurrentPos = CarPositionCalculator.
 						calculateTotalMilageOfCar(car.getOrbitRadius(), carsInRace.get(i).getSpeedList(), raceDurationInMillis);
-//				System.out.println("Done calculation for car:" + car.getCarName());
-				carCurrentPos.runFromStart(false);
+				//				System.out.println("Done calculation for car:" + car.getCarName());
+				carCurrentPos.runFromStart(waited);
 				car.startCar(new CarRadialMove(carsInRace.get(i).getSpeedList(), carCurrentPos));
 			}
 			carsStarted  = true;

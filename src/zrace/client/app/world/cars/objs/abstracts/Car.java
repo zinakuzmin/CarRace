@@ -100,7 +100,7 @@ public abstract class Car {
     public void startCar(CarRadialMove radialMoveParams) {
 		this.radialMoveParams = radialMoveParams;
 		
-		if (radialMoveParams.isRunFromStart()) {
+		if (!radialMoveParams.isRunFromStart()) {
 			carForm.setTranslateX(radialMoveParams.getLastXPos());
 			carForm.setTranslateZ(radialMoveParams.getLastZPos());
 			carForm.setRotateY(radialMoveParams.getLastDegree());
