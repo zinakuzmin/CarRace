@@ -3,13 +3,14 @@ package zrace.client.app;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.interactivemesh.jfx.importer.ModelImporter;
 import com.interactivemesh.jfx.importer.col.ColModelImporter;
 
+import dbModels.RaceRun.CarInRace;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.SceneAntialiasing;
@@ -19,12 +20,15 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import main.runner.RunParameters;
 import zrace.client.app.world.Crowd;
 import zrace.client.app.world.Road;
 import zrace.client.app.world.Tribune;
 import zrace.client.app.world.ZCamera;
 import zrace.client.app.world.cars.CarResources;
+import zrace.client.app.world.cars.objs.Songs;
 import zrace.client.app.world.cars.objs.abstracts.Car;
 import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 
@@ -32,26 +36,17 @@ public class MainClientApp extends Application {
 
     private ArrayList<Car> cars = new ArrayList<>();
 	private Pane pane;
+	private ArrayList<CarInRace> carsInRace;
+//	private long hipoteticalStartTime;
     
-    public MainClientApp(Pane racePane) {
+    public MainClientApp(Pane racePane, ArrayList<CarInRace> carsInRace) {
 		this.pane = racePane;
+		this.carsInRace = carsInRace;
 	}
 
 	private void buildAllCars(Xform world) throws InstantiationException, IllegalAccessException {
-//    	cars.add(new AlfaRomeo());
-//    	cars.add(new AudiTT());
-//    	cars.add(new AstonMartinV12());
-//    	cars.add(new Batmobile());
-//    	cars.add(new ChryslerDodgeRam());
-//    	cars.add(new MercedesCLKGTR());
-//    	cars.add(new Nissan350Zcoupe());
-//    	cars.add(new McLaren());
-
-    	boolean shoudBePixelCar = RunParameters.BUILD_PIXEL_CARS;
-    	List<CarResources> carResources = shoudBePixelCar ? CarResources.getPixelCarResources() : CarResources.getModelCarResources();
-    	
     	for( int i=0 ; i < 5 ; i++) {
-    		cars.add(carResources.get(i).getKlass().newInstance());
+    		cars.add(CarResources.getCarByUid(carsInRace.get(i)));
     	}
 
     	for (int i = 0; i < cars.size(); i++) {
@@ -85,7 +80,7 @@ public class MainClientApp extends Application {
     }
     
     @Override
-    public void start(Stage primaryStage) throws InstantiationException, IllegalAccessException, FileNotFoundException {
+    public void start(Stage primaryStage) throws InstantiationException, IllegalAccessException, FileNotFoundException, InterruptedException {
         Group root = new Group();
         Xform world = new Xform();
 //        System.setProperty("javafx.pulseLogger","true");
@@ -103,40 +98,47 @@ public class MainClientApp extends Application {
 		SubScene subScene = new SubScene(root, 800, 600, true, SceneAntialiasing.BALANCED);
 		
         subScene.setFill(Color.FORESTGREEN);
-        cam.handleKeyboard(subScene, world, cars);
+//        cam.handleKeyboard(subScene, world, cars);
         cam.handleMouse(subScene, world);
-//        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-//
-//			@Override
-//			public void handle(WindowEvent arg0) {
+        
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
+			@Override
+			public void handle(WindowEvent arg0) {
+//				long raceDurationInMillis2 = System.currentTimeMillis()-hipoteticalStartTime;
+//				System.out.println("Race time in millis:" + raceDurationInMillis2);
 //		        System.out.println("Cars driving mileage:");
 //		        for (Car car : cars) {
+//		        Car car = cars.get(0);
 //		        	System.out.println(car.getCarName() + ":" + car.getTotalDrivingMileage());
+//					Car.calculateTotalMilageOfCar(car, raceDurationInMillis2);
 //		        }
-//
 //		        System.out.println("=============================");
 //		        Car max = Collections.max(cars, Comparator.comparing(Car::getTotalDrivingMileage));
 //		        System.out.println("Car won the race:" + max.getCarName());
 //		        System.out.println("=============================");
-//			}
-//		});
+		        closeApp();
+			}
+		});
 
         subScene.setCamera(cam.getCamera());
         pane.getChildren().add(subScene);
         
-        for (Car car : cars) {
-    		car.moveCar(new CarRadialMove());
+//        if (raceStarted) {
+//        	System.out.println("Setting milis to 1");
+//	        Car.STEP_DURATION_IN_MILLISECONDS = 1;
+//	        
+//        hipoteticalStartTime = System.currentTimeMillis();
+        for (int i=0; i<cars.size() ; i++) {
+	    		cars.get(i).startCar(new CarRadialMove(carsInRace.get(i).getSpeedList()));
 		}
-        
-        ArrayList<String> listOfSongs = new ArrayList<>();
-        listOfSongs.add("Guns N Roses - Sweet.mp3");
-        listOfSongs.add("I Like To Move It.mp3");
-        listOfSongs.add("Michael Jackson - Smooth Criminal.mp3");
-        Collections.shuffle(listOfSongs);
-        
-        String bip = listOfSongs.get(0);
-		Media hit = new Media(new File(bip).toURI().toString());
-		mediaPlayer = new MediaPlayer(hit);
+//	        
+//	        
+//	        System.out.println("Setting milis to 100");
+//	        Car.STEP_DURATION_IN_MILLISECONDS = 100;
+//	        
+//        }
+		
 		mediaPlayer.play();
 		mediaPlayer.setOnEndOfMedia(new Runnable() {
 			
@@ -147,6 +149,28 @@ public class MainClientApp extends Application {
 		});
     }
     MediaPlayer mediaPlayer ;
+	private boolean raceStarted;
+	private long raceDurationInMillis;
+
+	public void closeApp() {
+		mediaPlayer.stop();
+		for (Car car : cars) {
+			car.stopCar();
+		}
+		pane.getChildren().clear();
+		System.gc();
+	}
+
+	public void setMusic(Songs song, Duration seek) {
+		Media songToPlay = new Media(new File(song.getSongName()).toURI().toString());
+		mediaPlayer = new MediaPlayer(songToPlay);
+		mediaPlayer.setStartTime(seek);
+	}
+
+	public void setIsRaceStarted(boolean raceStarted, long raceDuration) {
+		this.raceStarted = raceStarted;
+		this.raceDurationInMillis = raceDuration;
+	}
 
 	@SuppressWarnings("unused")
 	private void buildCar(Xform world) {
@@ -171,10 +195,4 @@ public class MainClientApp extends Application {
     	
     	world.getChildren().addAll(carForm);
     }
-
-	public void closeApp() {
-		mediaPlayer.stop();
-		pane.getChildren().clear();
-		System.gc();
-	}
 }

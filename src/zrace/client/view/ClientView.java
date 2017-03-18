@@ -3,6 +3,8 @@ package zrace.client.view;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import dbModels.Race;
+import dbModels.RaceRun;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -22,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
 import zrace.protocol.ClientDisconnectMsg;
@@ -178,9 +181,9 @@ public class ClientView extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		viewRace1.setOnAction(e -> showRace(viewRace1.getText(), racePane, primaryStage));
-		viewRace2.setOnAction(e -> showRace(viewRace2.getText(), racePane, primaryStage));
-		viewRace3.setOnAction(e -> showRace(viewRace3.getText(), racePane, primaryStage));
+		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces().get(0), racePane, primaryStage, gameController.getRaceRuns().get(0)));
+		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces().get(1), racePane, primaryStage, gameController.getRaceRuns().get(1)));
+		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces().get(2), racePane, primaryStage, gameController.getRaceRuns().get(2)));
 
 		betBtn1.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(0).getRaceId()));
 		betBtn2.setOnAction(e -> showBettingPage(gameController.getActiveRaces().get(1).getRaceId()));
@@ -196,16 +199,25 @@ public class ClientView extends Application {
 		});
 	}
 
-	private static void showRace(String raceID, Pane racePane, Stage primaryStage) {
+	private static void showRace(Race activeRace, Pane racePane, Stage primaryStage, RaceRun raceRun) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
 		}
 		racePane.getChildren().clear();
 		try {
-			mainClientApp = new MainClientApp(racePane);
+			boolean raceStarted = activeRace.getStartTime() != null;
+			long raceDurationInMilis = 0;
+
+			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace());
+			
+			if (raceStarted)
+				raceDurationInMilis = activeRace.getEndTime().getTime() - activeRace.getStartTime().getTime();
+			
+			mainClientApp.setIsRaceStarted(raceStarted, raceDurationInMilis);
+			mainClientApp.setMusic(raceRun.getSongUid(), Duration.millis(raceDurationInMilis));
 			mainClientApp.start(primaryStage);
 		} catch (InstantiationException | IllegalAccessException
-				| FileNotFoundException e) {
+				| FileNotFoundException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

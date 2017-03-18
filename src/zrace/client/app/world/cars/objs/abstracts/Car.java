@@ -1,6 +1,7 @@
 package zrace.client.app.world.cars.objs.abstracts;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.interactivemesh.jfx.importer.ModelImporter;
@@ -88,13 +89,16 @@ public abstract class Car {
 	}
     
 	// Number of steps for a circle during one orbit -> car speed [currentSpeed]
-    private static int STEP_DURATION_IN_MILLISECONDS = 100;
+    public static int STEP_DURATION_IN_MILLISECONDS = 100;
 	public static int firstCarRadius = 80;
-    
-    public void moveCar(CarRadialMove speed) {
-		
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		final Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, new EventHandler() {
+	Timeline timeline;
+	private CarRadialMove speedList;
+	public long totalNumOfLoops = 0;
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+    public void startCar(CarRadialMove speed) {
+		this.speedList = speed;
+		timeline = new Timeline(new KeyFrame(Duration.ZERO, new EventHandler() {
 	        float movingStep = 0;
 	        float movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*speed.getRadialPoint();
 	        float lastMovingPoint = movingPoints;
@@ -102,6 +106,7 @@ public abstract class Car {
 	
 	        @Override
 	        public void handle(Event event) {
+	        	totalNumOfLoops++;
 	        	movingStep++;
 	
 	        	if (lastMovingPoint != movingPoints) {
@@ -128,7 +133,7 @@ public abstract class Car {
 	            	movingStep = 0;
 	            }
 				if (timeInMillis > timeToChangeSpeed) {
-	            	movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*CarRadialMove.getNewRadialVelue();
+	            	movingPoints = ((float)getOrbitRadius()/(float)firstCarRadius)*speed.getRadialPoint();
 	            	timeInMillis = 0;
 	            }
 	            timeInMillis += STEP_DURATION_IN_MILLISECONDS;
@@ -138,6 +143,11 @@ public abstract class Car {
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.play();
 	}
+    
+    public void stopCar() {
+    	timeline.stop();
+    	System.out.println("run loops:" + totalNumOfLoops);
+    }
     
     private void moveCar(double x, double z) {
     	TranslateTransition move = new TranslateTransition();
@@ -169,4 +179,12 @@ public abstract class Car {
 	public double getCarHightFromGround() {
 		return carHightFromGround;
 	}
+	
+	public void translateCar(long raceDuration) {
+		
+	}
+	public ArrayList<Integer> getSpeedList() {
+		return speedList.getList();
+	}
+	
 }

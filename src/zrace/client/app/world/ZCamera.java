@@ -96,22 +96,22 @@ public class ZCamera {
 	        });
 	    }
 
-	    public void handleKeyboard(SubScene subScene, final Node root, ArrayList<Car> cars) {
-	        subScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-	            @Override
-	            public void handle(KeyEvent event) {
-	                switch (event.getCode()) {
-	                    case Z:
-	                    	for (Car car : cars) {
-	                    		car.moveCar(new CarRadialMove());
-							}
-	                    	break;
-					default:
-						break;
-	                }
-	            }
-	        });
-	    }
+//	    public void handleKeyboard(SubScene subScene, final Node root, ArrayList<Car> cars) {
+//	        subScene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//	            @Override
+//	            public void handle(KeyEvent event) {
+//	                switch (event.getCode()) {
+//	                    case Z:
+//	                    	for (Car car : cars) {
+//	                    		car.startCar(new CarRadialMove());
+//							}
+//	                    	break;
+//					default:
+//						break;
+//	                }
+//	            }
+//	        });
+//	    }
 
 		public Camera getCamera() {
 			return camera;

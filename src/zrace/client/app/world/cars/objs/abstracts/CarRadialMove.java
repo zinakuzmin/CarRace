@@ -1,28 +1,24 @@
 package zrace.client.app.world.cars.objs.abstracts;
 
-import java.util.Random;
+import java.util.ArrayList;
 
 public class CarRadialMove {
 	
-	private static final int speed_end = 180;
-	private static final int speed_start = 72;
+	private ArrayList<Integer> speedList;
+	private int counter = 0;
+
 	
-
-	public static Integer getNewRadialVelue() {
-		return new Random().nextInt(speed_end-speed_start)+speed_start;
-	}
-
-	private Integer radialPoint;
-
-	public CarRadialMove(int speed) {
-		this.radialPoint = speed;
-	}
-	
-	public CarRadialMove() {
-		radialPoint = getNewRadialVelue();
+	public CarRadialMove(ArrayList<Integer> speedList) {
+		this.speedList = speedList;
 	}
 
 	public Integer getRadialPoint() {
-		return radialPoint;
+		Integer integer = speedList.get(counter++);
+//		System.out.println("Using new speed:" + integer);
+		return integer;
+	}
+
+	public ArrayList<Integer> getList() {
+		return speedList;
 	}
 }
