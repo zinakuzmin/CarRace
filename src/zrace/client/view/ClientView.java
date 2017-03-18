@@ -45,7 +45,7 @@ public class ClientView extends Application {
 	private ZRaceGameController gameController;
 	private TextField userTextField;
 	private TextField userIDtextField;
-	private static MainClientApp mainClientApp;
+	private MainClientApp mainClientApp;
 	private Label raceStatus1;
 	private Label raceStatus2;
 	private Label raceStatus3;
@@ -287,13 +287,13 @@ public class ClientView extends Application {
 
 		viewRace1.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(0), racePane, primaryStage, gameController.getRaceRuns()
-				.get(0), gameController, 0));
+				.get(0), gameController, 0, mainClientApp));
 		viewRace2.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(1), racePane, primaryStage, gameController.getRaceRuns()
-				.get(1), gameController, 1));
+				.get(1), gameController, 1, mainClientApp));
 		viewRace3.setOnAction(e -> showRace(gameController.getActiveRaces()
 				.get(2), racePane, primaryStage, gameController.getRaceRuns()
-				.get(2), gameController, 2));
+				.get(2), gameController, 2, mainClientApp));
 
 		betBtn1.setOnAction(e -> showBettingPage(gameController
 				.getActiveRaces().get(0).getRaceId()));
@@ -313,7 +313,7 @@ public class ClientView extends Application {
 	}
 
 	private static void showRace(Race activeRace, Pane racePane,
-			Stage primaryStage, RaceRun raceRun, ZRaceGameController gameController, int raceNumber) {
+			Stage primaryStage, RaceRun raceRun, ZRaceGameController gameController, int raceNumber, MainClientApp mainClientApp) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
 		}

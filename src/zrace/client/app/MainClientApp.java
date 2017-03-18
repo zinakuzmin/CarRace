@@ -177,9 +177,22 @@ public class MainClientApp extends Application {
 			@Override
 			public void run() {
 				System.out.println("Song ended");
+				try {
+					Thread.sleep(2_000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (carsStarted) {
+					for (Car car : cars) {
+						car.stopCar();
+					}
+				}
+				
 			}
 		});
     }
+    
     MediaPlayer mediaPlayer ;
 	private boolean raceStarted;
 	private long raceDurationInMillis;

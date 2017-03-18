@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.interactivemesh.jfx.importer.ModelImporter;
 
+import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
@@ -21,7 +22,7 @@ import zrace.client.app.world.cars.CarResources;
 
 public abstract class Car {
 
-    public static final int timeToChangeSpeed = 5_000;
+    public static final int timeToChangeSpeed = 10_000;
 	CarResources carRes;
 	protected Xform carForm;
 	private double totalDrivingMileage = 0;
@@ -150,7 +151,8 @@ public abstract class Car {
 	}
     
     public void stopCar() {
-    	timeline.stop();
+    	if (timeline.getStatus().equals(Status.RUNNING))
+    		timeline.stop();
     }
     
     private void moveCar(double x, double z) {
