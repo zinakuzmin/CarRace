@@ -347,7 +347,7 @@ public class ServerController {
 		cars.add(new CarInRace(race.getCar3Id(), 2));
 		cars.add(new CarInRace(race.getCar4Id(), 3));
 		cars.add(new CarInRace(race.getCar5Id(), 4));
-		RaceRun raceRun = new RaceRun(race.getRaceId(), RaceStatus.before_start,
+		RaceRun raceRun = new RaceRun(race.getRaceId(), RaceStatus.waiting,
 				Songs.getSongByUid(songId), cars);
 		return raceRun;
 	}

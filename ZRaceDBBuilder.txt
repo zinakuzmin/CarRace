@@ -77,9 +77,11 @@ insert into ZRaceSystem values (
   
 
 insert into Users values (
-  NULL, 'Zina', 100.0);
+  NULL, 'zina', 100.0);
 insert into Users values (
-  NULL, 'Dima', 200.0);
+  NULL, 'dima', 200.0);
+ insert into Users values (
+  NULL, 'test', 200.0);
 
 insert into Cars values (
   20001, 'Alfa Romeo');
