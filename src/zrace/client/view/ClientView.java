@@ -320,19 +320,19 @@ public class ClientView extends Application {
 		racePane.getChildren().clear();
 		try {
 			boolean raceStarted = activeRace.getStartTime() != null;
-			long raceDurationInMilis = 5_000;
+			long raceDurationInMilis = 0;
 
 			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace(), gameController, raceNumber);
 
-//			long raceStartTime = activeRace.getStartTime().getTime();
-//			long currentTimeMillis = System.currentTimeMillis();
-//			System.out.println("Race Start:"+new Date(raceStartTime));
-//			System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
-//			System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
-//			
-//			if (raceStarted) {
-//				raceDurationInMilis = raceStartTime - currentTimeMillis;
-//			}
+			
+			if (raceStarted) {
+				long raceStartTime = activeRace.getStartTime().getTime();
+				long currentTimeMillis = System.currentTimeMillis();
+				System.out.println("Race Start:"+new Date(raceStartTime));
+				System.out.println("CURRENT TIME:"+new Date(currentTimeMillis));
+				System.out.println("Duration in millis:" + (raceStartTime - raceDurationInMilis));
+				raceDurationInMilis = raceStartTime - currentTimeMillis;
+			}
 
 			System.out.println("Race duration in millis:" + raceDurationInMilis);
 			mainClientApp.setIsRaceStarted(raceStarted, raceDurationInMilis);
