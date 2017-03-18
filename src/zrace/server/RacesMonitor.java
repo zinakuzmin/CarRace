@@ -76,16 +76,16 @@ public class RacesMonitor implements Runnable {
 				System.out.println("the ready race is " + race);
 				int raceIndex = controller.getActiveRaces().lastIndexOf(race);
 //				race.setStartTime(new Timestamp(System.currentTimeMillis()));
-				controller.getActiveRaces().get(raceIndex).setStartTime(new Timestamp(System.currentTimeMillis() + RunParameters.RACE_DELAY_IN_MILLISECONDS));
 				
 				RaceRun raceRun = controller.getRaceRunByRaceId(race.getRaceId());
 				if (raceRun != null){
 					int raceRunIndex = controller.getRaceRuns().lastIndexOf(raceRun);
 					if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.waiting)){
+						controller.getActiveRaces().get(raceIndex).setStartTime(new Timestamp(System.currentTimeMillis() + RunParameters.RACE_DELAY_IN_MILLISECONDS));
 						controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.ready_to_run);
 					}
 					else if (controller.getRaceRuns().get(raceRunIndex).getRaceStatus().equals(RaceStatus.ready_to_run)){
-						if (controller.getActiveRaces().get(raceIndex).getStartTime().compareTo(new Timestamp(System.currentTimeMillis())) >= 0){
+						if (controller.getActiveRaces().get(raceIndex).getStartTime().compareTo(new Timestamp(System.currentTimeMillis())) <= 0){
 							controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.in_progress);
 						}
 							
@@ -115,33 +115,35 @@ public class RacesMonitor implements Runnable {
 		 * call addNewActiveRace
 		 * send new activeRaces and raceRuns to client
 		 * update raceResult **/
-		
-		Race race = null;
-		RaceRun raceRun = controller.getRaceRunByStatus(RaceStatus.in_progress);
-		if (raceRun != null){
-			int raceRunIndex = controller.getRaceRuns().lastIndexOf(raceRun);
-			race = controller.getActiveRaceByRaceId(raceRun.getRaceId());
-			int raceIndex = controller.getActiveRaces().lastIndexOf(race);
-			
-			if (race.getStartTime().compareTo(new Timestamp(System.currentTimeMillis())) < 0){
-				long startTimeInMillis = race.getStartTime().getTime();
-				long songDurationInMillis = controller.getSongDuration(raceRun.getSong().getId());
-				if (System.currentTimeMillis() - (songDurationInMillis + 2000) >= startTimeInMillis){
-					controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.completed);
-					controller.sendBroadcastMessage(new UpdateRaceRunsMsg(0, controller.getRaceRuns()));
-					controller.getActiveRaces().get(raceIndex).setCompleted(true);
-					controller.getActiveRaces().get(raceIndex).setEndTime(new Timestamp(System.currentTimeMillis()));
-					controller.getActiveRaces().get(raceIndex).setDuration((int) ((songDurationInMillis + 2000)/1000));
-					int winnerCarId = controller.getRaceWinnerCarID(raceRun);
-					
-					controller.completeRace(race, winnerCarId);
-					controller.getActiveRaces().remove(raceIndex);
-					controller.getRaceRuns().remove(raceRunIndex);
-					addNewActiveRace();
+		if (controller.isRunningRace()){
+			Race race = null;
+			RaceRun raceRun = controller.getRaceRunByStatus(RaceStatus.in_progress);
+			if (raceRun != null){
+				int raceRunIndex = controller.getRaceRuns().lastIndexOf(raceRun);
+				race = controller.getActiveRaceByRaceId(raceRun.getRaceId());
+				int raceIndex = controller.getActiveRaces().lastIndexOf(race);
+				
+				if (race.getStartTime().compareTo(new Timestamp(System.currentTimeMillis())) < 0){
+					long startTimeInMillis = race.getStartTime().getTime();
+					long songDurationInMillis = controller.getSongDuration(raceRun.getSong().getId());
+					if (System.currentTimeMillis() - (songDurationInMillis + 2000) >= startTimeInMillis){
+						controller.getRaceRuns().get(raceRunIndex).setRaceStatus(RaceStatus.completed);
+						controller.sendBroadcastMessage(new UpdateRaceRunsMsg(0, controller.getRaceRuns()));
+						controller.getActiveRaces().get(raceIndex).setCompleted(true);
+						controller.getActiveRaces().get(raceIndex).setEndTime(new Timestamp(System.currentTimeMillis()));
+						controller.getActiveRaces().get(raceIndex).setDuration((int) ((songDurationInMillis + 2000)/1000));
+						int winnerCarId = controller.getRaceWinnerCarID(raceRun);
+						
+						controller.completeRace(race, winnerCarId);
+						controller.getActiveRaces().remove(raceIndex);
+						controller.getRaceRuns().remove(raceRunIndex);
+						addNewActiveRace();
+					}
 				}
+				
+				
+				
 			}
-			
-			
 			
 		}
 		

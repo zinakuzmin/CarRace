@@ -155,22 +155,7 @@ public class ClientView extends Application {
 				new BackgroundSize(1160, 600, false, false, false, false));
 		pane.setBackground(new Background(myBI));
 		
-		
-		
-		
-//		Image image = new Image(CurrentClass.class.getResource("/path/to/package/bg.jpg"));
-//		// new BackgroundSize(width, height, widthAsPercentage, heightAsPercentage, contain, cover)
-//		BackgroundSize backgroundSize = new BackgroundSize(100, 100, true, true, true, false);
-//		// new BackgroundImage(image, repeatX, repeatY, position, size)
-//		BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-//		// new Background(images...)
-//		Background background = new Background(backgroundImage);
-		
-//		String image = JavaFXApplication9.class.getResource("splash.jpg").toExternalForm();
-//		pane.setStyle("-fx-background-image: url('" + myBI + "'); " +
-//		           "-fx-background-position: center center; " +
-//		           "-fx-background-repeat: stretch;");
-		
+	
 		
 		Label userNameLabel = new Label();
 
@@ -191,7 +176,7 @@ public class ClientView extends Application {
 		}
 
 		userNameLabel.setText("     *** Welcome "
-				+ gameController.getUser().getUserFullName() + ". Your user ID is " + gameController.getUser().getUserID() + " ***    ");
+				+ gameController.getUser().getUserFullName() + ".  Your user ID is " + gameController.getUser().getUserID() + " ***    ");
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
 		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
 		pane.setTop(userNameLabel);
