@@ -99,14 +99,18 @@ public abstract class Car {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     public void startCar(CarRadialMove radialMoveParams) {
 		this.radialMoveParams = radialMoveParams;
-		System.out.println(radialMoveParams);
-		carForm.setTranslateX(radialMoveParams.getLastXPos());
-		carForm.setTranslateZ(radialMoveParams.getLastZPos());
-		carForm.setRotateY(radialMoveParams.getLastDegree());
+		
+		if (!radialMoveParams.isRunFromStart()) {
+			carForm.setTranslateX(radialMoveParams.getLastXPos());
+			carForm.setTranslateZ(radialMoveParams.getLastZPos());
+			carForm.setRotateY(radialMoveParams.getLastDegree());
+		}
 		
 		timeline = new Timeline(new KeyFrame(Duration.ZERO, new EventHandler() {
-	        float movingStep = radialMoveParams.getLastMovingStep();//0;
-	        float movingPoints = radialMoveParams.getLastMovingPoints();//((float)getOrbitRadius()/(float)firstCarRadius)*radialMoveParams.getRadialPoint();
+	        float movingStep = radialMoveParams.isRunFromStart() ? 0 : radialMoveParams.getLastMovingStep();
+	        float movingPoints = radialMoveParams.isRunFromStart() ? 
+	        		((float)getOrbitRadius()/(float)firstCarRadius)*radialMoveParams.getRadialPoint() : radialMoveParams.getLastMovingPoints();//
+	        		
 	        float lastMovingPoint = movingPoints;
 	        long timeInMillis = 0;
 	

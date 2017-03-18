@@ -13,6 +13,7 @@ public class CarRadialMove {
 	private float lastDegree;
 	private float lastMovingStep;
 	private float lastMovingPoints;
+	private boolean isRunFromStart;
 
 	
 	public double getLastXPos() {
@@ -42,6 +43,7 @@ public class CarRadialMove {
 		lastDegree = carCurrentPos.getLastDegree();
 		lastMovingStep = carCurrentPos.getLastMovingStep();
 		lastMovingPoints = carCurrentPos.getLastMovingPoints();
+		isRunFromStart = carCurrentPos.isRunFromStart();
 	}
 
 	public Integer getRadialPoint() {
@@ -63,5 +65,10 @@ public class CarRadialMove {
 	public float getLastMovingPoints() {
 		return lastMovingPoints;
 	}
+
+	public boolean isRunFromStart() {
+		return isRunFromStart;
+	}
+	
 	
 }

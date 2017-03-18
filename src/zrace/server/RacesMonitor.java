@@ -38,7 +38,7 @@ public class RacesMonitor implements Runnable {
 				messageId++;
 				// addNewActiveRace();
 
-				Thread.sleep(10_000);
+				Thread.sleep(1_000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
