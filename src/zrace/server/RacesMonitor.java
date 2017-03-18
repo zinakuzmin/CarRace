@@ -148,7 +148,7 @@ public class RacesMonitor implements Runnable {
 			if (race.getStartTime().compareTo(
 					new Timestamp(System.currentTimeMillis())) < 0) {
 				long startTimeInMillis = race.getStartTime().getTime();
-				long songDurationInMillis = controller.getSongDuration(raceRun.getSong())*1000;
+				long songDurationInMillis = raceRun.getSong().getDuraionInSeconds()*1000;
 				System.out.println("currect time " + System.currentTimeMillis());
 				System.out.println("duration of song time " + songDurationInMillis);
 				if (System.currentTimeMillis() - (songDurationInMillis + 2000) >= startTimeInMillis) {

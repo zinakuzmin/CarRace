@@ -44,6 +44,7 @@ public class CarRadialMove {
 		lastMovingStep = carCurrentPos.getLastMovingStep();
 		lastMovingPoints = carCurrentPos.getLastMovingPoints();
 		isRunFromStart = carCurrentPos.isRunFromStart();
+		counter = carCurrentPos.isRunFromStart() ? 0 : carCurrentPos.getIndexOfSpeed();
 	}
 
 	public Integer getRadialPoint() {

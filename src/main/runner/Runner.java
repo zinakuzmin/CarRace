@@ -1,6 +1,7 @@
 package main.runner;
 
 import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -25,6 +26,7 @@ import dbModels.Car;
 import dbModels.Race;
 import dbModels.RaceResult;
 import dbModels.User;
+
 
 public class Runner extends Application {
 	

@@ -10,6 +10,7 @@ public class CarPositionCalculator {
 		double lastZPos = 0;
 		float lastDegree = 0;
 		float lastMovingStep = 0;
+		int indexOfSpeed = 0;
 		
 		int speedArrayPos = 0;
 		float movingStep = 0;
@@ -57,13 +58,14 @@ public class CarPositionCalculator {
 //				System.out.println("Speed changed new:" + speedList.get(speedArrayPos));
             	movingPoints = ((float)orbitRadius/(float)Car.firstCarRadius)*speedList.get(speedArrayPos);
             	timePassedInLap = 0;
+            	indexOfSpeed++;
             }
 			timePassedInLap += Car.STEP_DURATION_IN_MILLISECONDS;
 		}
 //		System.out.println("Calculated milage:" + totalMilage);
 //		System.out.println("Calculated loops:" + totalNumOfLoops);
 		
-		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep, movingPoints);
+		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep, movingPoints, indexOfSpeed);
 	}
 	
 	public static class CalculatedCarInRace{
@@ -75,14 +77,16 @@ public class CarPositionCalculator {
 		private float lastMovingStep;
 		private float lastMovingPoints;
 		private boolean runFromStart;
+		private int indexOfSpeed;
 
-		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep, float lastMovingPoints) {
+		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep, float lastMovingPoints, int indexOfSpeed) {
 			this.totalMilage = totalMilage;
 			this.lastXPos = lastXPos;
 			this.lastZPos = lastZPos;
 			this.lastDegree = lastDegree;
 			this.lastMovingStep = lastMovingStep;
 			this.lastMovingPoints = lastMovingPoints;
+			this.indexOfSpeed = indexOfSpeed;
 		}
 
 		public float getLastDegree() {
@@ -117,7 +121,9 @@ public class CarPositionCalculator {
 			return runFromStart;
 		}
 		
-		
+		public int getIndexOfSpeed() {
+			return indexOfSpeed;
+		}
 		
 	}
 }
