@@ -1,18 +1,24 @@
 package zrace.client.app.world.cars.objs;
 
 public enum Songs {
-	Guns_N_Roses("Guns N Roses - Sweet.mp3", 0),
-	I_Like_To_Move_It("I Like To Move It.mp3", 1),
-	Smooth_Criminal("Michael Jackson - Smooth Criminal.mp3", 2);
+	Guns_N_Roses("Guns N Roses - Sweet.mp3", 0, 63),
+	I_Like_To_Move_It("I Like To Move It.mp3", 1, 60),
+	Smooth_Criminal("Michael Jackson - Smooth Criminal.mp3", 2, 61);
 	
 	private String songName;
 	private int id;
+	private int duraionInSeconds;
 
-	private Songs(String name, int id) {
+	private Songs(String name, int id, int duraionInSeconds) {
 		songName = name;
 		this.id = id;
+		this.duraionInSeconds = duraionInSeconds;
 	}
 
+	public int getDuraionInSeconds() {
+		return duraionInSeconds;
+	}
+	
 	public String getSongName() {
 		return songName;
 	}
