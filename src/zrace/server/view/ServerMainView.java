@@ -235,7 +235,7 @@ public class ServerMainView extends Application {
 	 * @param 
 	 * @param 
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void populateTableView(ResultSet resultSet, TableView tableView) {
 //		tableView.getColumns().clear();
 //		ObservableList<ObservableList> data = FXCollections
