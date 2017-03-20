@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * This class provides an API compatible with User.
  * 
- * @author Zina Kuzmin
+ * @author Zina K
  *
  */
 

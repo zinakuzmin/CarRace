@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
- * The Class Bet .
+ * The Class Bet 
+ * @author Zina K.
  */
 public class Bet implements Serializable{
 
