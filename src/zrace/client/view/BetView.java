@@ -3,6 +3,7 @@ package zrace.client.view;
 import java.util.ArrayList;
 
 import zrace.client.ZRaceGameController;
+import zrace.client.app.world.cars.CarResources;
 import dbModels.Bet;
 import dbModels.Race;
 import javafx.application.Application;
@@ -62,12 +63,13 @@ public class BetView extends Application{
 		grid.setPadding(new Insets(25, 25, 25, 25));
 		
 		
+		
 		Label raceNamelbl = new Label(race.getRaceFullName() + race.getRaceId());
-		Label car1Namelbl = new Label("Car1: " + race.getCar1Id());
-		Label car2Namelbl = new Label("Car2: " + race.getCar2Id());
-		Label car3Namelbl = new Label("Car3: " + race.getCar3Id());
-		Label car4Namelbl = new Label("Car4: " + race.getCar4Id());
-		Label car5Namelbl = new Label("Car5: " + race.getCar5Id());
+		Label car1Namelbl = new Label("Car1: " + race.getCar1Id() + " " + CarResources.getCarByUid(race.getCar1Id()));
+		Label car2Namelbl = new Label("Car2: " + race.getCar2Id() + " " + CarResources.getCarByUid(race.getCar2Id()));
+		Label car3Namelbl = new Label("Car3: " + race.getCar3Id() + " " + CarResources.getCarByUid(race.getCar3Id()));
+		Label car4Namelbl = new Label("Car4: " + race.getCar4Id() + " " + CarResources.getCarByUid(race.getCar4Id()));
+		Label car5Namelbl = new Label("Car5: " + race.getCar5Id() + " " + CarResources.getCarByUid(race.getCar5Id()));
 
 		betBtn = new Button("Make a bet!");
 		betBtn.setDisable(true);

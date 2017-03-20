@@ -93,4 +93,16 @@ public enum CarResources {
 		
 		throw new RuntimeException("Didn't found car uid in emum CarResources:" + carInRace.getUid());
 	}
+	
+	
+	
+	public static String getCarByUid(int carId)  {
+		for (CarResources carResources : CarResources.getPixelCarResources()) {
+			if (carResources.carUid == carId)
+				return carResources.name().toString();
+		}
+		
+		return null;
+	}
+	
 }

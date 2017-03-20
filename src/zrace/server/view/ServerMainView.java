@@ -171,7 +171,9 @@ public class ServerMainView extends Application {
 				DataBaseViewer.GET_RACE_BETS_QUERY,
 				DataBaseViewer.GET_RACES_STATS_QUERY,
 				DataBaseViewer.GET_SYSTEM_REVENUE_QUERY,
-				DataBaseViewer.GET_USER_REVENUE_QUERY);
+				DataBaseViewer.GET_USER_REVENUE_QUERY,
+		DataBaseViewer.GET_REVENUE_BY_RACE_QUERY);
+	
 
 		return options;
 	}
@@ -187,7 +189,7 @@ public class ServerMainView extends Application {
 		DBHandler db = new DBHandler();
 		ResultSet result = null;
 		if (comboboxChoise.equals(DataBaseViewer.GET_CARS_QUERY)) {
-			result = db.getAllCars();
+			result = db.getAllCarsStatistics();
 		} else if (comboboxChoise
 				.equals(DataBaseViewer.GET_SYSTEM_REVENUE_QUERY)) {
 			result = db.getAllSystemRevenue();
@@ -200,7 +202,12 @@ public class ServerMainView extends Application {
 		} else if (comboboxChoise
 				.equals(DataBaseViewer.GET_RACE_BETS_QUERY)) {
 			result = db.getAllBets();
-			
+		} else if (comboboxChoise
+				.equals(DataBaseViewer.GET_USERS_BALANCE_QUERY)) {
+			result = db.getUsersBalance();
+		} else if (comboboxChoise
+				.equals(DataBaseViewer.GET_REVENUE_BY_RACE_QUERY)) {
+			result = db.getRevenueByRace();
 		}
 		else{
 			try {

@@ -253,15 +253,17 @@ public class ServerController {
 				User user = db.getUserById(bet.getUserId());
 				Double betAmount = bet.getAmount();
 				RaceResult raceResult = new RaceResult();
-				raceResult.setWinner(true);
 				raceResult.setRaceId(race.getRaceId());
 				raceResult.setBetId(bet.getBetId());
+				
 				if (bet.getCarId() == winnerCarId) {
+					raceResult.setWinner(true);
 					raceResult.setUserRevenue(betAmount - betAmount * RunParameters.SYSTEM_COMISSION);
 					raceResult.setSystemRevenue(betAmount * RunParameters.SYSTEM_COMISSION);
 					user.setUserRevenue(user.getUserRevenue() + raceResult.getUserRevenue());
 					
 				} else {
+					raceResult.setWinner(false);
 					raceResult.setUserRevenue(0);
 					raceResult.setSystemRevenue(betAmount);
 					user.setUserRevenue(user.getUserRevenue() - betAmount);

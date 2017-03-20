@@ -169,6 +169,7 @@ public class RacesMonitor implements Runnable {
 							.setDuration(
 									(int) ((songDurationInMillis + 2000) / 1000));
 					int winnerCarId = controller.getRaceWinnerCarID(raceRun);
+					controller.getActiveRaces().get(raceIndex).setWinnerCarId(winnerCarId);
 					controller.getLogger().logStringMessage("Race " + race.getRaceFullName() + "is completed " + ". Won car " + winnerCarId);
 					controller.sendBroadcastMessage(new WinnerCarMsg(0, winnerCarId, raceRun.getRaceId()));
 					controller.completeRace(race, winnerCarId);

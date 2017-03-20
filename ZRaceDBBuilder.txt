@@ -41,6 +41,7 @@ create table Races (
   startTime timestamp null,
   endTime timestamp null,
   duration integer,
+  winnerCarId integer,
   constraint pkRaces primary key (raceId),
   constraint fk_Car1 foreign key (car1Id) references Cars(carId) on delete cascade,
   constraint fk_Car2 foreign key (car2Id) references Cars(carId) on delete cascade,
@@ -104,9 +105,9 @@ insert into Cars values (
 
 
 insert into Races values (
-  NULL, 'Race1', 20001, 20002, 20003, 20005, 20007, 0, null, null, null);
+  NULL, 'Race1', 20001, 20002, 20003, 20005, 20007, 0, null, null, null, null);
 insert into Races values (
-  NULL, 'Race2', 20001, 20007, 20009, 20002, 20003, 0, null,  null, null);
+  NULL, 'Race2', 20001, 20007, 20009, 20002, 20003, 0, null,  null, null, null);
 
 
 commit;
