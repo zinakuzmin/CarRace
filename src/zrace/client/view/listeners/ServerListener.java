@@ -15,82 +15,81 @@ import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.UserDetailsMsg;
 import zrace.protocol.WinnerCarMsg;
 
+/**
+ * The class provides API for {@link ServerListener}
+ * 
+ * @author Zina K
+ *
+ */
+public class ServerListener extends Thread {
+	private ObjectInputStream in;
+	private ZRaceGameController gameController;
 
-public class ServerListener extends Thread{
-		private ObjectInputStream in;
-//		private ObservableList<Race> activeRaces;
-		private ZRaceGameController gameController;
-		
-		public ServerListener(ObjectInputStream in,ZRaceGameController gameController) {
-			this.in = in;
-//			this.activeRaces = activeRaces;
-			this.gameController = gameController;
-		}
+	/**
+	 * Initialize {@link ServerListener}
+	 * @param in
+	 * @param gameController
+	 */
+	public ServerListener(ObjectInputStream in,ZRaceGameController gameController) {
+		this.in = in;
+		this.gameController = gameController;
+	}
 
-		@Override
-		public void run() {
-			System.out.println("Client start to listen");
-			gameController.setServerListenerActivated(true);
-			while (true) {
-				System.out.println("client waiting for message from server");
-				try {
-					Message message = (Message) in.readObject();
-					System.out.println("message " + message);
-					if (message instanceof UpdateRacesMsg) {
-//						new Thread(() -> {
-//						Platform.runLater(() -> {
-							System.out.println("Client got message " + message);
-							ArrayList<Race> activaRaces = (((UpdateRacesMsg) message).getRaces());
-							gameController.setActiveRaces(activaRaces);
-							System.out.println("client got races from server " + activaRaces);
-							gameController.setGotRacesFromServer(true);
-							Platform.runLater(() -> gameController.getClientView().setRacesNamesInView());
-//						}).start();
-					} else if (message instanceof UserDetailsMsg) {
-//						new Thread(() -> {
-//						Platform.runLater(() -> {
-							System.out.println("Client got message " + message);
-							User user = ((UserDetailsMsg)message).getUser();
-							gameController.setUserDetails(user);
-							System.out.println("client got user details " + user);
-							gameController.setGotUserFromServer(true);
-							Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());
-//						}).start();
-							
-						
-						
-
+	/* (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 * Run listener for outcomming messages
+	 */
+	@Override
+	public void run() {
+		System.out.println("Client start to listen");
+		gameController.setServerListenerActivated(true);
+		while (true) {
+			
+			try {
+				Message message = (Message) in.readObject();
+				
+				if (message instanceof UpdateRacesMsg) {
+					ArrayList<Race> activaRaces = (((UpdateRacesMsg) message).getRaces());
+					gameController.setActiveRaces(activaRaces);
+					gameController.setGotRacesFromServer(true);
+					Platform.runLater(() -> gameController.getClientView().setRacesNamesInView());
 					
+				} else if (message instanceof UserDetailsMsg) {
 					
+					System.out.println("Client got message " + message);
+					User user = ((UserDetailsMsg) message).getUser();
+					gameController.setUserDetails(user);
+					System.out.println("client got user details " + user);
+					gameController.setGotUserFromServer(true);
+					Platform.runLater(() -> gameController.getClientView()
+							.setUserDetailsInView());
+					
+
 				} else if (message instanceof UpdateRaceRunsMsg) {
-//					new Thread(() -> {
-						System.out.println("Client got message " + message);
-						ArrayList<RaceRun> raceRuns = (((UpdateRaceRunsMsg) message).getRaceRuns());
-						gameController.setRaceRuns(raceRuns);
-						System.out.println("client got races runs from server " + raceRuns);
-						gameController.setGotRacesRunsFromServer(true);
-						Platform.runLater(() -> gameController.getClientView().setRacesStatusInView());
-//					}).start();
-				}
 					
-				 else if (message instanceof WinnerCarMsg) {
-//					new Thread(() -> {
-//					Platform.runLater(() -> {
-						System.out.println("Client got message " + message);
-						gameController.setLastWinnerCarId(((WinnerCarMsg) message).getCarId());
-//						User user = ((UserDetailsMsg)message).getUser();
-//						gameController.setUserDetails(user);
-//						System.out.println("client got user details " + user);
-//						gameController.setGotUserFromServer(true);
-						Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());
-				 }
-//					}).start();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					break;
+					ArrayList<RaceRun> raceRuns = (((UpdateRaceRunsMsg) message)
+							.getRaceRuns());
+					gameController.setRaceRuns(raceRuns);
+					gameController.setGotRacesRunsFromServer(true);
+					Platform.runLater(() -> gameController.getClientView()
+							.setRacesStatusInView());
+					
 				}
+
+				else if (message instanceof WinnerCarMsg) {
+					
+					System.out.println("Client got message " + message);
+					gameController.setLastWinnerCarId(((WinnerCarMsg) message)
+							.getCarId());
+					Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());
+				}
+				
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				break;
 			}
 		}
+	}
 
 }

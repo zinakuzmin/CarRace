@@ -12,15 +12,52 @@ import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
 import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
 
+/**
+ * @author Zina K
+ *
+ */
 public class RaceMonitor implements Runnable{
+	/**
+	 * stops the thread, in case like race switched to other
+	 */
 	private boolean shoudRun = true;
+	/**
+	 * Control client behavior 
+	 */
 	private ZRaceGameController gameController;
+	/**
+	 * race id
+	 */
 	private int raceNumber;
+	/**
+	 * media player
+	 */
 	private MediaPlayer mediaPlayer;
+	/**
+	 * cars in race
+	 */
 	private ArrayList<Car> cars;
+	/**
+	 * cars in race - info
+	 */
 	private ArrayList<CarInRace> carsInRace;
+	/**
+	 * If cars already in middle of race
+	 */
 	private boolean carsStarted = false;
+	/**
+	 * cars waited in this thread
+	 */
+	boolean waited = false;
 	
+	/**
+	 * Constructor of the thread
+	 * @param gameController	client behavior 
+	 * @param raceNumber		race id
+	 * @param mediaPlayer		player
+	 * @param cars				cars array
+	 * @param carsInRace		cars info
+	 */
 	public RaceMonitor(ZRaceGameController gameController, int raceNumber, MediaPlayer mediaPlayer,
 			ArrayList<Car> cars, ArrayList<CarInRace> carsInRace) {
 		this.gameController = gameController;
@@ -30,7 +67,6 @@ public class RaceMonitor implements Runnable{
 		this.carsInRace = carsInRace;
 	}
 
-	boolean waited = false;
 	@Override
 	public void run() {
 		while(shoudRun) {
@@ -61,10 +97,16 @@ public class RaceMonitor implements Runnable{
 		}
 	}
 	
+	/**
+	 * Stops the thread
+	 */
 	public void stopThread(){
 		shoudRun = false;
 	}
 	
+	/**
+	 * @return were the cars started
+	 */
 	public boolean isCarsStarted() {
 		return carsStarted;
 	}

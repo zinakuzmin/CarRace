@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 import dbModels.Race;
 
+/**
+ * This class supplies API for {@link UpdateRacesMsg}
+ * @author Zina K
+ *
+ */
 public class UpdateRacesMsg extends Message{
 	/**
 	 * 
@@ -18,13 +23,6 @@ public class UpdateRacesMsg extends Message{
 		this.races.addAll(races);
 		
 	}
-	
-//	public UpdateRacesMsg(int id, ArrayList<Race> races) {
-//		this.races = races;
-//		this.messageId = id;
-//		
-//	}
-	
 	
 	public ArrayList<Race> getRaces() {
 		return races;

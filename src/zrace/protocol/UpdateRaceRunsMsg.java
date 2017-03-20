@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 import dbModels.RaceRun;
 
+/**
+ * This class supplies API for {@link UpdateRaceRunsMsg}
+ * @author Zina K
+ *
+ */
 public class UpdateRaceRunsMsg extends Message{
 
 	/**
@@ -12,16 +17,12 @@ public class UpdateRaceRunsMsg extends Message{
 	private static final long serialVersionUID = 1L;
 	private ArrayList<RaceRun> raceRuns;
 	
-	 
-//	public UpdateRaceRunsMsg(ArrayList<RaceRun> raceRuns) {
-//		this.raceRuns = raceRuns;
-//	}
 	
 	public UpdateRaceRunsMsg(int messageId, ArrayList<RaceRun> raceRuns) {
 		super(messageId);
 		this.raceRuns = new ArrayList<RaceRun>();
 		this.raceRuns.addAll(raceRuns);
-//		this.raceRuns = raceRuns;
+
 		
 	}
 	

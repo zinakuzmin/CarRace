@@ -8,15 +8,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.sun.swing.internal.plaf.synth.resources.synth;
-
-import dbModels.*;
+import dbModels.Bet;
+import dbModels.Car;
+import dbModels.Race;
+import dbModels.RaceResult;
+import dbModels.User;
+import dbModels.ZraceSystem;
 
 /**
- * This Class provides an API compatible with DataBaseHandler to control
- * database information.
+ * This Class provides an API compatible with DDHandler to control database
+ * information.
  * 
- * @author Zina Kuzmin
+ * @author Zina K
  *
  */
 
@@ -36,7 +39,7 @@ public class DBHandler {
 			theConnection = DriverManager.getConnection(
 					"jdbc:mysql://localhost/zracedb?useSSL=false", "scott",
 					"tiger");
-			System.out.println("Database successfully connected");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -47,7 +50,7 @@ public class DBHandler {
 	 * 
 	 * @param theUser
 	 *            - User Class Object.
-	 * @return return Boolean if the user added to the database.
+	 * @return return User or null if action failed.
 	 */
 	public synchronized User insertUser(User theUser) {
 		String theQuery = " insert into Users (userId, userFullName, userRevenue)"
@@ -79,7 +82,7 @@ public class DBHandler {
 	 * 
 	 * @param theRace
 	 *            - Race Class Object.
-	 * @return return Boolean if the race added to the database.
+	 * @return return Race or null if action failed.
 	 */
 	public synchronized Race insertRace(Race theRace) {
 		String theQuery = " insert into Races (raceId, raceFullName, car1Id, car2Id, car3Id, car4Id, car5Id, isCompleted, startTime, endTime, duration, winnerCarId)"
@@ -271,6 +274,11 @@ public class DBHandler {
 
 	}
 
+	/**
+	 * Get the main system information
+	 * 
+	 * @return
+	 */
 	public synchronized ZraceSystem getSystem() {
 		String theQuery;
 		theQuery = "select * from zracesystem";
@@ -283,7 +291,7 @@ public class DBHandler {
 					ZraceSystem systemObj;
 
 					systemObj = new ZraceSystem(result.getInt("systemId"),
-							result.getDouble("systemRevenue"));
+							result.getDouble("totalRevenue"));
 					system.add(systemObj);
 				}
 				return system.get(0);
@@ -300,6 +308,12 @@ public class DBHandler {
 
 	}
 
+	/**
+	 * Return all bets that user made as array of objects
+	 * 
+	 * @param userId
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getUserBetsAsArray(int userId) {
 		try {
@@ -311,6 +325,12 @@ public class DBHandler {
 		return null;
 	}
 
+	/**
+	 * Return all bets that made for specific race
+	 * 
+	 * @param raceId
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getRaceBetsAsArray(int raceId) {
 		try {
@@ -322,6 +342,13 @@ public class DBHandler {
 		return null;
 	}
 
+	/**
+	 * Return all bets that made specific user for specific race
+	 * 
+	 * @param raceId
+	 * @param userId
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getRaceBetsByUserID(int raceId,
 			int userId) {
@@ -334,6 +361,12 @@ public class DBHandler {
 
 	}
 
+	/**
+	 * Return all bets that made for specific race
+	 * 
+	 * @param raceId
+	 * @return
+	 */
 	public synchronized ResultSet getBetsByRaceID(int raceId) {
 		String theQuery;
 		theQuery = "select * from Bets where raceId = " + raceId;
@@ -341,18 +374,25 @@ public class DBHandler {
 		return result;
 	}
 
+	/**
+	 * Return all bets that made for specific race
+	 * 
+	 * @param raceId
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getBetsByRaceIDAsArray(int raceId) {
 		return (ArrayList<Bet>) convertResultSetToArraylist(
 				getBetsByRaceID(raceId), "Bet");
 	}
 
 	/**
+	 * Return bets of specific car
+	 * 
 	 * @param carId
-	 *            - unique id of car.
-	 * @return return Bets of specified car if exist in DB otherwise return
-	 *         null.
+	 * @return ArrayList<Bet>
 	 */
-
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Bet> getCarBets(int carId) {
 		String theQuery;
 		theQuery = "select * from Bets where carId = " + carId;
@@ -361,6 +401,12 @@ public class DBHandler {
 		return (ArrayList<Bet>) convertResultSetToArraylist(result, "Bet");
 	}
 
+	/**
+	 * Return race by race ID
+	 * 
+	 * @param raceId
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getRaceById(int raceId) {
 		String theQuery;
 
@@ -374,6 +420,12 @@ public class DBHandler {
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Return race by race ID
+	 * 
+	 * @param raceId
+	 * @return Race
+	 */
 	public synchronized Race getRaceByIdAsObject(int raceId) {
 		return (Race) convertResultSetToObject(getRaceById(raceId), "Race");
 	}
@@ -397,6 +449,12 @@ public class DBHandler {
 		return -1;
 	}
 
+	/**
+	 * Update races set isCompleted = true
+	 * 
+	 * @param race
+	 * @return number of updated rows
+	 */
 	public synchronized int updateRaceCompleted(Race race) {
 		String theQuery = " update Races set isCompleted = ? ,startTime = ?, endTime = ?, duration = ?, winnerCarId = ? where raceId = ?";
 
@@ -423,13 +481,16 @@ public class DBHandler {
 		}
 		return -1;
 	}
-	
-	
-	
+
+	/**
+	 * Update race name
+	 * 
+	 * @param race
+	 * @return number of updated rows
+	 */
 	public synchronized int updateRaceName(Race race) {
 		String theQuery = " update Races set raceFullName = ? where raceId = ?";
 
-		
 		try {
 			PreparedStatement preparedStmt = theConnection
 					.prepareStatement(theQuery);
@@ -446,12 +507,18 @@ public class DBHandler {
 		return -1;
 	}
 
+	/**
+	 * Update system revenue
+	 * 
+	 * @param amount
+	 * @return number of updated rows
+	 */
 	public synchronized int updateSystemRevenue(Double amount) {
 		ZraceSystem system = getSystem();
 		if (system != null) {
 			double currentRevenue = system.getSystemRevenue();
 			currentRevenue = currentRevenue + amount;
-			String theQuery = "update System set systemRevenue = "
+			String theQuery = "update zracesystem set systemRevenue = "
 					+ currentRevenue;
 
 			try {
@@ -473,88 +540,6 @@ public class DBHandler {
 
 	}
 
-	/**
-	 * @param gameEventsList
-	 *            - a ArrayList The Contains GameEvent Class Objects.
-	 * @return return Boolean if the gameEvetsList added to the DB.
-	 */
-	// public synchronized boolean insertEvent(ArrayList<GameEvent>
-	// gameEventsList) {
-	// boolean hasInsetred = true;
-	// for(GameEvent gameEvent : gameEventsList)
-	// if( !insertGameEvent(gameEvent) )
-	// hasInsetred = false;
-	// return hasInsetred;
-	// }
-
-	/**
-	 * @param theGameEvent
-	 *            - a GameEvent Class Object.
-	 * @return return Boolean if the gameEvent added to DB.
-	 */
-	// public synchronized boolean insertGameEvent(GameEvent theGameEvent) {
-	// String theQuery =
-	// " insert into GamesEvents (userId, gameId, eventType , eventTime)" +
-	// " values (?, ?, ?, ?)";
-	// try {
-	// PreparedStatement preStat = theConnection.prepareStatement(theQuery);
-	// preStat.setInt(1, theGameEvent.getUserID());
-	// preStat.setInt(2, theGameEvent.getGameID());
-	// preStat.setString(3, theGameEvent.getEventType());
-	// java.sql.Timestamp theDate = new
-	// java.sql.Timestamp(theGameEvent.getEventTime().getTime());
-	// preStat.setTimestamp(4, theDate);
-	//
-	//
-	// preStat.execute();
-	// preStat.close();
-	// return true;
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// return false;
-	// }
-
-	/**
-	 * @param userId
-	 *            - a user id.
-	 * @param nameToUpdate
-	 *            - new user name value.
-	 * @return return true in the name was updated successfully in the database.
-	 */
-
-	/**
-	 * Boolean if a game already exist in DB & updating the gameScore database
-	 * value.
-	 * 
-	 * @param theGame
-	 *            - a Game Class Object.
-	 * @return return true in the game.gameScore was updated successfully in the
-	 *         database.
-	 */
-
-	/**
-	 * @return return a ResultSet that Contains all games of all users in the
-	 *         database.
-	 */
-	public synchronized ResultSet getAllGames() {
-		String theQuery;
-		theQuery = "select * from Games order by gameScore";
-		return executeQuery(theQuery);
-	}
-
-	/**
-	 * @param userId
-	 *            - a user id.
-	 * @return return a ResultSet that Contains all games that fit to the user
-	 *         userId.
-	 */
-	public synchronized ResultSet getAllUserGames(int userId) {
-		String theQuery;
-		theQuery = "select * from Games where userId = '" + userId
-				+ "' order by startedTime";
-		return executeQuery(theQuery);
-	}
 
 	/**
 	 * @return return a ResultSet that Contains all users in the database.
@@ -567,6 +552,10 @@ public class DBHandler {
 		return getCarByID(-1);
 	}
 
+	/**
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Car> getAllCarsAsArray() {
 		return (ArrayList<Car>) convertResultSetToArraylist(getAllCars(), "Car");
 	}
@@ -575,6 +564,10 @@ public class DBHandler {
 		return getRaceById(-1);
 	}
 
+	/**
+	 * @param raceID
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Race> getAllRacesAsArray(String raceID) {
 		return (ArrayList<Race>) convertResultSetToArraylist(getAllRaces(),
@@ -589,6 +582,12 @@ public class DBHandler {
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Return all not completed races 
+	 * @param isCompleted
+	 * @return ArrayList<Race>
+	 */
+	@SuppressWarnings("unchecked")
 	public synchronized ArrayList<Race> getAllActiveRacesAsArray(
 			boolean isCompleted) {
 		return (ArrayList<Race>) convertResultSetToArraylist(
@@ -609,16 +608,20 @@ public class DBHandler {
 
 	}
 
+	/**
+	 * @param userFullName
+	 * @return User
+	 */
 	public synchronized User getUserByNameAsObject(String userFullName) {
 		return (User) convertResultSetToObject(getUserByName(userFullName),
 				"User");
 	}
 
+	
 	/**
-	 * @param userFullName
-	 *            - a string name value.
-	 * @return return a ResultSet that Contains a user with same name as
-	 *         userFullName.
+	 * Return car by ID
+	 * @param carID
+	 * @return ResultSet
 	 */
 	public synchronized ResultSet getCarByID(int carID) {
 
@@ -640,7 +643,7 @@ public class DBHandler {
 	public synchronized ResultSet executeQuery(String theQuery) {
 		try {
 			Statement stat = theConnection.createStatement();
-			System.out.println(theQuery);
+			// System.out.println(theQuery);
 			return stat.executeQuery(theQuery);
 		} catch (SQLException e) {
 
@@ -663,53 +666,15 @@ public class DBHandler {
 		}
 	}
 
+	
+
 	/**
-	 * this method delete all information the bind to userID.
+	 * Convert result set of car, user, race, bet to array of objects
 	 * 
-	 * @param userID
-	 *            - a user id .
+	 * @param result
+	 * @param classType
+	 * @return ArrayList<?>
 	 */
-	public synchronized void delUser(int userID) {
-
-		String delQueryFromUsers = "delete from Users where userId = '"
-				+ userID + "'";
-		executeSqlQuery(delQueryFromUsers);
-
-	}
-
-	/**
-	 * @return return a ResultSet that contains all users ,that played 3 times
-	 *         or more, best 3 game score average.
-	 */
-	public synchronized ResultSet getTopThree() {
-		String theQuery;
-		theQuery = "select users.userId,users.userFullName,avg(new_table.scores) as avg_score "
-				+ "from users,"
-				+ "(select ranker.r_ids as ids,ranker.r_score as scores "
-				+ "from "
-				+ "(select games.userId as r_ids,games.gameScore as r_score,"
-				+ "@game_counter := IF(@game_id = games.userId,@game_counter + 1,1) as game_counter,"
-				+ "@game_id := games.userId "
-				+ "from games "
-				+ "order by games.userId,games.gameScore DESC"
-				+ ") as ranker,"
-				+ "(select games.userId as id,count(games.gameId) as ctr "
-				+ "from games "
-				+ "group by games.userId) as gamecounter "
-				+ "where ranker.r_ids = gamecounter.id and game_counter <= 3 and gamecounter.ctr >= 3 ) as new_table "
-				+ "where users.userId = new_table.ids "
-				+ "group by users.userId";
-		try {
-			Statement stat = theConnection.createStatement();
-			stat.execute(theQuery);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return executeQuery(theQuery);
-	}
-
 	public synchronized ArrayList<?> convertResultSetToArraylist(
 			ResultSet result, String classType) {
 
@@ -827,10 +792,18 @@ public class DBHandler {
 		return null;
 	}
 
+	/**
+	 * Convert result set to Object
+	 * 
+	 * @param result
+	 * @param objectType
+	 * @return Object (Car, User, Bet, Race)
+	 */
 	public synchronized Object convertResultSetToObject(ResultSet result,
 			String objectType) {
 		@SuppressWarnings("unchecked")
-		ArrayList<Object> object = (ArrayList<Object>) convertResultSetToArraylist(result, objectType);
+		ArrayList<Object> object = (ArrayList<Object>) convertResultSetToArraylist(
+				result, objectType);
 		System.out.println("object is " + object);
 
 		if (object != null)
@@ -839,72 +812,143 @@ public class DBHandler {
 		return object;
 	}
 
-	/** DB viewer **/
+	/** DB viewer queries **/
+
+	/**
+	 * Return system balance
+	 * 
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getAllSystemRevenue() {
 		// Return race results
-		String theQuery = "select raceId, systemRevenue from RaceResults group by raceId order by systemRevenue desc";
+		String theQuery = "select totalRevenue from zracesystem";
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Return users balance
+	 * 
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getAllUsersRevenue() {
-		// Return race results
-		String theQuery = "select raceId, userRevenue from RaceResults group by raceId order by userRevenue desc";
+		String theQuery = "select * from users";
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Get all races
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getRacesStatus() {
 		String theQuery = "select * from Races";
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Return all bets of race
+	 * @param raceId
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getRaceBets(int raceId) {
 		String theQuery = "select * from Bets where raceId = " + raceId;
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Return all bets of user
+	 * @param userId
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getUserBets(int userId) {
 		String theQuery = "select * from Bets where userId = " + userId;
 		return executeQuery(theQuery);
 	}
 
+	/**
+	 * Return all existing bets
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getAllBets() {
 		String theQuery = "select * from Bets";
 		return executeQuery(theQuery);
 	}
-	
-	public synchronized ResultSet getAllCarsStatistics(){
-//		String theQuery = "select cars.carId, cars.carFullName, count(*) as number_of_races, temp.number_of_wins from cars " 
-// + "join races on (carId = car1Id or carId = car2Id or carId = car3Id or "
-//+ "carId = car4Id or carId = car5Id) "
-//+ "join (select bets.carId, count(*) as number_of_wins from bets "
-//+ "join raceresults on bets.betId = raceresults.betId and isWinner = true group by bets.carId) as temp "
-//+ "on cars.carId = temp.carId "
-//+ "where races.isCompleted = true "
-//+ "group by cars.carId";
-//		
+
+	/**
+	 * Return cars info, number of participated races and wins
+	 * @return ResultSet
+	 */
+	public synchronized ResultSet getAllCarsStatistics() {
+
 		String theQuery = "select cars.carId, cars.carFullName, count(*) as number_of_races, temp.number_of_wins from cars "
-+ "left join races on (carId = car1Id or carId = car2Id or carId = car3Id or "
-+ "carId = car4Id or carId = car5Id) "
-+ "left join (select cars.carId, count(*) as number_of_wins from cars "
-+ "join races on cars.carId = races.winnerCarId group by cars.carId) as temp "
-+ "on cars.carId = temp.carId "
-+ "where races.isCompleted = true "
-+ "group by cars.carId";
+				+ "left join races on (carId = car1Id or carId = car2Id or carId = car3Id or "
+				+ "carId = car4Id or carId = car5Id) "
+				+ "left join (select cars.carId, count(*) as number_of_wins from cars "
+				+ "join races on cars.carId = races.winnerCarId group by cars.carId) as temp "
+				+ "on cars.carId = temp.carId "
+				+ "where races.isCompleted = true " + "group by cars.carId";
 		return executeQuery(theQuery);
 	}
-	
-	
+
+	/**
+	 * Get users balance
+	 * @return ResultSet
+	 */
 	public synchronized ResultSet getUsersBalance() {
-		String theQuery = 
-	"select users.userId, users.userFullName, users.userRevenue as total_balance from users";
+		String theQuery = "select users.userId, users.userFullName, users.userRevenue as total_balance from users";
 		return executeQuery(theQuery);
 	}
-	 public synchronized ResultSet getRevenueByRace() {
-	 String theQuery = "select bets.raceId, users.userId, users.userFullName, raceresults.userRevenue, raceresults.systemRevenue from users "
-+ "join bets on users.userId = bets.userId "
-+ "join raceresults on bets.betId = raceresults.betId "
-+ "group by bets.raceId order by bets.raceId";
-	 return executeQuery(theQuery);
-	 }
+
+	/**
+	 * Return user and system revenue by race
+	 * @return ResultSet
+	 */
+	public synchronized ResultSet getRevenueByRace() {
+		String theQuery = "select bets.raceId, races.raceFullName, users.userId, users.userFullName, raceresults.userRevenue, raceresults.systemRevenue from users "
+				+ "join bets on users.userId = bets.userId "
+				+ "join raceresults on bets.betId = raceresults.betId "
+				+ "join races on bets.raceId = races.raceId "
+				+ "group by bets.raceId order by bets.raceId";
+		return executeQuery(theQuery);
+	}
+
+	/**
+	 * Race bets number per car in race 
+	 * @return ResultSet
+	 */
+	public synchronized ResultSet getRacesBets() {
+		String theQuery = "select bets.raceId, races.raceFullName, total.total_bets, total.total_amount , car1.bets_on_car1, "
+				+ "car2.bets_on_car2, car3.bets_on_car3,  "
+				+ "car4.bets_on_car4,  car5.bets_on_car5 from bets "
+				+ "join races on bets.raceId = races.raceId "
+				+ "join (select bets.raceId, count(*) as total_bets, sum(bets.amount) as total_amount from bets group by bets.raceId) as total "
+				+ "on bets.raceId = total.raceId                                                               "
+				+ "left join                                                                                   "
+				+ "(select bets.raceId, count(*) as bets_on_car1, sum(bets.amount) as car1_amount from bets    "
+				+ "join races on bets.raceId = races.raceId                                                    "
+				+ "where bets.carId = races.car1Id group by raceId) as car1                                    "
+				+ "on bets.raceId = car1.raceId                                                                "
+				+ "left join                                                                                   "
+				+ "(select bets.raceId, count(*) as bets_on_car2, sum(bets.amount) as car2_amount from bets    "
+				+ "join races on bets.raceId = races.raceId                                                    "
+				+ "where bets.carId = races.car2Id group by raceId) as car2                                    "
+				+ "on bets.raceId = car2.raceId                                                                "
+				+ "left join                                                                                   "
+				+ "(select bets.raceId, count(*) as bets_on_car3, sum(bets.amount) as car3_amount from bets    "
+				+ "join races on bets.raceId = races.raceId                                                    "
+				+ "where bets.carId = races.car3Id group by raceId) as car3                                    "
+				+ "on bets.raceId = car3.raceId                                                                "
+				+ "left join                                                                                   "
+				+ "(select bets.raceId, count(*) as bets_on_car4, sum(bets.amount) as car4_amount from bets    "
+				+ "join races on bets.raceId = races.raceId                                                    "
+				+ "where bets.carId = races.car4Id group by raceId) as car4                                    "
+				+ "on bets.raceId = car4.raceId                                                                "
+				+ "left join                                                                                   "
+				+ "(select bets.raceId, count(*) as bets_on_car5, sum(bets.amount) as car5_amount from bets    "
+				+ "join races on bets.raceId = races.raceId                                                    "
+				+ "where bets.carId = races.car5Id group by raceId) as car5                                    "
+				+ "on bets.raceId = car5.raceId                                                                "
+				+ "group by bets.raceId";
+		return executeQuery(theQuery);
+	}
 
 }

@@ -9,7 +9,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 /**
  * run a sql script for building database tables and inserting initial data
  * 
- * @author Zina Kuzmin
+ * @author Zina K
  *
  */	
 

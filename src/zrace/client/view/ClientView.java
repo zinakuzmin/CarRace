@@ -37,6 +37,12 @@ import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
 import zrace.protocol.ClientDisconnectMsg;
 
+/**
+ * UI for client
+ * 
+ * @author Zina K
+ *
+ */
 public class ClientView extends Application {
 	private ZRaceGameController gameController;
 	private TextField userTextField;
@@ -51,8 +57,12 @@ public class ClientView extends Application {
 	private Button betBtn1; // = new Button("Make a bet for race1");
 	private Button betBtn2; // = new Button("Make a bet for race3");
 	private Button betBtn3; // = new Button("Make a bet for race3");
-	
 
+	/**
+	 * Initialize {@link ClientView}
+	 * 
+	 * @param gameController
+	 */
 	public ClientView(ZRaceGameController gameController) {
 		this.gameController = gameController;
 
@@ -67,9 +77,6 @@ public class ClientView extends Application {
 		betBtn2 = new Button("Make a bet for race3");
 		betBtn3 = new Button("Make a bet for race3");
 
-		
-		
-
 	}
 
 	@Override
@@ -78,8 +85,10 @@ public class ClientView extends Application {
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			public void handle(WindowEvent event) {
 				try {
-					gameController.getOut().writeObject(
-							new ClientDisconnectMsg(0 , gameController.getUser()));
+					gameController.getOut()
+							.writeObject(
+									new ClientDisconnectMsg(0, gameController
+											.getUser()));
 					gameController.getSocket().close();
 				} catch (IOException e) {
 				}
@@ -90,6 +99,11 @@ public class ClientView extends Application {
 
 	}
 
+	/**
+	 * Build UI for Login screen
+	 * 
+	 * @param primaryStage
+	 */
 	private void createLoginPage(Stage primaryStage) {
 		primaryStage.setTitle("ZRace client");
 		GridPane grid = new GridPane();
@@ -121,7 +135,6 @@ public class ClientView extends Application {
 			@Override
 			public void handle(ActionEvent e) {
 
-				// if (isLoginInputValid(userIDtextField, userTextField)){
 				if (isLoginInputValid(userTextField)) {
 					gameController.sendLoginOrRegisterMessage(userTextField
 							.getText());
@@ -152,19 +165,19 @@ public class ClientView extends Application {
 		primaryStage.show();
 	}
 
+	/**
+	 * Build UI for client races view
+	 * @param primaryStage
+	 */
 	public void createClientView(Stage primaryStage) {
 
 		BorderPane pane = new BorderPane();
-		
-		
-		BackgroundImage myBI= new BackgroundImage(new Image(RunParameters.IMG_RUNNER_BACKGROUND),
-				BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
+
+		BackgroundImage myBI = new BackgroundImage(new Image(
+				RunParameters.IMG_RUNNER_BACKGROUND), BackgroundRepeat.REPEAT,
+				BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT,
 				new BackgroundSize(1160, 600, false, false, false, false));
 		pane.setBackground(new Background(myBI));
-		
-	
-		
-		
 
 		while (!(gameController.isGotUserFromServer()
 				&& gameController.isGotRacesFromServer() && gameController
@@ -176,30 +189,15 @@ public class ClientView extends Application {
 			}
 		}
 
-		
 		pane.setTop(userNameLabel);
 
-		
-
 		Button viewRace1 = new Button("View Race 1");
-		Button viewRace2 = new Button("View Race 2");		
+		Button viewRace2 = new Button("View Race 2");
 		Button viewRace3 = new Button("View Race 3");
-				
-//		Button betBtn1 = new Button("Make a bet for race1");
-//		Button betBtn2 = new Button("Make a bet for race3");
-//		Button betBtn3 = new Button("Make a bet for race3");
 
 		GridPane paneRace1 = new GridPane();
 		GridPane paneRace2 = new GridPane();
 		GridPane paneRace3 = new GridPane();
-
-		// ColumnConstraints column1 = new ColumnConstraints();
-		// column1.setPercentWidth(50);
-		// ColumnConstraints column2 = new ColumnConstraints();
-		// column2.setPercentWidth(50);
-		// paneRace1.getColumnConstraints().addAll(column1, column2);
-		// paneRace2.getColumnConstraints().addAll(column1, column2);
-		// paneRace3.getColumnConstraints().addAll(column1, column2);
 
 		paneRace1.setHgap(10); // horizontal gap in pixels => that's what you
 								// are asking for
@@ -220,24 +218,18 @@ public class ClientView extends Application {
 		paneRace1.add(raceStatus1, 1, 2);
 		paneRace1.add(viewRace1, 1, 3);
 		paneRace1.add(betBtn1, 1, 4);
-		
+
 		paneRace2.add(race2Name, 1, 1);
 		paneRace2.add(raceStatus2, 1, 2);
 		paneRace2.add(viewRace2, 1, 3);
 		paneRace2.add(betBtn2, 1, 4);
-		
+
 		paneRace3.add(race3Name, 1, 1);
 		paneRace3.add(raceStatus3, 1, 2);
 		paneRace3.add(viewRace3, 1, 3);
 		paneRace3.add(betBtn3, 1, 4);
 
 		GridPane grid = new GridPane();
-
-		// ColumnConstraints column1 = new ColumnConstraints();
-		// column1.setPercentWidth(50);
-		// ColumnConstraints column2 = new ColumnConstraints();
-		// column2.setPercentWidth(50);
-		// grid.getColumnConstraints().addAll(column1, column2);
 
 		grid.setHgap(10); // horizontal gap in pixels => that's what you are
 							// asking for
@@ -250,21 +242,11 @@ public class ClientView extends Application {
 		grid.add(paneRace2, 0, 3);
 		grid.add(paneRace3, 0, 5);
 
-		// grid.add(viewRace1, 0, 1);
-		// grid.add(viewRace2, 0, 3);
-		// grid.add(viewRace3, 0, 5);
-		// grid.add(betBtn1, 1, 1);
-		// grid.add(betBtn2, 1, 3);
-		// grid.add(betBtn3, 1, 5);
-		// grid.add(raceStatus1, 2, 1);
-		// grid.add(raceStatus2, 2, 3);
-		// grid.add(raceStatus3, 2, 5);
-
 		pane.setRight(grid);
 
 		Pane racePane = new Pane();
 		pane.setCenter(racePane);
-		
+
 		Pane leftPane = new Pane();
 		leftPane.getChildren().add(new Label("    "));
 		pane.setLeft(leftPane);
@@ -297,8 +279,10 @@ public class ClientView extends Application {
 				try {
 					if (mainClientApp != null)
 						mainClientApp.closeApp();
-					gameController.getOut().writeObject(
-							new ClientDisconnectMsg(0 , gameController.getUser()));
+					gameController.getOut()
+							.writeObject(
+									new ClientDisconnectMsg(0, gameController
+											.getUser()));
 					gameController.getSocket().close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -308,14 +292,24 @@ public class ClientView extends Application {
 		});
 	}
 
-	private void showRace(Race activeRace, Pane racePane,
-			Stage primaryStage, RaceRun raceRun, ZRaceGameController gameController, int raceNumber) {
+	/**
+	 * Show race 3D 
+	 * @param activeRace
+	 * @param racePane
+	 * @param primaryStage
+	 * @param raceRun
+	 * @param gameController
+	 * @param raceNumber
+	 */
+	private void showRace(Race activeRace, Pane racePane, Stage primaryStage,
+			RaceRun raceRun, ZRaceGameController gameController, int raceNumber) {
 		if (mainClientApp != null) {
 			mainClientApp.closeApp();
 		}
 		racePane.getChildren().clear();
 		try {
-			mainClientApp = new MainClientApp(racePane, raceRun.getCarsInRace(), gameController, raceNumber);
+			mainClientApp = new MainClientApp(racePane,
+					raceRun.getCarsInRace(), gameController, raceNumber);
 
 			mainClientApp.setMusic(raceRun.getSong());
 			mainClientApp.start(primaryStage);
@@ -326,6 +320,10 @@ public class ClientView extends Application {
 
 	}
 
+	/**
+	 * Show {@link BetView}
+	 * @param raceID
+	 */
 	private synchronized void showBettingPage(int raceID) {
 		try {
 			BetView betView = new BetView(gameController,
@@ -337,23 +335,11 @@ public class ClientView extends Application {
 		}
 	}
 
-	// public boolean isLoginInputValid(TextField userIdTF, TextField
-	// userNameTF) {
-	// if (userIdTF.getText().isEmpty() || userNameTF.getText().isEmpty()) {
-	// return false;
-	// } else {
-	//
-	// try {
-	// Integer.parseInt(userIdTF.getText());
-	// return true;
-	// } catch (Exception e) {
-	// return false;
-	// }
-	//
-	// }
-	//
-	// }
-
+	
+	/**
+	 * @param userNameTF
+	 * @return true if name is not empty
+	 */
 	public boolean isLoginInputValid(TextField userNameTF) {
 		if (userNameTF.getText().isEmpty())
 			return false;
@@ -361,22 +347,21 @@ public class ClientView extends Application {
 		return true;
 	}
 
+	/**
+	 * Update races status in client UI
+	 */
 	public synchronized void setRacesStatusInView() {
 		if (!gameController.getRaceRuns().isEmpty()
 				&& gameController.getRaceRuns().size() >= 3) {
-
-
-			// raceStatus1.setStyle("-fx-font-size: 20px; -fx-text-fill: red;");
-			// raceStatus1.setEffect(new Reflection());
-			// raceStatus1.setMaxWidth(250);
-			// raceStatus1.setWrapText(true);
-			// raceStatus1.setFont(Font.font("Verdana", 20));
-			raceStatus1.setText("Status: " + gameController.getRaceRuns().get(0)
-					.getRaceStatus().toString());
-			raceStatus2.setText("Status: " + gameController.getRaceRuns().get(1)
-					.getRaceStatus().toString());
-			raceStatus3.setText("Status: " + gameController.getRaceRuns().get(2)
-					.getRaceStatus().toString());
+			raceStatus1.setText("Status: "
+					+ gameController.getRaceRuns().get(0).getRaceStatus()
+							.toString());
+			raceStatus2.setText("Status: "
+					+ gameController.getRaceRuns().get(1).getRaceStatus()
+							.toString());
+			raceStatus3.setText("Status: "
+					+ gameController.getRaceRuns().get(2).getRaceStatus()
+							.toString());
 			setStatusLabelStyle(raceStatus1, gameController.getRaceRuns()
 					.get(0).getRaceStatus(), betBtn1);
 			setStatusLabelStyle(raceStatus2, gameController.getRaceRuns()
@@ -387,8 +372,14 @@ public class ClientView extends Application {
 		}
 	}
 
-	public void setStatusLabelStyle(Label label, RaceStatus status, Button betBtn) {
-		// label.setText(status);
+	/**
+	 * Set style of race status
+	 * @param label
+	 * @param status
+	 * @param betBtn
+	 */
+	public void setStatusLabelStyle(Label label, RaceStatus status,Button betBtn) {
+		
 		label.setEffect(new Glow());
 		if (status.equals(RaceStatus.waiting)) {
 			System.out.println("waiting status");
@@ -397,9 +388,10 @@ public class ClientView extends Application {
 		} else if (status.equals(RaceStatus.completed)) {
 			label.setStyle("-fx-font-size: 25px; -fx-text-fill: red;");
 			betBtn.setDisable(true);
-			if (gameController.getLastWinnerCarId() != 0){
-				label.setText(label.getText() + ". Won car " + gameController.getLastWinnerCarId());
-				
+			if (gameController.getLastWinnerCarId() != 0) {
+				label.setText(label.getText() + ". Won car "
+						+ gameController.getLastWinnerCarId());
+
 			}
 		} else if (status.equals(RaceStatus.in_progress)) {
 			label.setStyle("-fx-font-size: 25px; -fx-text-fill: green;");
@@ -409,51 +401,82 @@ public class ClientView extends Application {
 			betBtn.setDisable(true);
 		}
 	}
-	
-	
-	
+
+	/**
+	 * Set race names in client UI
+	 */
 	public synchronized void setRacesNamesInView() {
-		if (!gameController.getActiveRaces().isEmpty() && gameController.getActiveRaces().size() >= 3) {
-			race1Name.setText("Race name: " + gameController.getActiveRaces().get(0).getRaceFullName());
+		if (!gameController.getActiveRaces().isEmpty()
+				&& gameController.getActiveRaces().size() >= 3) {
+			race1Name.setText("Race name: "
+					+ gameController.getActiveRaces().get(0).getRaceFullName());
 			race1Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
-			race2Name.setText("Race name: " + gameController.getActiveRaces().get(1).getRaceFullName());
+			race2Name.setText("Race name: "
+					+ gameController.getActiveRaces().get(1).getRaceFullName());
 			race2Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
-			race3Name.setText("Race name: " + gameController.getActiveRaces().get(2).getRaceFullName());
+			race3Name.setText("Race name: "
+					+ gameController.getActiveRaces().get(2).getRaceFullName());
 			race3Name.setStyle("-fx-font-size: 25px; -fx-text-fill: black;");
 		}
 	}
-	
-	public synchronized void setUserDetailsInView(){
+
+	/**
+	 * Set user details in user UI
+	 */
+	public synchronized void setUserDetailsInView() {
 		userNameLabel.setText("     *** Welcome "
-				+ gameController.getUser().getUserFullName() + ".  Your user ID is " + gameController.getUser().getUserID() + ". User revenue is :" + gameController.getUser().getUserRevenue() +  " ***    ");
+				+ gameController.getUser().getUserFullName()
+				+ ".  Your user ID is " + gameController.getUser().getUserID()
+				+ ". User revenue is :"
+				+ gameController.getUser().getUserRevenue() + " ***    ");
 		userNameLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 25));
 		userNameLabel.setStyle("-fx-font-size: 25px; -fx-text-fill: azure;");
 	}
-	
-	
-	
-	
 
+	/**
+	 * Get race name
+	 * @return Label
+	 */
 	public Label getRace1Name() {
 		return race1Name;
 	}
 
+	/**
+	 * Set race names
+	 * @param race1Name
+	 */
 	public void setRace1Name(Label race1Name) {
 		this.race1Name = race1Name;
 	}
 
+	/**
+	 * Get race name
+	 * @return
+	 */
 	public Label getRace2Name() {
 		return race2Name;
 	}
 
+	/**
+	 * Set race name
+	 * @param race2Name
+	 */
 	public void setRace2Name(Label race2Name) {
 		this.race2Name = race2Name;
 	}
 
+	/**
+	 * Get race name
+	 * @return
+	 */
 	public Label getRace3Name() {
 		return race3Name;
 	}
 
+	/**
+	 * Set race name
+	 * @param race3Name
+	 */
 	public void setRace3Name(Label race3Name) {
 		this.race3Name = race3Name;
 	}
