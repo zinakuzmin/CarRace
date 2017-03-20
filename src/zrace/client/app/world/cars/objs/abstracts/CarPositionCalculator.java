@@ -2,8 +2,19 @@ package zrace.client.app.world.cars.objs.abstracts;
 
 import java.util.ArrayList;
 
+/**
+ * The Class CarPositionCalculator.
+ */
 public class CarPositionCalculator {
 	
+	/**
+	 * Calculate total milage of car.
+	 *
+	 * @param orbitRadius the orbit radius
+	 * @param speedList the speed list
+	 * @param raceDurationInMillis the race duration in millis
+	 * @return the calculated car in race
+	 */
 	public static CalculatedCarInRace calculateTotalMilageOfCar(float orbitRadius, ArrayList<Integer> speedList, long raceDurationInMillis) {
 		float totalMilage = 0;
 		double lastXPos = 0;
@@ -68,17 +79,46 @@ public class CarPositionCalculator {
 		return new CalculatedCarInRace(totalMilage, lastXPos, lastZPos, lastDegree, lastMovingStep, movingPoints, indexOfSpeed);
 	}
 	
+	/**
+	 * The Class CalculatedCarInRace.
+	 */
 	public static class CalculatedCarInRace{
 
+		/** The total milage. */
 		private float totalMilage;
+		
+		/** The last X pos. */
 		private double lastXPos;
+		
+		/** The last Z pos. */
 		private double lastZPos;
+		
+		/** The last degree. */
 		private float lastDegree;
+		
+		/** The last moving step. */
 		private float lastMovingStep;
+		
+		/** The last moving points. */
 		private float lastMovingPoints;
+		
+		/** The run from start. */
 		private boolean runFromStart;
+		
+		/** The index of speed. */
 		private int indexOfSpeed;
 
+		/**
+		 * Instantiates a new calculated car in race.
+		 *
+		 * @param totalMilage the total milage
+		 * @param lastXPos the last X pos
+		 * @param lastZPos the last Z pos
+		 * @param lastDegree the last degree
+		 * @param lastMovingStep the last moving step
+		 * @param lastMovingPoints the last moving points
+		 * @param indexOfSpeed the index of speed
+		 */
 		public CalculatedCarInRace(float totalMilage, double lastXPos, double lastZPos, float lastDegree, float lastMovingStep, float lastMovingPoints, int indexOfSpeed) {
 			this.totalMilage = totalMilage;
 			this.lastXPos = lastXPos;
@@ -89,38 +129,83 @@ public class CarPositionCalculator {
 			this.indexOfSpeed = indexOfSpeed;
 		}
 
+		/**
+		 * Gets the last degree.
+		 *
+		 * @return the last degree
+		 */
 		public float getLastDegree() {
 			return lastDegree;
 		}
 
+		/**
+		 * Gets the last moving step.
+		 *
+		 * @return the last moving step
+		 */
 		public float getLastMovingStep() {
 			return lastMovingStep;
 		}
 
+		/**
+		 * Gets the last X pos.
+		 *
+		 * @return the last X pos
+		 */
 		public double getLastXPos() {
 			return lastXPos;
 		}
 
+		/**
+		 * Gets the last Z pos.
+		 *
+		 * @return the last Z pos
+		 */
 		public double getLastZPos() {
 			return lastZPos;
 		}
 
+		/**
+		 * Gets the total milage.
+		 *
+		 * @return the total milage
+		 */
 		public float getTotalMilage() {
 			return totalMilage;
 		}
 
+		/**
+		 * Gets the last moving points.
+		 *
+		 * @return the last moving points
+		 */
 		public float getLastMovingPoints() {
 			return lastMovingPoints;
 		}
 
+		/**
+		 * Run from start.
+		 *
+		 * @param runFromStart the run from start
+		 */
 		public void runFromStart(boolean runFromStart) {
 			this.runFromStart = runFromStart;
 		}
 
+		/**
+		 * Checks if is run from start.
+		 *
+		 * @return true, if is run from start
+		 */
 		public boolean isRunFromStart() {
 			return runFromStart;
 		}
 		
+		/**
+		 * Gets the index of speed.
+		 *
+		 * @return the index of speed
+		 */
 		public int getIndexOfSpeed() {
 			return indexOfSpeed;
 		}

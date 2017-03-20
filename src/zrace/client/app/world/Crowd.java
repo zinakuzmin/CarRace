@@ -13,14 +13,34 @@ import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+
+/**
+ * This class sets the crowd in the race.
+ *
+ * @author Zina K
+ */
 public class Crowd {
 
+	/**
+	 * The humans.
+	 */
 	private Group humans;
 
+	/**
+	 * Instantiates a new crowd.
+	 *
+	 * @param humans the humans
+	 */
 	public Crowd(Group humans) {
 		this.humans = humans;
 	}
 
+	/**
+	 * Generate crowd on tribunes
+	 *
+	 * @param tribunes the tribunes
+	 * @return the crowd
+	 */
 	public static Crowd generateCrowd(Tribune tribunes) {
 		Group humans = new Group();
 		int humansPerRow = 60; // not more than this - slows down
@@ -45,6 +65,12 @@ public class Crowd {
 		return new Crowd(humans);
 	}
 
+    /**
+     * Sets the animation human.
+     *
+     * @param human the human
+     * @param startFrom the start from
+     */
     private static void setAnimationHuman(Group human, double startFrom) {
     	TranslateTransition move = new TranslateTransition();
     	move.setNode(human);
@@ -57,6 +83,14 @@ public class Crowd {
     	move.play();
 	}
 
+	/**
+	 * Sets the human position on tribune 
+	 *
+	 * @param human the human
+	 * @param orbitRadius the orbit radius
+	 * @param movingStep the moving step
+	 * @param numOfFaces the num of faces
+	 */
 	public static void setRadialOfHuman(Group human, double orbitRadius, double movingStep, float numOfFaces) {
 		int nextInt = new Random().nextInt(3);
 		double degree = movingStep*(360/numOfFaces) + nextInt;//movingStep*(360f/80f) + nextInt; //double degree =  
@@ -75,6 +109,11 @@ public class Crowd {
 		human.setTranslateZ(moveZ);
     }
 	
+	/**
+	 * Make human.
+	 *
+	 * @return the group
+	 */
 	private static Group makeHuman() {
 		Group human = new Group();
 		
@@ -136,23 +175,45 @@ public class Crowd {
 		return human;
 	}
 	
+	/**
+	 * Gets the crowd as group.
+	 *
+	 * @return the crowd group
+	 */
 	public Group getCrowdGroup() {
 		return humans;
 	}
 
+	/**
+	 * Gets the random hair color.
+	 *
+	 * @return the random hair color
+	 */
 	private static PhongMaterial getRandomHairColor() {
 		Collections.shuffle(hairColors);
 		
 		return new PhongMaterial(hairColors.get(0));
 	}
 	
+	/**
+	 * Gets the random color.
+	 *
+	 * @return the random color
+	 */
 	private static PhongMaterial getRandomColor() {
 		Collections.shuffle(otherColors);
 		
 		return new PhongMaterial(otherColors.get(0));
 	}
 
+	/**
+	 * The hair colors.
+	 */
 	private static ArrayList<Color> hairColors;
+	
+	/**
+	 * The other colors.
+	 */
 	private static ArrayList<Color> otherColors;
 
 	static {

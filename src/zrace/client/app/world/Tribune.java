@@ -1,19 +1,59 @@
 package zrace.client.app.world;
 
+/**
+ * This class sets the tribune in the race.
+ *
+ * @author Zina K
+ */
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 
+/**
+ * The Class Tribune.
+ */
 public class Tribune  {
 
+    /**
+     * The tribunes.
+     */
     private Group tribunes;
+	
+	/**
+	 * The number of rows.
+	 */
 	private int numOfRows;
+	
+	/**
+	 * The radius increment.
+	 */
 	private double radiusIncrement;
+	
+	/**
+	 * The initial row radius.
+	 */
 	static int initialRowRadius = 220;
+	
+	/**
+	 * The height.
+	 */
 	private double hight;
+	
+	/**
+	 * The increnebt hight of column.
+	 */
 	private int increnebtHightOfColumn;
 
+	/**
+	 * Instantiates a new tribune.
+	 *
+	 * @param all the all
+	 * @param numOfRows the num of rows
+	 * @param radiusIncrement the radius increment
+	 * @param hight the hight
+	 * @param increnebtHightOfColumn the increnebt hight of column
+	 */
 	public Tribune(Group all, int numOfRows, double radiusIncrement, double hight, int increnebtHightOfColumn) {
 		this.tribunes = all;
 		this.numOfRows = numOfRows;
@@ -22,10 +62,23 @@ public class Tribune  {
 		this.increnebtHightOfColumn = increnebtHightOfColumn;
 	}
 	
+	/**
+	 * Gets the tribunes.
+	 *
+	 * @return the tribunes
+	 */
 	public Group getTribunes() {
 		return tribunes;
 	}
 	
+	/**
+	 * Generate all seats and columns.
+	 *
+	 * @param hight the hight
+	 * @param radiusIncrement the radius increment
+	 * @param numOfRows the num of rows
+	 * @return the tribune
+	 */
 	public static Tribune generateAllSeatsAndColumns(double hight, double radiusIncrement, int numOfRows) {
 		Group all = new Group();
     	int increnebtHightOfColumn = 5;
@@ -44,6 +97,14 @@ public class Tribune  {
     	return new Tribune(all, numOfRows, radiusIncrement, hight, increnebtHightOfColumn);
 	}
 
+	/**
+	 * Creates the tube.
+	 *
+	 * @param numOfFaces the num of faces
+	 * @param radius the radius
+	 * @param hight the hight
+	 * @return the group
+	 */
 	private static Group createTube(int numOfFaces, double radius, double hight) {
     	Group group = new Group();
     	
@@ -61,6 +122,14 @@ public class Tribune  {
     	return group;
 	}
     
+    /**
+     * Sets the radial of rect.
+     *
+     * @param rec the rec
+     * @param orbitRadius the orbit radius
+     * @param movingStep the moving step
+     * @param numOfFaces the num of faces
+     */
     public static void setRadialOfRect(Rectangle rec, double orbitRadius, double movingStep, int numOfFaces) {
 		double degree = movingStep*(360/numOfFaces);
 		double angleAlpha = Math.toRadians(degree);
@@ -78,18 +147,40 @@ public class Tribune  {
 		rec.setTranslateZ(moveZ);
     }
 
+	/**
+	 * Gets the tribune count.
+	 *
+	 * @return the tribune count
+	 */
 	public int getTribuneCount() {
 		return numOfRows;
 	}
 
+	/**
+	 * Gets the tribune radius.
+	 *
+	 * @param numOfRow the num of row
+	 * @return the tribune radius
+	 */
 	public double getTribuneRadius(int numOfRow) {
 		return (initialRowRadius + (numOfRow*radiusIncrement));
 	}
 
+	/**
+	 * Gets the hight of row.
+	 *
+	 * @param numOfRow the num of row
+	 * @return the hight of row
+	 */
 	public double getHightOfRow(int numOfRow) {
 		return (hight/2 + (numOfRow*increnebtHightOfColumn));
 	}
 
+	/**
+	 * Gets the radius increment.
+	 *
+	 * @return the radius increment
+	 */
 	public double getRadiusIncrement() {
 		return radiusIncrement;
 	}

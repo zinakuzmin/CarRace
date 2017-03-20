@@ -13,13 +13,24 @@ import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.abstracts.Car;
 import zrace.client.app.world.cars.objs.pixels.Pixel;
 
+/**
+ * The Class PixelAudiTT.
+ */
 public class PixelAudiTT extends Car{
+	
+	/** The uid. */
 	public static int uid = 2003;
     
+	/**
+	 * Instantiates a new pixel audi TT.
+	 */
 	public PixelAudiTT() {
 		super(CarResources.PixelAudiTT);
 	}
 
+	/* (non-Javadoc)
+	 * @see zrace.client.app.world.cars.objs.abstracts.Car#loadCar()
+	 */
 	@Override
 	public Xform loadCar() {
 		carForm = new Xform();
@@ -87,21 +98,33 @@ public class PixelAudiTT extends Car{
         return carForm;
     }
 
+	/* (non-Javadoc)
+	 * @see zrace.client.app.world.cars.objs.abstracts.Car#getRandomScaleOnLoad()
+	 */
 	@Override
 	public double getRandomScaleOnLoad() {
 		return 0.8;
 	}
 
+	/* (non-Javadoc)
+	 * @see zrace.client.app.world.cars.objs.abstracts.Car#getRotateOnLoad()
+	 */
 	@Override
 	public Rotate getRotateOnLoad() {
 		return new Rotate(0, 0, 0, 0);
 	}
 
+	/* (non-Javadoc)
+	 * @see zrace.client.app.world.cars.objs.abstracts.Car#getModelLocation()
+	 */
 	@Override
 	public String getModelLocation() {
 		throw new NotImplementedException();
 	}
 
+	/* (non-Javadoc)
+	 * @see zrace.client.app.world.cars.objs.abstracts.Car#getModelClassType()
+	 */
 	@Override
 	public Class<? extends ModelImporter> getModelClassType() {
 		throw new NotImplementedException();
