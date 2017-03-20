@@ -5,10 +5,10 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import dbModels.Race;
-import dbModels.RaceRun;
-import dbModels.User;
 import zrace.client.ZRaceGameController;
+import zrace.dbModels.Race;
+import zrace.dbModels.RaceRun;
+import zrace.dbModels.User;
 import zrace.protocol.Message;
 import zrace.protocol.UpdateRaceRunsMsg;
 import zrace.protocol.UpdateRacesMsg;
@@ -41,7 +41,7 @@ public class ServerListener extends Thread {
 	 */
 	@Override
 	public void run() {
-		System.out.println("Client start to listen");
+		
 		gameController.setServerListenerActivated(true);
 		while (true) {
 			
@@ -56,10 +56,8 @@ public class ServerListener extends Thread {
 					
 				} else if (message instanceof UserDetailsMsg) {
 					
-					System.out.println("Client got message " + message);
 					User user = ((UserDetailsMsg) message).getUser();
 					gameController.setUserDetails(user);
-					System.out.println("client got user details " + user);
 					gameController.setGotUserFromServer(true);
 					Platform.runLater(() -> gameController.getClientView()
 							.setUserDetailsInView());
@@ -78,7 +76,6 @@ public class ServerListener extends Thread {
 
 				else if (message instanceof WinnerCarMsg) {
 					
-					System.out.println("Client got message " + message);
 					gameController.setLastWinnerCarId(((WinnerCarMsg) message)
 							.getCarId());
 					Platform.runLater(() -> gameController.getClientView().setUserDetailsInView());

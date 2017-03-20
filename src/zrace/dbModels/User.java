@@ -1,4 +1,4 @@
-package dbModels;
+package zrace.dbModels;
 
 import java.io.Serializable;
 

@@ -1,13 +1,14 @@
 package zrace.server;
 
 import java.sql.Timestamp;
+
 import main.runner.RunParameters;
+import zrace.dbModels.Race;
+import zrace.dbModels.RaceRun;
+import zrace.dbModels.RaceRun.RaceStatus;
 import zrace.protocol.UpdateRaceRunsMsg;
 import zrace.protocol.UpdateRacesMsg;
 import zrace.protocol.WinnerCarMsg;
-import dbModels.Race;
-import dbModels.RaceRun;
-import dbModels.RaceRun.RaceStatus;
 
 /**
  * This Class provides an API compatible with RacesMonitor.
@@ -99,10 +100,7 @@ public class RacesMonitor implements Runnable {
 		if (!controller.isRunningRace()) {
 			Race race = controller.checkIfOneOfRacesCanRun();
 			if (race != null) {
-				System.out.println("the ready race is " + race);
 				int raceIndex = controller.getActiveRaces().lastIndexOf(race);
-				// race.setStartTime(new Timestamp(System.currentTimeMillis()));
-
 				RaceRun raceRun = controller.getRaceRunByRaceId(race
 						.getRaceId());
 				if (raceRun != null) {
@@ -130,7 +128,7 @@ public class RacesMonitor implements Runnable {
 												.currentTimeMillis())) <= 0) {
 							controller.getRaceRuns().get(raceRunIndex)
 									.setRaceStatus(RaceStatus.in_progress);
-							controller.getLogger().logStringMessage("Race " + race.getRaceFullName() + "is started \n");
+							controller.getLogger().logStringMessage("Race " + race.getRaceFullName() + " is started \n");
 						}
 
 					}
@@ -169,8 +167,6 @@ public class RacesMonitor implements Runnable {
 					new Timestamp(System.currentTimeMillis())) < 0) {
 				long startTimeInMillis = race.getStartTime().getTime();
 				long songDurationInMillis = raceRun.getSong().getDuraionInSeconds()*1000;
-//				System.out.println("currect time " + System.currentTimeMillis());
-//				System.out.println("duration of song time " + songDurationInMillis);
 				if (System.currentTimeMillis() - (songDurationInMillis + 2000) >= startTimeInMillis) {
 					controller.getRaceRuns().get(raceRunIndex)
 							.setRaceStatus(RaceStatus.completed);
@@ -190,7 +186,7 @@ public class RacesMonitor implements Runnable {
 									(int) ((songDurationInMillis + 2000) / 1000));
 					int winnerCarId = controller.getRaceWinnerCarID(raceRun);
 					controller.getActiveRaces().get(raceIndex).setWinnerCarId(winnerCarId);
-					controller.getLogger().logStringMessage("Race " + race.getRaceFullName() + "is completed " + ". Won car " + winnerCarId);
+					controller.getLogger().logStringMessage("Race " + race.getRaceFullName() + " is completed " + ". Won car " + winnerCarId);
 					controller.sendBroadcastMessage(new WinnerCarMsg(0, winnerCarId, raceRun.getRaceId()));
 					controller.completeRace(race, winnerCarId);
 					controller.getActiveRaces().remove(raceIndex);

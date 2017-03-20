@@ -5,16 +5,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+
 import javafx.stage.Stage;
 import zrace.client.view.ClientView;
 import zrace.client.view.listeners.ServerListener;
+import zrace.dbModels.Bet;
+import zrace.dbModels.Race;
+import zrace.dbModels.RaceRun;
+import zrace.dbModels.User;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
 import zrace.protocol.ClientDisconnectMsg;
-import dbModels.Bet;
-import dbModels.Race;
-import dbModels.RaceRun;
-import dbModels.User;
 
 /**
  * The class provides API for {@link ZRaceGameController}

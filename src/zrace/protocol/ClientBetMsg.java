@@ -1,7 +1,8 @@
 package zrace.protocol;
 
 import java.util.ArrayList;
-import dbModels.*;
+
+import zrace.dbModels.*;
 
 /**
  * This class supplies API for {@link ClientBetMsg}

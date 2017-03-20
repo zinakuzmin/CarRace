@@ -1,6 +1,6 @@
 package zrace.protocol;
 
-import dbModels.User;
+import zrace.dbModels.User;
 
 /**
  * This class supplies API for {@link UserDetailsMsg}

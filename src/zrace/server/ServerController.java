@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
@@ -15,18 +16,18 @@ import javafx.stage.WindowEvent;
 import main.runner.RunParameters;
 import zrace.client.app.world.cars.objs.Songs;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
+import zrace.dbModels.Bet;
+import zrace.dbModels.Car;
+import zrace.dbModels.Race;
+import zrace.dbModels.RaceResult;
+import zrace.dbModels.RaceRun;
+import zrace.dbModels.User;
+import zrace.dbModels.RaceRun.CarInRace;
+import zrace.dbModels.RaceRun.RaceStatus;
 import zrace.protocol.Message;
 import zrace.protocol.UserDetailsMsg;
 import zrace.server.db.DBHandler;
 import zrace.server.view.ServerMainView;
-import dbModels.Bet;
-import dbModels.Car;
-import dbModels.Race;
-import dbModels.RaceResult;
-import dbModels.RaceRun;
-import dbModels.RaceRun.CarInRace;
-import dbModels.RaceRun.RaceStatus;
-import dbModels.User;
 
 /**
  * This Class provides an API compatible with ServerController.
@@ -150,11 +151,9 @@ public class ServerController {
 		// Get from DB where isCompleted = false
 		ArrayList<Race> notCompletedRaces = db.getAllActiveRacesAsArray(false);
 
-		// System.out.println("not completed races " + notCompletedRaces);
 		if (notCompletedRaces.size() < RunParameters.NUMBER_OF_ACTIVE_RACES) {
 			int missingRaces = RunParameters.NUMBER_OF_ACTIVE_RACES
 					- notCompletedRaces.size();
-			// activeRaces.addAll(notCompletedRaces);
 
 			for (int i = 0; i < notCompletedRaces.size(); i++) {
 				activeRaces.add(notCompletedRaces.get(i));
@@ -186,8 +185,6 @@ public class ServerController {
 	 */
 	public Race generateRace() throws Exception {
 		ArrayList<Car> cars = db.getAllCarsAsArray();
-		System.out.println(cars);
-
 		ArrayList<Car> selectedCars = new ArrayList<Car>();
 
 		// Choose randomly cars for race
@@ -198,7 +195,6 @@ public class ServerController {
 					selectedCars.add(cars.get(randomNum));
 				}
 			}
-			System.out.println("cars selected for race " + selectedCars);
 
 			Race race = new Race();
 			race.setCar1Id(selectedCars.get(0).getCarId());
@@ -211,8 +207,6 @@ public class ServerController {
 			race.setRaceFullName("Race");
 
 			race = db.insertRace(race);
-			System.out.println("generated race " + race);
-
 			race.setRaceFullName("Race-" + race.getRaceId());
 			db.updateRaceName(race);
 			raceRuns.add(generateRaceRun(race));
@@ -252,7 +246,6 @@ public class ServerController {
 			User newUser = new User(userFullName, userId,
 					RunParameters.USER_INITIAL_AMOUNT_OF_MONEY);
 			newUser = db.insertUser(newUser);
-			System.out.println("Created a new user " + newUser);
 			return newUser;
 		}
 	}
@@ -288,10 +281,6 @@ public class ServerController {
 		return isLoggedIn;
 	}
 
-	// public synchronized void removeClientFromActiveClients(ClientHandler
-	// client) {
-	// activeClients.remove(client);
-	// }
 
 	/**
 	 * Insert a bet to DB
@@ -554,8 +543,8 @@ public class ServerController {
 			try {
 				if (client.getUserFullName().equals(user.getUserFullName())) {
 					UserDetailsMsg message = new UserDetailsMsg(0, user);
-					System.out.println("server send to client message "
-							+ client + " " + message);
+					/*System.out.println("server send to client message "
+							+ client + " " + message);*/
 					client.getStreamToClient().reset();
 					client.getStreamToClient().writeObject(message);
 					client.getStreamToClient().flush();
@@ -594,7 +583,7 @@ public class ServerController {
 
 		// CalculatedCarInRace max = Collections.max(calcs,
 		// Comparator.comparing(CarPositionCalculator.CalculatedCarInRace::getTotalMilage));
-		System.out.println("Car won the race:" + carWinner);
+		System.out.println("Car won the race:" + carWinner + " raceID " + raceRun.getRaceId());
 
 		return carWinner;
 	}

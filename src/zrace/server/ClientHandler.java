@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import zrace.dbModels.User;
 import zrace.protocol.ClientDisconnectMsg;
 import zrace.protocol.Message;
-import dbModels.User;
 
 /**
  * This Class provides an API compatible with ClientHandler.
@@ -94,9 +95,9 @@ public class ClientHandler implements Runnable {
 
 			Message messageFromClient;
 			do {
-				System.out.println("Waiting for client message");
+				//System.out.println("Waiting for client message");
 				messageFromClient = (Message) getStreamFromClient().readObject();
-				System.out.println("Server: read message " + messageFromClient);
+				//System.out.println("Server: read message " + messageFromClient);
 				new Thread(new HandleMessage(messageFromClient, this)).start();
 
 			} while (!(messageFromClient instanceof ClientDisconnectMsg));

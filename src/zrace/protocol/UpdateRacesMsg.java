@@ -2,7 +2,7 @@ package zrace.protocol;
 
 import java.util.ArrayList;
 
-import dbModels.Race;
+import zrace.dbModels.Race;
 
 /**
  * This class supplies API for {@link UpdateRacesMsg}

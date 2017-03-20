@@ -2,8 +2,6 @@ package zrace.client.app;
 
 import java.util.ArrayList;
 
-import dbModels.RaceRun.CarInRace;
-import dbModels.RaceRun.RaceStatus;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import zrace.client.ZRaceGameController;
@@ -11,6 +9,8 @@ import zrace.client.app.world.cars.objs.abstracts.Car;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator;
 import zrace.client.app.world.cars.objs.abstracts.CarRadialMove;
 import zrace.client.app.world.cars.objs.abstracts.CarPositionCalculator.CalculatedCarInRace;
+import zrace.dbModels.RaceRun.CarInRace;
+import zrace.dbModels.RaceRun.RaceStatus;
 
 /**
  * @author Zina K

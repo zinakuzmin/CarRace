@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import zrace.client.ZRaceGameController;
 import zrace.client.app.world.cars.CarResources;
-import dbModels.Bet;
-import dbModels.Race;
+import zrace.dbModels.Bet;
+import zrace.dbModels.Race;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

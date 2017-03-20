@@ -2,7 +2,8 @@ package zrace.server;
 
 
 import java.util.ArrayList;
-import dbModels.*;
+
+import zrace.dbModels.*;
 import zrace.protocol.ClientBetMsg;
 import zrace.protocol.ClientConnectMsg;
 import zrace.protocol.ClientDisconnectMsg;

@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import dbModels.Bet;
-import dbModels.Car;
-import dbModels.Race;
-import dbModels.RaceResult;
-import dbModels.User;
-import dbModels.ZraceSystem;
+import zrace.dbModels.Bet;
+import zrace.dbModels.Car;
+import zrace.dbModels.Race;
+import zrace.dbModels.RaceResult;
+import zrace.dbModels.User;
+import zrace.dbModels.ZraceSystem;
 
 /**
  * This Class provides an API compatible with DDHandler to control database
@@ -518,7 +518,7 @@ public class DBHandler {
 		if (system != null) {
 			double currentRevenue = system.getSystemRevenue();
 			currentRevenue = currentRevenue + amount;
-			String theQuery = "update zracesystem set systemRevenue = "
+			String theQuery = "update zracesystem set totalRevenue = "
 					+ currentRevenue;
 
 			try {
@@ -774,7 +774,6 @@ public class DBHandler {
 								result.getDouble("userRevenue"));
 
 						users.add(user);
-						System.out.println("found users " + users);
 
 					} while (result.next());
 					return users;
@@ -804,7 +803,6 @@ public class DBHandler {
 		@SuppressWarnings("unchecked")
 		ArrayList<Object> object = (ArrayList<Object>) convertResultSetToArraylist(
 				result, objectType);
-		System.out.println("object is " + object);
 
 		if (object != null)
 			return object.get(0);

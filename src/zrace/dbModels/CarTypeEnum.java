@@ -1,4 +1,4 @@
-package dbModels;
+package zrace.dbModels;
 
 /**
  * The Enum CarTypeEnum.

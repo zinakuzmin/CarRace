@@ -23,7 +23,7 @@ import zrace.client.app.world.ZCamera;
 import zrace.client.app.world.cars.CarResources;
 import zrace.client.app.world.cars.objs.Songs;
 import zrace.client.app.world.cars.objs.abstracts.Car;
-import dbModels.RaceRun.CarInRace;
+import zrace.dbModels.RaceRun.CarInRace;
 
 /**
  * This class supplies API for {@link MainClientApp}

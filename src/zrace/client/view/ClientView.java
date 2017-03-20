@@ -3,9 +3,6 @@ package zrace.client.view;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import dbModels.Race;
-import dbModels.RaceRun;
-import dbModels.RaceRun.RaceStatus;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,6 +32,9 @@ import javafx.stage.WindowEvent;
 import main.runner.RunParameters;
 import zrace.client.ZRaceGameController;
 import zrace.client.app.MainClientApp;
+import zrace.dbModels.Race;
+import zrace.dbModels.RaceRun;
+import zrace.dbModels.RaceRun.RaceStatus;
 import zrace.protocol.ClientDisconnectMsg;
 
 /**
@@ -382,7 +382,6 @@ public class ClientView extends Application {
 		
 		label.setEffect(new Glow());
 		if (status.equals(RaceStatus.waiting)) {
-			System.out.println("waiting status");
 			label.setStyle("-fx-font-size: 25px; -fx-text-fill: blue;");
 			betBtn.setDisable(false);
 		} else if (status.equals(RaceStatus.completed)) {
@@ -406,6 +405,7 @@ public class ClientView extends Application {
 	 * Set race names in client UI
 	 */
 	public synchronized void setRacesNamesInView() {
+		gameController.setLastWinnerCarId(0);
 		if (!gameController.getActiveRaces().isEmpty()
 				&& gameController.getActiveRaces().size() >= 3) {
 			race1Name.setText("Race name: "

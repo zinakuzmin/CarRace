@@ -5,11 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import dbModels.RaceRun.CarInRace;
 import zrace.client.app.world.cars.objs.AlfaRomeo;
 import zrace.client.app.world.cars.objs.McLaren;
 import zrace.client.app.world.cars.objs.Nissan350Zcoupe;
 import zrace.client.app.world.cars.objs.abstracts.Car;
+import zrace.dbModels.RaceRun.CarInRace;
 
 /**
  * This enum holds cars and info.

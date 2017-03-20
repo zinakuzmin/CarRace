@@ -1,4 +1,4 @@
-package dbModels;
+package zrace.dbModels;
 
 /**
  * This class Provides API for {@link ZraceSystem}
