@@ -23,7 +23,7 @@ public class RunParameters {
 	/**
 	 * Create DB on app start
 	 */
-	public static boolean SHOULD_INIT_DB = false;
+	public static boolean SHOULD_INIT_DB = true;
 	
 	/**
 	 * Number of cars in each race
