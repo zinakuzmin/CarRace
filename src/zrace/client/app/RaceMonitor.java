@@ -1,7 +1,9 @@
 package zrace.client.app;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import zrace.client.ZRaceGameController;
@@ -78,6 +80,17 @@ public class RaceMonitor implements Runnable{
 					e.printStackTrace();
 				}
 				continue;
+			}
+			
+			if (waited) {
+				Media songToPlay = new Media(new File("race_start.mp3").toURI().toString());
+				new MediaPlayer(songToPlay).play();
+				try {
+					Thread.sleep(3_300);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			long raceDurationInMillis = System.currentTimeMillis()-gameController.getActiveRaces().get(raceNumber).getStartTime().getTime();

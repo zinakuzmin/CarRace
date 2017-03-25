@@ -176,6 +176,10 @@ public class MainClientApp extends Application {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				
+				Media songToPlay = new Media(new File("race_end.mp3").toURI().toString());
+				new MediaPlayer(songToPlay).play();
+				
 				if (raceThread.isCarsStarted()) {
 					for (Car car : cars) {
 						car.stopCar();
